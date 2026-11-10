@@ -50,6 +50,7 @@ personal AI assistant in the style of Hermes Agent / OpenClaw, and what is being
 | [`admission-dsh-im.md`](admission-dsh-im.md) | M0.5 gating trial: `/dsh-im` on 0.2.2-rc.1 (compatible boot, uncertified, upstream Telegram bug) |
 | [`m1-own-code.md`](m1-own-code.md) | M1 own-code bundles: SOUL identity loader, ntfy push, quiet heartbeat, human-invoked forget + verification evidence |
 | [`m1-install-verification.md`](m1-install-verification.md) | M1 install + acceptance evidence: pinned plugin installs, Hindsight config outside Cordis, write/recall/search proof, side effects, rollback |
+| [`m2-retention-policy.md`](m2-retention-policy.md) | M2 memory curator (daily Hindsight consolidation) + retention/erasure policy and inventory |
 | [`dsh-restart-runbook.md`](dsh-restart-runbook.md) | restarting a DSH host + pending-plugin detection (host-control UI, scripts/ops) |
 
 ## One-paragraph answer

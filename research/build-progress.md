@@ -22,7 +22,7 @@ script (Hindsight exposes no delete tool; derived observations survive document 
 | **M0** | Security & telemetry baseline on the personal host | ✅ **complete 2026-11-10** | Unit hardened + verified, telemetry egress off, egress observed + alerted, local telemetry live, Hindsight `dsh-personal` bank isolated, restore drill passed, residual risks recorded |
 | M0.5 | Plugin admission pass (mature-only, D14) | ✅ **complete** — awaiting sign-off | Ledger rows complete; surprises documented; human sign-off |
 | M1 | Install curated stack into `personal` (D14 mature-only) | 🟨 **in progress** — memory + recall + identity + push + heartbeat installed & verified; channel HOLD; acceptance gaps remain | Design §3 + shortlist §5 acceptance tests |
-| M2 | Curator/digest, notify policy, per-surface autonomy, retention | ⬜ pending M1 | Egress/approval/injection tests pass |
+| M2 | Curator/digest, notify policy, per-surface autonomy, retention | 🟨 **started** — memory curator + retention policy live | Egress/approval/injection tests pass |
 | M3 | Optional notes store / memory UI / skill curator / second channel | ⬜ later | Only with a real need |
 
 ## M0 task checklist (pragmatic baseline, D13)
@@ -295,3 +295,16 @@ Telemetry:
     works, derived observations survive; bank clear is the full-erasure path).
   - Telegram channel **deferred by human decision** — parked, no work in this block.
   - Evidence: [`m1-acceptance.md`](m1-acceptance.md).
+
+- **2026-11-11 08:45–08:50 AEST — M2 start: memory hygiene + retention (host: one user timer):**
+  - `scripts/memory/curate.sh`: bank-locked daily pass — refresh mental models, `POST /consolidate`, bounded
+    wait, counts-only JSON report (0600) + Hindsight 7-day LLM usage (first reading: 67 requests / 335,897
+    tokens). Dry-run + real run verified; no content in the report.
+  - `dsh-memory-curate.timer` (user unit) enabled for **07:15 daily**; oneshot test run `Result=success`.
+  - `scripts/ops/retention-report.sh`: read-only inventory (sessions/storages/backups/telemetry/logs/journal/
+    bank) + `--json`; policy recorded in [`m2-retention-policy.md`](m2-retention-policy.md) (retention table,
+    Hindsight erasure contract, open decisions).
+  - `daily-digest.sh` now prunes its own `digest-*.md` / `curate-*.json` older than 90 days (the policy's
+    telemetry-retention mechanism).
+  - Host changes: one user timer+service (revert: `systemctl --user disable --now dsh-memory-curate.timer` +
+    remove the two unit files + `daemon-reload`). No plugin or profile changes.

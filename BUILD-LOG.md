@@ -50,6 +50,13 @@ Chronological, link-first record of the build. Detail lives in `research/`.
   M2 cost item. `forget` stays partial (Hindsight lacks per-memory delete). Telegram channel deferred.
 - Evidence: `research/m1-acceptance.md`.
 
+## 2026-11-11 — M2 start: memory hygiene + retention
+- Daily Hindsight curator (`curate.sh` + `dsh-memory-curate.timer` 07:15): mental-model refresh,
+  consolidation, counts-only report + 7-day Hindsight LLM usage (67 req / 335,897 tokens first reading).
+- Retention policy (`research/m2-retention-policy.md`) and read-only inventory (`retention-report.sh`):
+  sessions, storages, backups 14/8, telemetry 90 d (digest prunes its own reports), journald 2 GB/30 d,
+  Hindsight erasure contract (document delete vs derived observations vs bank clear).
+
 ## 2026-11-11 — this repository
 - Public build log created: docs, our plugins, operator scripts, CI (plugin tests + shell syntax + a
   secret-shaped string scan).

@@ -90,6 +90,11 @@ loop. Target end state: identity (soul), long-term memory (Hindsight), one chann
   build. Sanitization rules: never commit `.cache/`, `artifacts/`, `design-systems/`, `.tmp-render/`,
   credentials/state (gitignored); no secrets; third-party bank names stay placeholders; CI runs plugin tests
   plus a secret-shaped string scan on every push.
+- **M2 memory hygiene (2026-11-11):** `dsh-memory-curate.timer` (user unit, 07:15 daily) runs
+  `scripts/memory/curate.sh` — mental-model refresh + Hindsight consolidation + a counts-only report at
+  `~/.dsh-personal/telemetry/curate-YYYY-MM-DD.json` (0600, includes Hindsight 7-day LLM usage). Retention
+  policy + erasure contract: `research/m2-retention-policy.md`; read-only inventory:
+  `scripts/ops/retention-report.sh`. The digest prunes its own reports after 90 days.
 - This workspace (`/home/josh/projects/DSH-playground`) is the build repo; `AGENTS.md` here is
   auto-loaded by DSH's instruction loader when the session workspace is this directory.
 

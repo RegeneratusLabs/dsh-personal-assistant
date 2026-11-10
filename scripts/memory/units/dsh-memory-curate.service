@@ -1,0 +1,12 @@
+[Unit]
+Description=Daily Hindsight memory curation for the personal agent (M2)
+Documentation=file:///home/josh/projects/DSH-playground/research/m2-retention-policy.md
+
+[Service]
+Type=oneshot
+Environment=DSH_PERSONAL_HOME=%h/.dsh-personal
+ExecStart=/home/josh/projects/DSH-playground/scripts/memory/curate.sh --quiet --wait-seconds 120
+Nice=10
+IOSchedulingClass=idle
+NoNewPrivileges=yes
+PrivateTmp=yes

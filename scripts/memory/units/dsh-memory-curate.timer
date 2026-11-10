@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily Hindsight memory curation for the personal agent (M2)
+
+[Timer]
+OnCalendar=*-*-* 07:15:00
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

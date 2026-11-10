@@ -29,6 +29,8 @@ done
 OUT_DIR="${OUT_DIR:-$DSH_HOME/telemetry}"
 mkdir -p "$OUT_DIR"
 chmod 700 "$OUT_DIR" 2>/dev/null || true
+# Retention (M2 policy): digest/curate reports are small but not immortal — keep 90 days.
+find "$OUT_DIR" -maxdepth 1 -type f \( -name 'digest-*.md' -o -name 'curate-*.json' \) -mtime +90 -delete 2>/dev/null || true
 
 ts="$(date +%Y%m%dT%H%M%S)"
 day="$(date +%Y-%m-%d)"

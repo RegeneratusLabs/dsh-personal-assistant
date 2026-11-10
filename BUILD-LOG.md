@@ -42,6 +42,14 @@ Chronological, link-first record of the build. Detail lives in `research/`.
   survive a source-document delete → `forget` is a human-invoked script; full erasure is a bank clear.
 - Telegram channel remains on hold; M2 (policy & glue, heartbeat live-nudge, digest, injection corpus) next.
 
+## 2026-11-11 — M1 acceptance gaps
+- Prompt-injection corpus 4/4 PASS (plain file, fake system notice, hidden HTML comment, memory poisoning):
+  no canary, no tool execution, no approval change, no poisoned rule stored. Corpus now reproducible via
+  `scripts/security/injection-corpus.sh`.
+- Recall token budget PASS (~180-token recall delta); recorded a fixed ~3k-token Hindsight prompt block as an
+  M2 cost item. `forget` stays partial (Hindsight lacks per-memory delete). Telegram channel deferred.
+- Evidence: `research/m1-acceptance.md`.
+
 ## 2026-11-11 — this repository
 - Public build log created: docs, our plugins, operator scripts, CI (plugin tests + shell syntax + a
   secret-shaped string scan).

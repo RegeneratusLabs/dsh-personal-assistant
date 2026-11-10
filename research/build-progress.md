@@ -286,8 +286,9 @@ Telemetry:
 - **2026-11-11 08:28–08:45 AEST — M1 acceptance gaps closed (channel deferred by human):**
   - built a reusable scratch `verify` profile (same pinned plugins/Hindsight config as `personal`).
   - **injection corpus 4/4 PASS** (plain file, fake system notice, hidden HTML comment, memory poisoning):
-    no canary files, no tool execution, no approval-policy change, no poisoned rule stored. Added the corpus
-    as repeatable tooling: `scripts/security/injection-corpus.sh` + fixtures.
+    no canary files, no tool execution, no poisoned rule stored, and the persisted approval policy was
+    deterministically verified to remain `ask`. Added the corpus as repeatable tooling:
+    `scripts/security/injection-corpus.sh` + fixtures (last run: PASS 4/4 + policy `ask`).
   - **recall token budget PASS**: recall delta ~729 chars (~180 tokens); recorded that Hindsight 0.8.6 also
     injects a fixed ~2.95k-token `<hindsight_knowledge>` block per request (no knob; M2 tuning).
   - fail-open, bank isolation, egress, restore drill re-confirmed; `forget` remains PARTIAL (document delete

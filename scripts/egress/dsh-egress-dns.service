@@ -1,0 +1,56 @@
+# /etc/systemd/system/dsh-egress-dns.service
+#
+# TEXT ARTIFACT ONLY — NOT installed by anything in this repo.
+#
+# Refreshes the hostname->IP allow sets (dns_v4/dns_v6) of the OPTIONAL deny
+# artifact. ⚠ This unit is part of the optional, NOT-in-M0/D13 deny upgrade:
+# D13 keeps M0 at observe + alert only, so do not install this unless a deny
+# list has been explicitly approved and allowlist.sh has been applied.
+#
+# It resolves the hostname lines of scripts/egress/expected-destinations.txt and
+# atomically replaces the nft sets; a failed lookup changes nothing (fail-safe).
+#
+# Install (root, after review):
+#   install -m 0755 scripts/egress/refresh-dns-sets.sh scripts/egress/lib.sh \
+#           scripts/egress/egress.conf scripts/egress/expected-destinations.txt \
+#           /usr/local/lib/dsh-egress/   # note: keep them together; the script
+#                                        # resolves egress.conf next to itself
+#   install -m 0644 scripts/egress/dsh-egress-dns.service \
+#           /etc/systemd/system/dsh-egress-dns.service
+#   install -m 0644 scripts/egress/dsh-egress-dns.timer \
+#           /etc/systemd/system/dsh-egress-dns.timer
+#   systemctl daemon-reload
+#   systemctl enable --now dsh-egress-dns.timer
+#
+# Rollback:
+#   systemctl disable --now dsh-egress-dns.timer
+#   rm -f /etc/systemd/system/dsh-egress-dns.service \
+#         /etc/systemd/system/dsh-egress-dns.timer
+#   systemctl daemon-reload
+#
+# ExecStart path note: the script must be able to read its sibling egress.conf and
+# expected-destinations.txt, so install the whole directory to one location.
+
+[Unit]
+Description=DSH egress: refresh hostname allow sets (optional deny artifact; not M0)
+Documentation=file:/usr/local/lib/dsh-egress/README.md
+# The refresh is meaningless without the deny table; still harmless if missing
+# (the script exits with a clear message and does not touch the firewall).
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/local/lib/dsh-egress/refresh-dns-sets.sh apply --quiet
+# This unit only needs netlink to nftables plus DNS resolution.
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW
+RestrictSUIDSGID=yes
+LockPersonality=yes
+TimeoutStartSec=60

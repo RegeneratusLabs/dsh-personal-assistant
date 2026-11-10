@@ -1,0 +1,49 @@
+# expected-destinations.txt — the M0 "expected egress" contract (D13)
+#
+# M0 has NO deny list. This file is the compensating control's allowlist: any
+# observed destination that does not match an entry here is an ALERT, not a
+# drop. Consumers:
+#   scripts/egress/summarize-egress.sh          --expected FILE (default: this file)
+#   scripts/telemetry/check-alerts.sh           EGRESS_ALLOW_HOSTS / --egress-allow-ips
+#
+# Format: one entry per line; `#` starts a comment; blank lines ignored.
+#   * hostname (no `/`)        -> resolved with `getent ahosts` at run time
+#   * IPv4/IPv6 address/CIDR   -> matched literally / by prefix
+# Keep it deliberately short: every line is an approved data path for the agent.
+# Add an entry only after the destination is explained in the egress ledger
+# (research/m0-egress.md §8) — never just to silence an alert.
+
+# ── static / local ──────────────────────────────────────────────────────────
+127.0.0.0/8                    # loopback (resolved stub 127.0.0.53, local services)
+::1/128
+192.168.1.0/24                 # home LAN on eno1
+100.64.0.0/10                  # tailnet IPv4
+fd7a:115c:a1e0::/48            # tailnet IPv6
+
+# ── model / inference ───────────────────────────────────────────────────────
+api.deepseek.com               # DeepSeek API: /models listing + server-side web search
+opencode.ai                    # pi-ai `opencode-go` provider (model endpoint)
+
+# ── channel (M1; harmless if unused in M0) ──────────────────────────────────
+api.telegram.org               # dsh-switchboard Telegram bridge (future)
+open.feishu.cn                 # Feishu/Lark (optional)
+open.larksuite.com
+
+# ── push (M1; harmless if unused in M0) ─────────────────────────────────────
+api.day.app                    # Bark
+ntfy.sh                        # ntfy
+
+# ── npm registry: expected ONLY during an approved install ──────────────────
+# Kept here so `npm install` does not raise a false alert. The digest/alert
+# consumer may filter this line to get stricter "no npm between installs"
+# behaviour; there is no nft rule for it in M0 (nothing is denied either way).
+registry.npmjs.org
+
+# ── deliberately NOT listed (these SHOULD alert if seen) ────────────────────
+#   dsh-otel-collector.deepseeksvc.com   DSH OTel exporter — must be DISABLED in M0
+#   huggingface.co, cdn-lfs.huggingface.co
+#       Hindsight model download. Pre-seed the model cache instead of allowing
+#       it; see research/m0-egress.md "open risks".
+#   github.com / *.githubusercontent.com
+#       Only if a future install needs a git dependency; a one-off npm window is
+#       the reviewed path, not a permanent allowance.

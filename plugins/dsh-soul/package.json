@@ -1,0 +1,22 @@
+{
+  "name": "@local/dsh-soul",
+  "version": "0.1.0",
+  "private": true,
+  "description": "File-based identity loader for the DeepSeek Harness: injects $DSH_HOME/soul/SOUL.md into the system prompt as a literal section at the deployment persona slot.",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

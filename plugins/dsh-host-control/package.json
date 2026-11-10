@@ -1,0 +1,31 @@
+{
+  "name": "@local/dsh-host-control",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Host-control panel for the DeepSeek Harness web GUI: shows which plugin changes are waiting for a restart and restarts this DSH process from the browser.",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    }
+  }
+}

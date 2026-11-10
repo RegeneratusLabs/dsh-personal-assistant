@@ -1,0 +1,27 @@
+{
+  "name": "@local/dsh-heartbeat",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Quiet heartbeat/proactivity loop for DSH: default OFF, checks cheap idle-agent state on an interval, and nudges an idle agent only when the state digest changed and is genuinely actionable. No tools, no network, no shell.",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "decision.js",
+    "pulse.js",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

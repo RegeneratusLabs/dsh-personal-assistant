@@ -1,0 +1,23 @@
+{
+  "name": "@local/dsh-push",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Fire-and-forget ntfy push notifications for turn completion, approvals and user questions on a DeepSeek Harness host. Zero dependencies; inert unless NTFY_URL is set.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

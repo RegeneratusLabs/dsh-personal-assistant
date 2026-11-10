@@ -1,0 +1,5 @@
+# Bundle patch for the Profiles panel: one Host row carries the bundle, and its
+# `dsh.client` declaration loads the browser half that owns the sidebar entry.
+- insert:
+    - id: dsh-profiles
+      name: '@local/dsh-profiles'

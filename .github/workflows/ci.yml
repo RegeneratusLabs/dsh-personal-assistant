@@ -1,0 +1,43 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: heartbeat unit tests
+        run: cd plugins/dsh-heartbeat && node --test
+
+      - name: soul loader selftest
+        run: node plugins/dsh-soul/selftest.mjs
+
+      - name: shell syntax
+        run: |
+          set -e
+          for f in $(find scripts -name '*.sh' | sort); do bash -n "$f"; echo "ok $f"; done
+
+      - name: plugin module syntax
+        run: |
+          set -e
+          for f in $(find plugins -maxdepth 2 -name '*.js' -o -maxdepth 2 -name '*.mjs' | sort); do node --check "$f"; echo "ok $f"; done
+
+      - name: secret-shaped string scan
+        run: |
+          set -e
+          if grep -rInE 'sk-[A-Za-z0-9]{16,}|oc_sk_[A-Za-z0-9_-]{8,}|gho_[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}|BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY' \
+               --include='*.md' --include='*.js' --include='*.mjs' --include='*.sh' --include='*.yml' --include='*.json' . ; then
+            echo '::error::secret-shaped string found'; exit 1
+          fi
+          echo 'clean'

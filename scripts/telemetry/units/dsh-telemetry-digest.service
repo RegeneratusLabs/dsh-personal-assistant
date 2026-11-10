@@ -1,0 +1,12 @@
+[Unit]
+Description=Local telemetry digest (M0/D13 — alerts, egress, backups, Hindsight)
+Documentation=file:///home/josh/projects/DSH-playground/research/m0-telemetry.md
+
+[Service]
+Type=oneshot
+Environment=DSH_HOME=%h/.dsh-personal
+ExecStart=/home/josh/projects/DSH-playground/scripts/telemetry/daily-digest.sh --quiet
+Nice=10
+IOSchedulingClass=idle
+NoNewPrivileges=yes
+PrivateTmp=yes

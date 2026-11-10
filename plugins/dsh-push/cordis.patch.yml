@@ -1,0 +1,9 @@
+# Bundle patch for the ntfy push notifier: one Host row, no client half.
+#
+# The row id (`dsh-push`) is the stable handle a profile can target with
+# `- id: dsh-push` overrides or `disabled: true`. The plugin is inert without
+# `NTFY_URL` in its process environment, so installing the bundle alone sends
+# nothing anywhere.
+- insert:
+    - id: dsh-push
+      name: '@local/dsh-push'

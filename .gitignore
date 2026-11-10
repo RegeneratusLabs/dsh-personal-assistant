@@ -1,0 +1,24 @@
+# Local caches and third-party content (docs mirror, 4,985-plugin market index, admission evidence)
+.cache/
+# Raw egress captures, screenshots and scratch evidence (may contain prompts/session content)
+artifacts/
+# Unrelated local experiments / render scratch
+design-systems/
+.tmp-render/
+# Dependencies and build output
+node_modules/
+**/node_modules/
+__pycache__/
+*.pyc
+# Secrets and local state
+.credentials.yaml
+.env
+.env.*
+*.pem
+*.key
+# Logs, backups and scratch profiles
+*.log
+logs/
+backups/
+*.bak*
+profiles/

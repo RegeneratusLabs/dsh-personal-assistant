@@ -1,0 +1,5 @@
+# Bundle patch for the Host-control panel: one Host row owns the bundle, and its
+# `dsh.client` declaration loads the browser half (a Settings section).
+- insert:
+    - id: dsh-host-control
+      name: '@local/dsh-host-control'

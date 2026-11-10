@@ -1,0 +1,26 @@
+# /etc/systemd/system/dsh-egress-dns.timer
+#
+# TEXT ARTIFACT ONLY — NOT installed by anything in this repo.
+#
+# PART OF THE OPTIONAL DENY UPGRADE (not M0/D13). A 5-minute interval is the
+# design value: hostname allow sets are point-in-time IP snapshots and CDN edges
+# (api.deepseek.com -> CloudFront, opencode.ai/npm -> Cloudflare) rotate, so the
+# sets go stale within minutes. If deny is ever enabled and transient denies are
+# observed at a CDN, shorten OnUnitActiveSec to 1min (and expect more DNS
+# queries) — do not enlarge the allow set instead.
+#
+# Install / rollback: see dsh-egress-dns.service header and scripts/egress/README.md.
+
+[Unit]
+Description=DSH egress: 5-minute hostname allow-set refresh timer (optional; not M0)
+
+[Timer]
+# 5-minute interval
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=30s
+RandomizedDelaySec=30s
+Unit=dsh-egress-dns.service
+
+[Install]
+WantedBy=timers.target

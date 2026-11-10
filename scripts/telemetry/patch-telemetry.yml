@@ -1,0 +1,114 @@
+# =============================================================================
+# M0 telemetry-egress patch — personal profile (DRAFT ARTIFACT, NOT APPLIED)
+# =============================================================================
+# Status:  repo artifact only. The build agent does not write host state; the
+#          human/Lead applies this with explicit approval and takes a backup of
+#          the target file first.
+# Target:  $DSH_HOME/profiles/personal/cordis.patch.yml   (append these rows)
+#          $DSH_HOME is /home/josh/.dsh-personal today (M0-D1: unit still runs
+#          as josh; paths become /home/dsh/... only after the deferred
+#          dedicated-user migration).
+# Docs:    research/m0-telemetry.md  §2 (patch, apply §2.4, verify §2.5, rollback §2.6)
+# Base:    dsh 0.2.2-rc.1, bundle @deepseek-ai/dsh-base
+#          dsh-base/cordis.patch.yml rows at lines 43 (session-log-deepseek),
+#          85 (plugin-package-inventory-deepseek), 218 (session-telemetry-otel).
+#
+# WHY (measured): every official-DeepSeek *model request* can carry two extra
+# body fields — `dsh_session_log` (~26 KB: system prompt, user message, runtime
+# context, tool catalog) and `dsh_plugin_packages` (~5.9 KB inventory) — plus
+# `x-deepseek-harness-user-id` / `x-deepseek-harness-session-id` headers. The
+# OTel backend can export session logs to DeepSeek's collector
+# (https://dsh-otel-collector.deepseeksvc.com/v1/logs) after explicit feedback.
+# `DSH_TELEMETRY_DISABLED=1` only disables the OTel exporter; it does NOT stop
+# the two request fields. The durable fix is this profile patch.
+# Evidence: artifacts/egress/findings.md §5 (fields removed by exactly these
+# two `enabled: false` rows) and §6 (mode DISABLED constructs no transport).
+#
+# HOW PATCHING WORKS (verified in the shipped lib and in this repo's own
+# profile patches): a patch entry identifies a row by `id` and REPLACES that
+# row's `config` object wholesale. It is NOT a deep merge. Two consequences:
+#   1. Any base `config` key not restated here falls back to the schema default
+#      (or is absent), never to the base value. Each row below therefore states
+#      every key it needs.
+#   2. Base expressions such as `!!js process.env.DSH_TELEMETRY_MODE ||
+#      'FEEDBACK_ONLY'` are intentionally replaced: the personal profile pins
+#      DISABLED regardless of environment, so a stray env var cannot re-enable
+#      uploads.
+#
+# SCHEMA CHECKED (dsh 0.2.2-rc.1, packages as shipped under
+# /home/josh/dsh/node/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/):
+#   - dsh-session-log-deepseek  Config = z.object({
+#       enabled: z.boolean().default(true).volatile(),
+#       maxBytes: z.number().step(1).min(1).default(8 * 1024 * 1024) })
+#     `enabled: false` passes validation; maxBytes falls back to 8 MiB but is
+#     never read while `enabled` is false. `enabled` is a volatile ref, so the
+#     flag is evaluated per request (`config.enabled.get()`).
+#   - dsh-plugin-package-inventory-deepseek  Config = z.object({
+#       enabled: z.boolean().default(true) })
+#     `enabled: false` passes validation.
+#   - dsh-session-telemetry-otel  Config = z.object({
+#       mode: z.union(['FEEDBACK_ONLY','DISABLED']).default('FEEDBACK_ONLY'),
+#       exporter: z.any(), processor: ..., shutdownTimeoutMillis: z.number(),
+#       maxRequestBytes: ... })
+#     `{ mode: DISABLED }` ALONE is valid and sufficient: the plugin's
+#     constructor short-circuits on DISABLED (lib/index.js:
+#     `if (mode === DISABLED) { ... return }`) BEFORE reading exporter.url or
+#     shutdownTimeoutMillis, so no transport/processor/coordinator is built and
+#     the endpoint is never validated, DNS-resolved, or contacted. A full
+#     restatement is therefore NOT required; the commented alternative at the
+#     bottom is audit-only.
+#
+# SHIPPED PATCH FRAGMENT (append to the personal profile patch file):
+- id: session-log-deepseek
+  config:
+    enabled: false
+# Whole-config replacement note: base row has no explicit config, so the only
+# effective change is `enabled: true -> false`. `maxBytes` falls back to the
+# schema default (8 MiB) and is unused while disabled.
+
+- id: plugin-package-inventory-deepseek
+  config:
+    enabled: false
+# Whole-config replacement note: base row has no explicit config; the only
+# effective change is `enabled: true -> false`.
+
+- id: session-telemetry-otel
+  config:
+    mode: DISABLED
+# Whole-config replacement note: this drops the base `exporter`, `processor`,
+# `shutdownTimeoutMillis`, and `maxRequestBytes` entries. That is deliberate
+# and safe: with mode DISABLED the plugin returns before constructing or
+# validating any of them (see SCHEMA CHECKED above). No OTLP transport exists,
+# so there is no endpoint to misconfigure and no queue to flush.
+#
+# Do NOT use `disabled: true` here instead: that unloads the row while
+# DSH_TELEMETRY_DISABLED/launcher boot patches may still toggle it, and it
+# changes the plugin inventory. Config `mode: DISABLED` is the documented
+# durable switch (README "Modes": "DISABLED constructs no transport").
+#
+# ROLLBACK (see research/m0-telemetry.md §2.6): delete these three entries from
+# $DSH_HOME/profiles/personal/cordis.patch.yml (or restore the pre-change
+# backup) and restart dsh-personal.service. The shipped defaults return:
+# session-log enabled, inventory enabled, OTel FEEDBACK_ONLY. HMR watches the
+# profile patch file, but the restart is the authoritative check.
+#
+# -----------------------------------------------------------------------------
+# ALTERNATIVE (audit-only, NOT recommended): full config restatement with the
+# shipped defaults pinned. Same behaviour as the minimal row above; kept to
+# show what the row would look like if a future DSH version stopped early-
+# returning on DISABLED. Do not include both entries for the same id.
+#
+# - id: session-telemetry-otel
+#   config:
+#     mode: DISABLED
+#     shutdownTimeoutMillis: 3000
+#     maxRequestBytes: 4000000
+#     exporter:
+#       url: https://dsh-otel-collector.deepseeksvc.com/v1/logs
+#       compression: gzip
+#       timeoutMillis: 1000
+#     processor:
+#       scheduledDelayMillis: 10000
+#       maxQueueSize: 2048
+#       maxExportBatchSize: 2048
+#       exportTimeoutMillis: 1500

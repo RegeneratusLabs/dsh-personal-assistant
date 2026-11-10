@@ -1,0 +1,8 @@
+# Bundle patch for the quiet heartbeat loop.
+#
+# The row is inert by design: `apply()` returns immediately unless the host is
+# started with DSH_HEARTBEAT=1 (or the row carries `config.enabled: true`).
+# Keep the id stable: it is the ledger/disposal handle for the row.
+- insert:
+    - id: dsh-heartbeat
+      name: '@local/dsh-heartbeat'

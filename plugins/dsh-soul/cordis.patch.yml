@@ -1,0 +1,12 @@
+# Bundle patch for the identity loader: one Host row reads the deployment's
+# SOUL file and registers its text as a literal prompt section at the
+# deployment-persona order. The row needs no config by default; a profile's own
+# patch layer may override it by id:
+#
+#   - id: dsh-soul
+#     config:
+#       file: /home/josh/.dsh-personal/soul/SOUL.md   # default: $DSH_HOME/soul/SOUL.md
+#       maxBytes: 16384                               # default cap
+- insert:
+    - id: dsh-soul
+      name: '@local/dsh-soul'

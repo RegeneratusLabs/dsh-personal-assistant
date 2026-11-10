@@ -85,6 +85,11 @@ loop. Target end state: identity (soul), long-term memory (Hindsight), one chann
   M2 live-nudge proof via `DSH_HEARTBEAT=1`). Forget is human-invoked: `scripts/memory/forget.sh` (bank
   locked to `dsh-personal`; Hindsight has no delete tool and derived observations survive document deletes —
   full erasure is `--clear`, destructive). Evidence: `research/m1-own-code.md`.
+- **Public build log:** https://github.com/RegeneratusLabs/dsh-personal-assistant (branch `main`, public).
+  This workspace is its git working tree; commit+push after each work block so the public record tracks the
+  build. Sanitization rules: never commit `.cache/`, `artifacts/`, `design-systems/`, `.tmp-render/`,
+  credentials/state (gitignored); no secrets; third-party bank names stay placeholders; CI runs plugin tests
+  plus a secret-shaped string scan on every push.
 - This workspace (`/home/josh/projects/DSH-playground`) is the build repo; `AGENTS.md` here is
   auto-loaded by DSH's instruction loader when the session workspace is this directory.
 

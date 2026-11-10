@@ -7,7 +7,7 @@ Plan: [`personal-agent-design.md`](personal-agent-design.md) · Gates: [`persona
 **Status:** P0 (design + documentation + plugin scouting) **complete**. **M0 ✅ GREEN (2026-11-10 17:07 AEST,
 pragmatic baseline D13)** — unit hardened + verified, telemetry egress off, egress observed + alerted,
 local telemetry live (journald cap, token/cost, digest timer, alerts), `dsh-personal` bank isolated, backup +
-restore drill PASS, residuals recorded. **M0.5 complete; M1 in progress (2026-11-11 07:44 AEST).** `personal` now runs: official
+restore drill PASS, residuals recorded. **M0.5 complete; M1 in progress (2026-11-11 07:44 AEST). Public build log:** https://github.com/RegeneratusLabs/dsh-personal-assistant `personal` now runs: official
 `session-search@0.2.2-rc.1`, vendor `Hindsight@0.8.6` (config outside Cordis), and **our own** identity,
 push and heartbeat bundles + `SOUL.md` — all verified, live, with no errors. Forgetting is a human-invoked
 script (Hindsight exposes no delete tool; derived observations survive document delete — recorded). Channel
@@ -274,3 +274,11 @@ Telemetry:
     document delete tested 4→3 docs; **honest limit recorded** — Hindsight 0.10.3 has no per-memory delete,
     so derived observations survive a document delete and full erasure needs a bank clear.
   - Stray processes/profiles from the dead subagents were killed and cleaned.
+
+- **2026-11-11 08:17–08:30 AEST — public build log created:** repo
+  https://github.com/RegeneratusLabs/dsh-personal-assistant (public, `main`). 101 files / 1.2 MB: docs,
+  our plugins, operator scripts, CI (heartbeat tests + soul selftest + shell/module syntax + secret-shaped
+  scan). Sanitization before the push: third-party bank names redacted to placeholders, the credential-
+  incident note rewritten with no values, `.cache/`, `artifacts/`, `design-systems/` and `.tmp-render/`
+  gitignored (raw captures/screenshots stay local). No secrets in the index (verified with a pattern scan);
+  local workspace anchored as the git working tree, `origin` = the new repo.

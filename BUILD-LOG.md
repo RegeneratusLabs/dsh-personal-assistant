@@ -66,6 +66,11 @@ Chronological, link-first record of the build. Detail lives in `research/`.
   as accepted.
 - Per-surface autonomy policy written; channel remains deferred by the human, narrative digest → M3.
 
+## 2026-11-11 — UI/UX track handed over
+- Self-contained handover (`research/ui-handover.md`) for a new UI session: verified DSH client-plugin seams
+  (bundles, slots, host routes, theme tokens, restart semantics), product surfaces, guardrails, first
+  slice = read-only Status/Health then Memory browser. Channel parked.
+
 ## 2026-11-11 — this repository
 - Public build log created: docs, our plugins, operator scripts, CI (plugin tests + shell syntax + a
   secret-shaped string scan).

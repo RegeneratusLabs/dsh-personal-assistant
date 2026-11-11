@@ -120,6 +120,13 @@ Telemetry:
   `dsh-im` only if the 0.2.2-rc.1 trial passes (else we build a minimal Telegram bridge, not adopt a 1★).
   Full matrix: [`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md) §0.
 
+## Next track — UI / UX (started 2026-11-11)
+
+The backend is built (M0–M2). The human opened a dedicated **UI/UX & front-end track**: design the
+assistant's own panels and component layer on DSH's client-plugin seams. The self-contained handover for the
+new session is [`ui-handover.md`](ui-handover.md) (context, verified seams, product asks, guardrails, first
+slice = read-only Status/Health, then Memory browser). Channel stays parked.
+
 ## Open questions for the human
 
 1. **Channel decision (open):** a live Telegram smoke test needs a BotFather token + your Telegram user id
@@ -326,3 +333,10 @@ Telemetry:
     set, approval-gated actions, no guest rights).
   - M2 exit: curator + retention + autonomy + notify policy done; **channel deferred**, **narrative digest
     deferred to M3**, skill diagnostics N/A (D14 rejected the plugin). No new third-party code.
+
+- **2026-11-11 12:10 AEST — UI/UX track handed over:** wrote [`ui-handover.md`](ui-handover.md) — a
+  self-contained brief for a new session (current stack/state, verified client-plugin seams: `dsh.client`
+  bundles, `__ModuleLoader__`, slots `sidebar.panellist`/`main`/`settings.section`, authenticated host routes
+  via `ctx.connection.fetch.register`, `--dsw-*` theme tokens + `ctx.theme`, restart semantics; product
+  surfaces: Status/Health → Memory → Identity/Activity/Approvals/Settings; accessibility and untrusted-data
+  rules; working agreement incl. explicit git staging). Repo synced and pushed; no host changes.

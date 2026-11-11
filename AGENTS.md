@@ -129,6 +129,9 @@ loop. Target end state: identity (soul), long-term memory (Hindsight), one chann
   autonomy policy, retention/backups, skill diagnostics.
 - **M3 — Optional.** Notes store (`dsh-memento`/`dsh-hermes-memory`), memory UI, skill curator, second
   channel/voice — only with a real need.
+- **UI/UX track (parallel, started 2026-11-11).** Extend the Web UI with our own client plugins (panels,
+  Status/Health, Memory browser, Identity, Activity, Approvals, Settings) on DSH client seams. Handover:
+  `research/ui-handover.md`. Channel remains parked.
 
 ## Acceptance tests (must pass before claiming a phase done)
 

@@ -127,6 +127,15 @@ assistant's own panels and component layer on DSH's client-plugin seams. The sel
 new session is [`ui-handover.md`](ui-handover.md) (context, verified seams, product asks, guardrails, first
 slice = read-only Status/Health, then Memory browser). Channel stays parked.
 
+**Design phase (2026-11-11):** brief written and awaiting the human's direction pick —
+[`ui-design-brief.md`](ui-design-brief.md) (IA: one `Assistant` panel with Status/Memory/Activity tabs; token
+system captured from the live shell; directions A instrument / B notebook / C minimal, with light+dark+390
+mockups; component kit; a11y + untrusted-data rules; first slice = read-only Status/Health with one pinned
+`GET /api/dsh-status/status` route). Supporting verified research: [`ui-primitives-slots.md`](ui-primitives-slots.md)
+(slot catalog, primitives, route recipe; `ui-primitives` is runtime-seeded, not an installed package) and
+[`ui-data-inventory.md`](ui-data-inventory.md) (15 read-only sources, sanitized schemas, 22 handover
+corrections, recommended route shape/TTLs). No UI code, no host change yet. Blocked on: direction + slice pick.
+
 ## Agent-consumable packaging (2026-11-11)
 
 The repo is now usable by **other people's DSH agents**: `agents/README.md` (what you get, prerequisites,
@@ -353,3 +362,26 @@ status), with topics.
   (`deepseek-harness`, `dsh`, `personal-assistant`, `ai-agent`, `plugins`); new `agents/` section
   (README/PROMPT/GUIDE/checklists) so anyone can point their own DSH agent at the repo and build their own
   assistant; `AGENTS.md` now routes external agents to it. No host changes.
+
+- **2026-11-11 12:15–12:55 AEST — UI/UX design phase: verified seams, data inventory, design brief (repo-only):**
+  - read the handover + build docs; captured the **live coding-host shell** (light/dark/390) with a loopback
+    owner-cookie exchange and dumped the real `--dsw-*` tokens (415 properties; aliases resolve per palette via
+    `body` / `body[data-ds-dark-theme]`). Evidence in `artifacts/ui/` (gitignored).
+  - verified seams: bundle shape, `__ModuleLoader__`, slots (`sidebar.panellist` icon-only `{size,active}`,
+    keyed `main`, `settings.section`), `/api` route contract (`methods`/`requestBody`/`fetch`, handler owns the
+    status), focus ring, radii, settings-card material. Found that `dsh-client-ui-primitives`/`-slots` are
+    **runtime-seeded, not installed packages** (no types; no Card/List/EmptyState exports) — our kit builds those
+    on tokens. `host-control`'s status route reports the *serving* host, so the new route must pin
+    `dsh-personal` explicitly.
+  - data inventory: 15 read-only sources with sanitized live schemas (systemd unit/timers, check-alerts, egress,
+    retention, Hindsight health/stats/usage, telemetry JSON, backup manifests, SOUL metadata) + 22 corrections to
+    the handover (no digest JSON; backup glob wrong; session-search index empty; Hermes banks listed by
+    `/v1/default/banks`; egress `table.present:false` is a privilege fact).
+  - wrote [`ui-design-brief.md`](ui-design-brief.md) with three directions (A instrument / B notebook / C minimal)
+    and rendered light+dark+390 mockups from the real token values (`.tmp/mockups/`, gitignored; PNGs in
+    `artifacts/ui/`). Recommended hybrid: A's bones + B's voice + C's settings material.
+  - first slice scoped: new `plugins/dsh-status` (`@local/dsh-status`) → one pinned
+    `GET /api/dsh-status/status`, single-flight TTL cache, per-section degradation; client panel with one
+    visibility-gated 60 s refresh, loading/empty/error states, tokens only, `en`+`zh`. No write surface.
+  - **no UI code, no host change, no install**: awaiting the human's direction + slice decision; the first
+    install onto the coding host needs one restart of `dsh-web.service` (will ask).

@@ -53,6 +53,9 @@ personal AI assistant in the style of Hermes Agent / OpenClaw, and what is being
 | [`m2-retention-policy.md`](m2-retention-policy.md) | M2 memory curator (daily Hindsight consolidation) + retention/erasure policy and inventory |
 | [`m2-autonomy-policy.md`](m2-autonomy-policy.md) | per-surface autonomy defaults (Web, heartbeat, push, schedules, future channel) |
 | [`ui-handover.md`](ui-handover.md) | handover brief for the new UI/UX track: context, DSH client-plugin seams, product asks, working agreement |
+| [`ui-design-brief.md`](ui-design-brief.md) | **UI track design brief**: IA and panel model, verified token system, three visual directions with mockups, component kit, a11y/untrusted-data rules, first slice (read-only Status/Health) | live shell capture + installed seams |
+| [`ui-primitives-slots.md`](ui-primitives-slots.md) | verified DSH client seams: slot catalog + props, 311 primitive exports, client-module contract, `/api` route recipe, defensive rules | installed 0.2.2-rc.1 tree + shell bundle |
+| [`ui-data-inventory.md`](ui-data-inventory.md) | read-only data sources for the Status/Health panel, sanitized live schemas, 22 handover corrections, recommended route shape + TTLs | live host, read-only capture |
 | [`dsh-restart-runbook.md`](dsh-restart-runbook.md) | restarting a DSH host + pending-plugin detection (host-control UI, scripts/ops) |
 
 ## One-paragraph answer

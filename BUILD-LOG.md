@@ -79,3 +79,14 @@ Chronological, link-first record of the build. Detail lives in `research/`.
 ## 2026-11-11 — this repository
 - Public build log created: docs, our plugins, operator scripts, CI (plugin tests + shell syntax + a
   secret-shaped string scan).
+
+## 2026-11-11 — UI/UX design brief (direction pick pending)
+- Captured the live Web shell (light/dark/390) and its real `--dsw-*` token values; verified the client-plugin
+  seams that the next slices build on (sidebar entry icon, keyed main panel, authenticated `/api` fetch route,
+  focus ring, radii, settings-card material). Correction: `ui-primitives`/`ui-slots` ship inside the shell bundle,
+  not as installed packages — cards/lists/empty states are ours to build on tokens.
+- Inventoried every read-only data source the assistant UI needs (systemd, alerts, egress, retention, Hindsight,
+  telemetry, backups, identity) with sanitized schemas and a recommended single status route.
+- Wrote `research/ui-design-brief.md`: IA (one Assistant panel, Status/Memory/Activity tabs), token system, three
+  visual directions with mockups (instrument / notebook / minimal), component kit, accessibility and
+  untrusted-data rules, and the first slice (read-only Status/Health). No UI code or host change yet.

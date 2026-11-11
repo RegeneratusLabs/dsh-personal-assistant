@@ -36,7 +36,7 @@ Everything is installed as **disableable bundle rows**; nothing forks DSH.
    rollback for each host change, then execute only what you approve. It follows
    [`agents/GUIDE.md`](GUIDE.md) and the gates in [`agents/checklists.md`](checklists.md).
 
-The agent will also read [`AGENTS.md`](../../AGENTS.md) automatically (DSH loads it for this workspace);
+The agent will also read [`AGENTS.md`](../AGENTS.md) automatically (DSH loads it for this workspace);
 its top section routes agents from "building your own" to this folder.
 
 ## Prerequisites

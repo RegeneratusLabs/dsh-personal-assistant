@@ -426,3 +426,18 @@ status), with topics.
     (no transitions), coarse-pointer 44px target — **all pass, 0 console errors**. UI verify still 16/16.
   - still open: a real screen-reader pass (NVDA/Orca/VoiceOver) and a human visual review; deployment to
     `personal` still needs the human's go-ahead + one restart.
+
+- **2026-11-11 15:10–15:55 AEST — UI slice 1 deployed to the personal host (host change, human-approved):**
+  - pre-install backup `daily/20261111T051012Z` (9.8 MB, sha256 recorded, Hindsight `dsh-personal` exported,
+    secret check PASS). Install: `DSH_HOME=~/.dsh-personal dsh plugin --profile personal add plugins/dsh-status`
+    — the installer added the dependency **and** appended `@local/dsh-status` to `dsh.profile.bundles`
+    (no hand-written row). One restart of `dsh-personal.service` (new PID, active, 401 serving, 0 restarts).
+  - verified live on `:7002` / tailnet `:8454`: `GET /api/dsh-status/status` → 200 `ok:true`,
+    `serving.unit = dsh-personal.service`; UI verify **16/16**, accessibility verify **10/10**, zero console
+    errors; screenshots `artifacts/ui/status-personal-*`. The route reads the assistant's own unit/home/bank
+    (backup age now reflects the pre-install backup).
+  - the **coding-host preview was removed** afterwards (disable bundle row + `dsh plugin --profile web remove`);
+    `:7000` profile is back to its pre-slice selection. Rollback for `personal`: remove the dependency + bundle
+    row, restart; or restore backup `20261111T051012Z`.
+  - verify scripts now take `--unit/--port/--authority/--base` (the personal unit's cookie is scoped to its
+    `--public-url` authority); token selection prefers the target unit's journal (a web.log token is 401 on :7002).

@@ -22,6 +22,10 @@ const args = process.argv.slice(2);
 const opt = (n, d) => { const i = args.indexOf('--' + n); return i >= 0 && args[i + 1] ? args[i + 1] : d; };
 const UNIT = opt('unit', 'dsh-web.service');
 const PORT = Number(opt('port', '7000'));
+const AUTHORITY = opt('authority', `127.0.0.1:${PORT}`);
+const BASE = opt('base', `http://127.0.0.1:${PORT}/`);
+const SECURE = BASE.startsWith('https:');
+const COOKIE_DOMAIN = AUTHORITY.replace(/:\d+$/, '');
 const OUT = path.join(ROOT, 'artifacts', 'ui');
 const CHROME = fs.existsSync('/home/josh/.local/bin/chromium')
   ? '/home/josh/.local/bin/chromium'
@@ -29,31 +33,40 @@ const CHROME = fs.existsSync('/home/josh/.local/bin/chromium')
 
 const sh = (c) => { try { return execSync(c, { encoding: 'utf8', timeout: 20000 }); } catch { return ''; } };
 const get = (p) => new Promise((res) => {
-  const r = http.request({ host: '127.0.0.1', port: PORT, path: p }, (x) => {
+  const r = http.request({ host: '127.0.0.1', port: PORT, path: p, headers: { Host: AUTHORITY } }, (x) => {
     const ch = []; x.on('data', (d) => ch.push(d)); x.on('end', () => res({ s: x.statusCode, h: x.headers }));
   });
   r.on('error', () => res({ s: 0, h: {} })); r.end();
 });
-let token = null;
-for (const file of [`${process.env.HOME}/dsh/logs/web.log`, `${process.env.HOME}/.dsh/logs/web.log`]) {
-  try { const m = [...fs.readFileSync(file, 'utf8').matchAll(/\?token=([A-Za-z0-9_-]+)/g)]; if (m.length) token = m[m.length - 1][1]; } catch {}
+// The target unit's own journal tokens come first (a web.log token is 401 on :7002).
+const journal = sh(`journalctl --user -u ${UNIT} -n 1200 --no-pager -o cat`);
+const fileTokens = [];
+for (const file of [`${process.env.HOME}/dsh/logs/${UNIT.replace('.service', '')}.log`, `${process.env.HOME}/dsh/logs/web.log`, `${process.env.HOME}/.dsh/logs/web.log`]) {
+  try { for (const m of fs.readFileSync(file, 'utf8').matchAll(/\?token=([A-Za-z0-9_-]+)/g)) fileTokens.push(m[1]); } catch {}
 }
-if (!token) { const m = [...sh(`journalctl --user -u ${UNIT} -n 800 --no-pager -o cat`).matchAll(/\?token=([A-Za-z0-9_-]+)/g)]; token = m.length ? m[m.length - 1][1] : null; }
-const exchange = await get('/?token=' + token);
-const cookieHeader = (exchange.h['set-cookie'] || []).map((c) => c.split(';')[0]).join('; ');
-const cookies = cookieHeader.split('; ').map((kv) => { const [n, ...v] = kv.split('='); return { name: n, value: v.join('='), domain: '127.0.0.1', path: '/' }; });
+const candidates = [...new Set([...[...journal.matchAll(/\?token=([A-Za-z0-9_-]+)/g)].map((m) => m[1]).reverse(), ...fileTokens.reverse()])];
+const token = candidates[0] || null;
+let cookieHeader = null;
+for (const candidate of candidates.slice(0, 40)) {
+  const res = await get('/?token=' + candidate);
+  const sc = (res.h['set-cookie'] || []).map((c) => c.split(';')[0]).join('; ');
+  if (res.s >= 200 && res.s < 400 && sc) { cookieHeader = sc; break; }
+}
+if (!cookieHeader) { console.error('could not mint the owner cookie'); process.exit(2); }
+
+const cookies = cookieHeader.split('; ').map((kv) => { const [n, ...v] = kv.split('='); return { name: n, value: v.join('='), domain: COOKIE_DOMAIN, path: '/', secure: SECURE }; });
 
 const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'] });
 const report = { checks: [], errors: [] };
 const pass = (name, ok, detail) => { report.checks.push({ name, ok: Boolean(ok), detail: detail ?? null }); if (!ok) report.failed = (report.failed || 0) + 1; };
 
 async function open(opts) {
-  const ctx = await browser.newContext({ viewport: opts.viewport, reducedMotion: opts.reducedMotion, hasTouch: opts.hasTouch, isMobile: opts.hasTouch, colorScheme: opts.scheme || 'light' });
+  const ctx = await browser.newContext({ viewport: opts.viewport, reducedMotion: opts.reducedMotion, hasTouch: opts.hasTouch, isMobile: opts.hasTouch, colorScheme: opts.scheme || 'light', ignoreHTTPSErrors: true });
   await ctx.addCookies(cookies);
   const page = await ctx.newPage();
   page.on('console', (m) => { if (m.type() === 'error') report.errors.push(m.text().slice(0, 200)); });
   page.on('pageerror', (e) => report.errors.push(String(e).slice(0, 200)));
-  await page.goto(`http://127.0.0.1:${PORT}/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+  await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.waitForTimeout(2500);
   if (opts.viewport.width < 768) {
     const toggle = page.getByRole('button', { name: 'Open sidebar', exact: true });

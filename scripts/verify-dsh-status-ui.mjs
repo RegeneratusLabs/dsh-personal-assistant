@@ -35,6 +35,12 @@ const opt = (name, fallback) => {
 };
 const UNIT = opt('unit', 'dsh-web.service');
 const PORT = Number(opt('port', '7000'));
+/** Browser-facing authority (the --public-url host scopes the owner cookie). */
+const AUTHORITY = opt('authority', `127.0.0.1:${PORT}`);
+/** Where the browser navigates; the tailnet URL for the personal host. */
+const BASE = opt('base', `http://127.0.0.1:${PORT}/`);
+const SECURE = BASE.startsWith('https:');
+const COOKIE_DOMAIN = AUTHORITY.replace(/:\d+$/, '');
 const LABEL = opt('label', 'status');
 const OUT = path.join(ROOT, 'artifacts', 'ui');
 const CHROME = fs.existsSync('/home/josh/.local/bin/chromium')
@@ -45,7 +51,7 @@ function sh(cmd) {
   try { return execSync(cmd, { encoding: 'utf8', timeout: 20000 }); } catch { return ''; }
 }
 const get = (pathname) => new Promise((resolve) => {
-  const req = http.request({ host: '127.0.0.1', port: PORT, path: pathname, method: 'GET' }, (res) => {
+  const req = http.request({ host: '127.0.0.1', port: PORT, path: pathname, method: 'GET', headers: { Host: AUTHORITY } }, (res) => {
     const chunks = [];
     res.on('data', (c) => chunks.push(c));
     res.on('end', () => resolve({ status: res.statusCode, headers: res.headers }));
@@ -66,9 +72,10 @@ async function mintCookie() {
   ];
   const tokens = [];
   for (const text of sources) {
-    for (const match of text.matchAll(/\?token=([A-Za-z0-9_-]+)/g)) tokens.push(match[1]);
+    const found = [...text.matchAll(/\?token=([A-Za-z0-9_-]+)/g)].map((match) => match[1]).reverse();
+    for (const token of found) tokens.push(token);
   }
-  for (const token of [...new Set(tokens)].reverse().slice(0, 25)) {
+  for (const token of [...new Set(tokens)].slice(0, 40)) {
     const res = await get(`/?token=${token}`);
     if (res.status >= 200 && res.status < 400 && res.headers['set-cookie']) {
       return res.headers['set-cookie'].map((c) => c.split(';')[0]).join('; ');
@@ -97,12 +104,12 @@ const pass = (name, ok, detail) => {
 };
 
 async function openPage(scheme, width, height, cookies) {
-  const context = await browser.newContext({ viewport: { width, height }, colorScheme: scheme, deviceScaleFactor: 1 });
+  const context = await browser.newContext({ viewport: { width, height }, colorScheme: scheme, deviceScaleFactor: 1, ignoreHTTPSErrors: true });
   if (cookies) await context.addCookies(cookies);
   const page = await context.newPage();
   page.on('console', (msg) => { if (msg.type() === 'error') report.errors.push(msg.text().slice(0, 300)); });
   page.on('pageerror', (err) => report.errors.push('pageerror: ' + String(err).slice(0, 300)));
-  const url = explicitUrl || `http://127.0.0.1:${PORT}/`;
+  const url = explicitUrl || BASE;
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.waitForTimeout(2500);
   return { context, page };
@@ -111,7 +118,7 @@ async function openPage(scheme, width, height, cookies) {
 function cookiesFrom(header) {
   return header.split('; ').map((kv) => {
     const [name, ...rest] = kv.split('=');
-    return { name, value: rest.join('='), domain: '127.0.0.1', path: '/' };
+    return { name, value: rest.join('='), domain: COOKIE_DOMAIN, path: '/', secure: SECURE };
   });
 }
 

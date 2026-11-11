@@ -1,6 +1,6 @@
 # UI design brief — the assistant's own surfaces
 
-Status: **approved and slice 1 shipped to the coding host 2026-11-11** — direction: hybrid (A bones + B voice); read-only Status/Health at 1440 + 390 in both palettes; one "Assistant" entry with tabs. Implementation lives in `plugins/dsh-status/` and is verified by `scripts/verify-dsh-status-ui.mjs` (16/16 checks, 0 console errors, screenshots `artifacts/ui/status-*`). Not yet installed on `personal` (needs approval).
+Status: **approved and slice 1 deployed to the personal host 2026-11-11** — direction: hybrid (A bones + B voice); read-only Status/Health at 1440 + 390 in both palettes; one "Assistant" entry with tabs. `plugins/dsh-status/` is installed on `~/.dsh-personal` (profile `personal`, `:7002`) after backup `20261111T051012Z`; UI verify 16/16, accessibility 10/10, zero console errors; the coding-host preview was removed. Screenshots `artifacts/ui/status-personal-*`.
 Track handover: [`ui-handover.md`](ui-handover.md). Verified seams: [`ui-primitives-slots.md`](ui-primitives-slots.md).
 Data contracts: [`ui-data-inventory.md`](ui-data-inventory.md). Mockups are local evidence in `artifacts/ui/` (gitignored).
 
@@ -464,9 +464,15 @@ toggles, channel, charts beyond a static sparkline, and any change to the `perso
 - `scripts/verify-dsh-status-a11y.mjs`: 10/10 (headings, landmark, live region, 17 contrast samples, keyboard
   focus, 200% zoom at 720 CSS px, reduced motion, touch target).
 
+**Deployed (2026-11-11, human-approved)**
+
+- `@local/dsh-status` installed on the **personal host** (`~/.dsh-personal`, profile `personal`, `:7002`,
+  tailnet `:8454`) after backup `daily/20261111T051012Z`; one restart of `dsh-personal.service`. Both verify
+  scripts pass against the live personal host (16/16 UI, 10/10 a11y). The coding-host preview was removed.
+- Rollback: remove the dependency + bundle row from the `personal` profile and restart; or restore the backup.
+
 **Still open**
 
-- Install on `personal` (human approval, one restart) and re-run both verify scripts there.
-- A real screen-reader pass (NVDA/Orca/VoiceOver) and a human visual review.
+- A real screen-reader pass (NVDA/Orca/VoiceOver) and a human visual review on the personal host.
 - Slice 2 (chosen order: polish first, then Memory tab): documents/observations list + recall search,
   read-only, reusing `PanelPage`/`Row`.

@@ -113,12 +113,26 @@ TTL/single-flight/stale with a fake clock, and the response envelope with failin
 ## Install / rollback
 
 Install with `dsh plugin --profile <profile> add ./plugins/dsh-status` (never hand-write the
-`insert` row — the bundle patch is applied by the installer). Rollback:
+`insert` row — the bundle patch is applied by the installer; the installer also appends the package
+to `dsh.profile.bundles`).
+
+Live on the personal host since 2026-11-11 (`~/.dsh-personal`, profile `personal`, `:7002`), after
+backup `daily/20261111T051012Z`. Rollback:
 
 ```sh
+# personal host (one restart)
+DSH_HOME="$HOME/.dsh-personal" dsh plugin --profile personal remove @local/dsh-status
+#   remove '@local/dsh-status' from profiles/personal/package.json dsh.profile.bundles if still listed
+systemctl --user restart dsh-personal.service
+
+# coding host (preview only during development)
 dsh plugin --profile web remove @local/dsh-status
-systemctl --user restart dsh-web.service   # or Settings → Host control
+systemctl --user restart dsh-web.service
 ```
+
+Reading the panel on the personal host: the owner cookie is scoped to the unit's `--public-url`
+authority (`https://homelab.taildace6c.ts.net:8454/`); the verify scripts take
+`--authority`/`--base` so the loopback token exchange and the browser navigation use that authority.
 
 ## No-write guarantee
 

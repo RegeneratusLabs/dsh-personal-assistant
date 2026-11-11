@@ -108,3 +108,11 @@ Chronological, link-first record of the build. Detail lives in `research/`.
 - New `scripts/verify-dsh-status-a11y.mjs` passes 10/10 (headings, landmark, live region, 17 text-style
   contrast samples, keyboard focus, 200% zoom, reduced motion, touch target); UI verify stays 16/16.
 - Still pending: real screen-reader pass, and deploying the panel to the `personal` host (approval + restart).
+
+## 2026-11-11 — Status/Health panel deployed to the personal host
+- Pre-install backup `daily/20261111T051012Z` (9.8 MB, sha256 + Hindsight export + secret check), installed
+  `@local/dsh-status` into the `personal` profile (installer added the dependency and bundle row), one restart
+  of `dsh-personal.service`.
+- Verified live at `:7002` / tailnet `:8454`: route 200 with `serving.unit = dsh-personal.service`, UI verify
+  16/16, accessibility verify 10/10, zero console errors. The coding-host preview was removed afterwards.
+- Rollback: remove the dependency + bundle row and restart, or restore backup `20261111T051012Z`.

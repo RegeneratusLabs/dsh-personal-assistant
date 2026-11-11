@@ -24,12 +24,16 @@
 //   env DSH_PROXY_PORT      listen port (default 7006)
 //   env DSH_UPSTREAM_PORT   DSH Web port (default 7000)
 //   env DSH_WEB_LOG         log file with the launch-token URL (default ~/dsh/logs/web.log)
+//                           used as the fallback when no journal unit is configured
+//   env DSH_WEB_JOURNAL_UNIT systemd --user unit whose journal prints the launch token
+//                           (e.g. dsh-personal.service; takes precedence over DSH_WEB_LOG)
 //   env DSH_PROXY_LABEL     name for verbose log lines (default proxy-<port>)
 //   env DSH_PROXY_VERBOSE   "1" logs request/upstream lines to stdout (journald)
 //   env DSH_AUTOLOGIN_ALLOW optional comma-separated client IPs (X-Forwarded-For)
 //                           allowed to auto-authenticate; empty = any tailnet client
 import http from 'node:http'
 import { createHash } from 'node:crypto'
+import { execFileSync } from 'node:child_process'
 import { closeSync, fstatSync, openSync, readSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
@@ -38,6 +42,7 @@ const LISTEN = Number(process.env.DSH_PROXY_PORT ?? 7006)
 const UPSTREAM_HOST = '127.0.0.1'
 const UPSTREAM_PORT = Number(process.env.DSH_UPSTREAM_PORT ?? 7000)
 const LOG_PATH = process.env.DSH_WEB_LOG ?? join(homedir(), 'dsh', 'logs', 'web.log')
+const JOURNAL_UNIT = process.env.DSH_WEB_JOURNAL_UNIT ?? ''
 const LABEL = process.env.DSH_PROXY_LABEL ?? `proxy-${LISTEN}`
 const VERBOSE = process.env.DSH_PROXY_VERBOSE === '1'
 const ALLOW = (process.env.DSH_AUTOLOGIN_ALLOW ?? '')
@@ -51,10 +56,28 @@ const COOKIE_PREFIX = 'dsh-auth-'
 let cachedToken
 let cachedTokenAt = 0
 
-/** Newest launch token printed by the running `dsh web` process. */
-function latestToken() {
-  if (cachedToken !== undefined && Date.now() - cachedTokenAt < 3000) return cachedToken
-  cachedTokenAt = Date.now()
+/** Tokens in the tail of a log sink, newest last. */
+function tokensIn(text) {
+  return [...String(text).matchAll(TOKEN_RE)].map((match) => match[1])
+}
+
+/** Launch tokens from the unit's journal (the personal host logs there, not to a file). */
+function journalTokens() {
+  if (JOURNAL_UNIT === '') return []
+  try {
+    const text = execFileSync(
+      'journalctl',
+      ['--user', '-u', JOURNAL_UNIT, '-n', '400', '--no-pager', '-o', 'cat'],
+      { encoding: 'utf8', timeout: 4000, stdio: ['ignore', 'pipe', 'ignore'] },
+    )
+    return tokensIn(text)
+  } catch {
+    return []
+  }
+}
+
+/** Launch tokens from the configured log file. */
+function fileTokens() {
   let fd
   try {
     fd = openSync(LOG_PATH, 'r')
@@ -62,12 +85,28 @@ function latestToken() {
     const length = Math.min(size, 256 * 1024)
     const buffer = Buffer.alloc(length)
     readSync(fd, buffer, 0, length, size - length)
-    const matches = [...buffer.toString('utf8').matchAll(TOKEN_RE)]
-    cachedToken = matches.length > 0 ? matches[matches.length - 1][1] : undefined
+    return tokensIn(buffer.toString('utf8'))
   } catch {
-    cachedToken = undefined
+    return []
   } finally {
     if (fd !== undefined) closeSync(fd)
+  }
+}
+
+/**
+ * Newest launch token printed by the running `dsh web` process.
+ * Journal first (authoritative for a hardened unit), file as the fallback.
+ * Cached briefly: a failed mint must be able to retry after a host restart,
+ * while a burst of PWA requests should not spawn `journalctl` per request.
+ */
+function latestToken() {
+  if (cachedToken !== undefined && Date.now() - cachedTokenAt < 10000) return cachedToken
+  cachedTokenAt = Date.now()
+  const journal = journalTokens()
+  const matches = journal.length > 0 ? journal : fileTokens()
+  cachedToken = matches.length > 0 ? matches[matches.length - 1] : undefined
+  if (VERBOSE && cachedToken === undefined) {
+    console.log(`${LABEL}: no launch token in ${JOURNAL_UNIT ? `journal ${JOURNAL_UNIT}` : LOG_PATH}`)
   }
   return cachedToken
 }
@@ -132,7 +171,7 @@ function ensureCookie(authority) {
   const pending = new Promise((resolve, reject) => {
     const token = latestToken()
     if (token === undefined) {
-      reject(new Error(`no launch token in ${LOG_PATH}`))
+      reject(new Error(`no launch token in ${JOURNAL_UNIT ? `journal ${JOURNAL_UNIT}` : LOG_PATH}`))
       return
     }
     const request = http.request(
@@ -339,6 +378,6 @@ server.on('upgrade', (req, socket, head) => {
 server.listen(LISTEN, '127.0.0.1', () => {
   console.log(
     `${LABEL}: http://127.0.0.1:${LISTEN} -> http://${UPSTREAM_HOST}:${UPSTREAM_PORT}` +
-      ` (token from ${LOG_PATH}; allow=${ALLOW.length === 0 ? 'any tailnet client' : ALLOW.join(',')})`,
+      ` (token from ${JOURNAL_UNIT ? `journal ${JOURNAL_UNIT}` : LOG_PATH}; allow=${ALLOW.length === 0 ? 'any tailnet client' : ALLOW.join(',')})`,
   )
 })

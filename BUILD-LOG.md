@@ -128,3 +128,11 @@ Chronological, link-first record of the build. Detail lives in `research/`.
   `dsh-personal.service`. Both panels render with their data; routes 401 unauthenticated / 200 authenticated;
   egress unchanged.
 - Coding profile: both rows disabled live and dependencies removed; data dirs kept as the backup copy.
+
+## 2026-11-11 — PWA auto-login fixed on the personal host
+- The personal PWA re-auth broke after today's restarts: the proxy read the launch token from
+  `~/dsh/logs/personal.log`, but that unit logs to journald (M0 hardening), so the file was stale and every
+  re-mint got 401. The proxy now supports `DSH_WEB_JOURNAL_UNIT` (journal first, file fallback) and a drop-in
+  points it at `dsh-personal.service`; proxy restarted, DSH untouched.
+- `scripts/verify-autologin-proxy.sh` updated to read the personal token from the journal; both entries pass
+  inject + own-cookie POST `session/list`; tailnet 200 through the proxy, direct loopback still 401.

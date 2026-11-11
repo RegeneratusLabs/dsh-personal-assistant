@@ -69,6 +69,11 @@ loop. Target end state: identity (soul), long-term memory (Hindsight), one chann
   unit) and `scripts/ops/dsh-pending.py` (saved-vs-live diff). The UI is served by the process being
   restarted, so a restart never comes from the page itself — only from a human click there or a shell.
   Background: `research/dsh-restart-runbook.md`.
+- **Tailnet PWA auto-login:** `dsh-pwa-autologin.service` (coding, :443→7006→7000) and
+  `dsh-pwa-autologin-personal.service` (personal, :8454→7007→7002) mint the owner cookie from the host's
+  launch token. The personal unit logs to journald, so its drop-in sets `DSH_WEB_JOURNAL_UNIT=dsh-personal.service`
+  (the proxy reads journal first, then `DSH_WEB_LOG` as fallback). If a host's log sink changes, update that
+  env or the PWA re-auth will 401. Verify: `scripts/verify-autologin-proxy.sh`.
 - Docs mirror + package READMEs: `.cache/deepseek-harness/`; market index `.cache/plugin-index.json`;
   market compatibility cache `~/.dsh/profiles/web/.dsh-market/discovery-compatibility-v1.json`.
 - **M0 baseline is live (2026-11-10, D13):** `dsh-personal.service` has the hardening drop-in

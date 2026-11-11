@@ -20,16 +20,18 @@ fail=0
 ok()   { printf '  \033[32mPASS\033[0m %s\n' "$1"; }
 bad()  { printf '  \033[31mFAIL\033[0m %s\n' "$1"; fail=$((fail + 1)); }
 
-# entry-label  tailnet-base  token-log
+# entry-label  tailnet-base  token-source
+#   file:<path>      read the launch-token URL from a log file (units that append)
+#   journal:<unit>   read it from the unit's journal (hardened units log there)
 ENTRIES=(
-  "443|https://homelab.taildace6c.ts.net|$HOME/dsh/logs/web.log"
-  "8454|https://homelab.taildace6c.ts.net:8454|$HOME/dsh/logs/personal.log"
+  "443|https://homelab.taildace6c.ts.net|file:$HOME/dsh/logs/web.log"
+  "8454|https://homelab.taildace6c.ts.net:8454|journal:dsh-personal.service"
 )
 
 RPC='{"type":"client-request","rpcId":"verify","method":"session/list","payload":{"args":{"_request":{}}}}'
 
 for entry in "${ENTRIES[@]}"; do
-  IFS='|' read -r label base log <<<"$entry"
+  IFS='|' read -r label base source <<<"$entry"
   echo "== entry :$label -> $base =="
 
   # A) inject path: no cookie at all.
@@ -42,9 +44,14 @@ for entry in "${ENTRIES[@]}"; do
 
   # B) pass path: the client's own valid cookie, minted exactly as a browser does.
   jar=$(mktemp)
-  token=$(grep -o 'token=[A-Za-z0-9_-]*' "$log" 2>/dev/null | tail -1 | cut -d= -f2)
+  if [[ $source == journal:* ]]; then
+    token=$(journalctl --user -u "${source#journal:}" -n 400 --no-pager -o cat 2>/dev/null \
+      | grep -o 'token=[A-Za-z0-9_-]*' | tail -1 | cut -d= -f2)
+  else
+    token=$(grep -o 'token=[A-Za-z0-9_-]*' "${source#file:}" 2>/dev/null | tail -1 | cut -d= -f2)
+  fi
   if [[ -z "$token" ]]; then
-    bad "no launch token in $log"
+    bad "no launch token in $source"
     rm -f "$jar"; continue
   fi
   exchange=$(curl -s -o /dev/null -w '%{http_code}' -m 15 -c "$jar" \

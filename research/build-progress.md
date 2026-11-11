@@ -465,3 +465,20 @@ status), with topics.
   - **Coding host cleaned up:** both bundle rows disabled live and `dsh plugin --profile web remove` for both
     dependencies; profile back to 9 deps / 17 bundles. Data dirs kept as backup; no `dsh-web` restart needed
     (fibers disabled live, next boot no longer composes them).
+
+- **2026-11-11 17:35–17:55 AEST — PWA auto-login on `personal` fixed (host change: proxy unit drop-in + script):**
+  - **Symptom:** the personal PWA showed `dsh-pwa-autologin-proxy: re-auth failed: token exchange returned no
+    auth cookie (status 401) for homelab.taildace6c.ts.net:8454` after today's `dsh-personal` restarts.
+  - **Root cause:** `dsh-pwa-autologin-personal.service` was configured with
+    `DSH_WEB_LOG=~/dsh/logs/personal.log`, but the M0 hardening drop-in sends the personal unit's stdout to
+    **journald**; that file has been stale since 2026-11-10, so every re-mint after a restart exchanged a dead
+    token and got 401. The proxy itself was fine (the coding entry, which still logs to `web.log`, kept working).
+  - **Fix:** the proxy now reads the launch token from `DSH_WEB_JOURNAL_UNIT` via `journalctl --user -u <unit>`
+    (journal first, log file as fallback, 10 s token cache) — `scripts/dsh-pwa-autologin-proxy.mjs`. New unit
+    drop-in `~/.config/systemd/user/dsh-pwa-autologin-personal.service.d/10-token-source.conf` sets
+    `DSH_WEB_JOURNAL_UNIT=dsh-personal.service`; proxy restarted (not the DSH host).
+  - **Verification:** `scripts/verify-autologin-proxy.sh` (updated to read the personal token from the journal)
+    passes both entries — inject path + own-cookie POST `session/list` (personal 8 sessions, coding 306);
+    tailnet root and `/api/dsh-status/status` return 200 through the proxy; direct loopback `:7002` still 401.
+  - **Rollback:** remove the drop-in + `systemctl --user daemon-reload && systemctl --user restart
+    dsh-pwa-autologin-personal.service` (reverts to the stale log-file behaviour); script change is in git.

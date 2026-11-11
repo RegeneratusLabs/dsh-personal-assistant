@@ -1,6 +1,6 @@
 # UI design brief — the assistant's own surfaces
 
-Status: **draft for human review (2026-11-11)**. Direction and first slice need a decision before UI code.
+Status: **approved and slice 1 shipped to the coding host 2026-11-11** — direction: hybrid (A bones + B voice); read-only Status/Health at 1440 + 390 in both palettes; one "Assistant" entry with tabs. Implementation lives in `plugins/dsh-status/` and is verified by `scripts/verify-dsh-status-ui.mjs` (16/16 checks, 0 console errors, screenshots `artifacts/ui/status-*`). Not yet installed on `personal` (needs approval).
 Track handover: [`ui-handover.md`](ui-handover.md). Verified seams: [`ui-primitives-slots.md`](ui-primitives-slots.md).
 Data contracts: [`ui-data-inventory.md`](ui-data-inventory.md). Mockups are local evidence in `artifacts/ui/` (gitignored).
 
@@ -265,12 +265,17 @@ at 1440×1000, plus 390px, in `artifacts/ui/{A,B,C}-*.png` (local evidence, not 
 - **Risk:** reads as configuration, not as "the agent"; the long scroll buries alerts; least distinctive, and
   Memory later wants richer rows than settings allows.
 
-### Recommendation
+### Recommendation — chosen (2026-11-11)
 
 **A for the bones, B for the voice, C for the Settings sections.** Ship A's layout and density, but write every
 card's supporting line as a plain sentence (B's discipline: "last backup 4 hours old, limit 48" beats "age 4h /
-limit 48h"), and use C's settings-card material whenever a surface lives inside Settings. That combination is
-what the mockups should converge on after your pick; the three files above stay the reference for the extremes.
+limit 48h"), and use C's settings-card material whenever a surface lives inside Settings.
+
+**Decision (human, 2026-11-11): the hybrid above.** Concretely for slice 1: A's page (eyebrow, 24/32 title,
+vitals strip, hairline two-column sections, source footer), plus (a) one **lede sentence** under the title, (b) a
+**plain sentence under every section heading**, (c) a **meta label** at the heading's right edge in mono for the
+terse fact (bank name, window, scope). Settings surfaces keep C's settings-card material when they land.
+Reference render: `artifacts/ui/D-hybrid-1440-{light,dark}.png`, `D-hybrid-390.png`.
 
 ## 7. Component kit (built once, reused by every tab)
 
@@ -401,15 +406,14 @@ toggles, channel, charts beyond a static sparkline, and any change to the `perso
    treat the slice as shipped.
 5. Rollback everywhere: disable/remove the bundle row + restart; no data is touched by the panel.
 
-## 13. Decisions needed from you
+## 13. Decisions (resolved 2026-11-11)
 
-1. **Direction** — A (instrument, recommended), B (notebook), C (minimal), or the recommended hybrid
-   "A's bones + B's voice + C's settings material".
-2. **First slice** — confirm read-only Status/Health as slice 1 (vs Memory browser first), and device targets
-   (default: desktop 1440 primary, 390 mobile secondary, both palettes).
-3. **Navigation** — one sidebar entry "Assistant" with tabs (recommended) or separate Status/Memory entries.
-4. **Restart approval** — after staging on the coding host, one restart of `dsh-web.service` (I will not do it
-   without your go-ahead; this session's host is the one being restarted).
+1. **Direction: hybrid** — A's bones + B's voice + C's settings material. ✅
+2. **First slice: read-only Status/Health**, desktop 1440 + mobile 390, light + dark. ✅
+3. **Navigation: one sidebar entry "Assistant"** with Status/Memory/Activity tabs; panel id `assistant` fixed
+   now, later tabs added without re-keying. ✅
+4. **Restart approval: still needed** — after staging on the coding host, one restart of `dsh-web.service`
+   (this session's host). The Lead will not restart without the human's go-ahead.
 
 ## 14. Evidence
 
@@ -421,3 +425,37 @@ toggles, channel, charts beyond a static sparkline, and any change to the `perso
   client-module contract, route recipe, defensive rules.
 - Data contracts: [`ui-data-inventory.md`](ui-data-inventory.md) — 15 sources with sanitized live schemas, 22
   handover corrections, recommended route shape, TTLs and degradation matrix.
+
+## 15. Slice 1 review note (implemented 2026-11-11)
+
+**Shipped** `plugins/dsh-status/` (zero-build, `@local/dsh-status`), installed on the **coding host only**:
+
+| Piece | What landed | Notes |
+|---|---|---|
+| Host half | `GET /api/dsh-status/status`, 14 read-only sources, per-section TTL 5–300 s, single-flight cache, stale fallback, `?fresh=1` only | allowlisted/sanitised envelope (`~` paths, masked tokens, no hostname/owner/cgroup/sha256); never throws; 15/15 `node:test` |
+| Client half | Assistant entry → keyed `main` panel: lede, 4 vitals, memory, jobs, safety/retention, alerts, egress, cost, identity, source footer | per-section degradation, one visibility-gated 60 s refresh + backoff (60→120→300 s), 15 s timestamp tick, manual refresh, zero literal colours, `en`+`zh` |
+| Verification | `scripts/verify-dsh-status-ui.mjs` | 16/16 checks, 0 console errors, light/dark/390 screenshots in `artifacts/ui/status-*` |
+| CI | new `status panel host tests` step | runs the 15 host tests on every push |
+
+**Deviations from the design, and why**
+
+1. **No DSH primitives are imported yet.** `ui-primitives` is runtime-seeded and untyped (§2.4); slice 1 builds
+   its own `PanelPage`/`Section`/`StatCell`/`Chip`/`Row` on tokens, which is the component kit the brief asks
+   for anyway. `SegmentedTabs` (slice 2 tabs), `Modal`/`RiskConfirmation` (write flows) and `DetailDocument`
+   (one-document viewer) get adopted once a real use verifies their props in place.
+2. **Tabs are not rendered with a single tab.** The page is the Status tab; the tab bar appears when Memory
+   lands. Panel id `assistant` is already fixed, so slice 2 adds a tab without re-keying.
+3. **`pendingPlugins` is not shown.** The route deliberately avoids `ctx.get('loader')` to stay fake-ctx
+   testable; it reports `selected`/`installed` bundle counts instead, and the live-vs-saved list stays in
+   Settings → Host control.
+4. **Alert details are humanised for the two known warnings** (`unit-restarts`, `cost-spike`) and fall back to
+   the check title + id; raw `key=value` script detail never reaches the DOM.
+5. **Install without a restart.** The first activation failed on a missing `inject` export (the host's
+   diagnostic caught it); after the fix, disabling and re-enabling the loader entry applied it **hot** — no
+   `dsh-web.service` restart was needed. The personal host still needs approval + one restart.
+
+**Still open**
+
+- Install on `personal` (human approval, one restart) and re-run the same verify script there.
+- Review at 200% zoom and with a real screen reader (not yet done).
+- Slice 2: Memory tab (documents/observations list + recall search, read-only) reusing `PanelPage`/`Row`.

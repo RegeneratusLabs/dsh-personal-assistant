@@ -23,6 +23,9 @@ jobs:
       - name: soul loader selftest
         run: node plugins/dsh-soul/selftest.mjs
 
+      - name: status panel host tests
+        run: cd plugins/dsh-status && node --test 'test/*.test.mjs'
+
       - name: shell syntax
         run: |
           set -e

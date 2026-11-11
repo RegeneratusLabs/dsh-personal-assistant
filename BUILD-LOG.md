@@ -90,3 +90,13 @@ Chronological, link-first record of the build. Detail lives in `research/`.
 - Wrote `research/ui-design-brief.md`: IA (one Assistant panel, Status/Memory/Activity tabs), token system, three
   visual directions with mockups (instrument / notebook / minimal), component kit, accessibility and
   untrusted-data rules, and the first slice (read-only Status/Health). No UI code or host change yet.
+
+## 2026-11-11 — UI slice 1: Status/Health panel live on the coding host
+- Direction picked (hybrid: instrument layout, human sentences, native settings material) and the brief
+  approved. Built `plugins/dsh-status`: one pinned `GET /api/dsh-status/status` aggregating 14 read-only
+  sources with per-section TTLs, single-flight cache, allowlisted/sanitised output and per-section
+  degradation (15/15 tests), plus the Assistant sidebar panel (vitals, memory, jobs, safety, alerts,
+  egress, cost, identity; token-only styling; visibility-gated refresh; en+zh).
+- Installed on the coding profile and enabled hot (no restart); `scripts/verify-dsh-status-ui.mjs` passes
+  16/16 with zero console errors; light/dark/390 evidence in `artifacts/ui/` (local only). Not installed
+  on the `personal` host — that needs human approval and one restart.

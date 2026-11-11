@@ -1,0 +1,35 @@
+{
+  "name": "@local/dsh-status",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Read-only Status/Health panel for the personal DSH assistant: one aggregated JSON document about dsh-personal.service, its memory bank, telemetry and backups.",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test 'test/*.test.mjs'"
+  },
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ]
+    }
+  }
+}

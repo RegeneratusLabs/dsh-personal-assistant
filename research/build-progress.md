@@ -127,14 +127,22 @@ assistant's own panels and component layer on DSH's client-plugin seams. The sel
 new session is [`ui-handover.md`](ui-handover.md) (context, verified seams, product asks, guardrails, first
 slice = read-only Status/Health, then Memory browser). Channel stays parked.
 
-**Design phase (2026-11-11):** brief written and awaiting the human's direction pick —
-[`ui-design-brief.md`](ui-design-brief.md) (IA: one `Assistant` panel with Status/Memory/Activity tabs; token
-system captured from the live shell; directions A instrument / B notebook / C minimal, with light+dark+390
-mockups; component kit; a11y + untrusted-data rules; first slice = read-only Status/Health with one pinned
-`GET /api/dsh-status/status` route). Supporting verified research: [`ui-primitives-slots.md`](ui-primitives-slots.md)
-(slot catalog, primitives, route recipe; `ui-primitives` is runtime-seeded, not an installed package) and
-[`ui-data-inventory.md`](ui-data-inventory.md) (15 read-only sources, sanitized schemas, 22 handover
-corrections, recommended route shape/TTLs). No UI code, no host change yet. Blocked on: direction + slice pick.
+**Design phase (2026-11-11):** brief approved — hybrid direction (A instrument bones + B human voice + C
+settings material), one `Assistant` panel with Status/Memory/Activity tabs, first slice read-only
+Status/Health at 1440 + 390 in both palettes. [`ui-design-brief.md`](ui-design-brief.md), supported by
+[`ui-primitives-slots.md`](ui-primitives-slots.md) (slots/primitives/route recipe; `ui-primitives` is
+runtime-seeded, not an installed package) and [`ui-data-inventory.md`](ui-data-inventory.md) (15 sources,
+22 handover corrections, route shape/TTLs).
+
+**Slice 1 built and verified on the coding host (2026-11-11):** `plugins/dsh-status` (`@local/dsh-status`,
+zero-build) — host half `GET /api/dsh-status/status` (14 sources, per-section TTLs + single-flight cache,
+sanitised allowlist envelope, never throws; 15/15 tests) + client half (Assistant sidebar entry → keyed
+`main` panel: vitals, lede, memory/jobs/safety/alerts/egress/cost/identity sections, per-source freshness,
+visibility-gated refresh with backoff, token-only styling, `en`+`zh`). Installed on the coding profile
+(`dsh-web.service`, :7000) and hot-enabled without a restart; `scripts/verify-dsh-status-ui.mjs` passes
+16/16 checks with zero console errors, screenshots in `artifacts/ui/status-*`. **Not installed on
+`personal`** — needs human approval + one restart. Rollback (coding host): disable the bundle row
+`include:dsh-status` in Plugins (or remove the dependency), then restart.
 
 ## Agent-consumable packaging (2026-11-11)
 
@@ -385,3 +393,22 @@ status), with topics.
     visibility-gated 60 s refresh, loading/empty/error states, tokens only, `en`+`zh`. No write surface.
   - **no UI code, no host change, no install**: awaiting the human's direction + slice decision; the first
     install onto the coding host needs one restart of `dsh-web.service` (will ask).
+
+- **2026-11-11 13:00–14:15 AEST — UI slice 1 built: Status/Health panel live on the coding host:**
+  - direction chosen by the human: hybrid (A's instrument layout, B's plain-sentence voice, C's settings
+    material for later Settings surfaces). Brief updated with the decision and a hybrid reference render.
+  - new bundle `plugins/dsh-status` (`@local/dsh-status`, zero-build): host half registers one pinned
+    `GET /api/dsh-status/status` through `ctx.connection.fetch.register` — 14 read-only sources
+    (systemd unit + timers, plugin counts, Hindsight health/stats/7d usage, alerts, egress, cost, curator,
+    backup manifests, retention, SOUL metadata), per-section TTLs (5 s–300 s) + single-flight cache, stale
+    fallback, `?fresh=1` cache-bypass only, allowlisted/sanitised output (`~` paths, masked tokens, no
+    hostname/owner/cgroup/sha256), never throws. 15/15 `node:test` cases.
+  - client half: sidebar entry `Assistant` (id/key `assistant`) → `main` panel with vitals strip, lede
+    sentence, and memory / scheduled jobs / safety & retention / needs-attention / egress / token-cost /
+    identity sections; per-section degradation, one visibility-gated 60 s refresh with backoff + manual
+    refresh, relative timestamps ticking at 15 s, token-only styling (zero literal colours), `en`+`zh`.
+  - installed into the coding profile via `plugin_manager` (dependency + bundle row); first activation
+    failed on a missing `inject` export (caught by the host's diagnostic), fixed, then re-enabled via the
+    plugin manager — applied hot, **no restart**. Verify script `scripts/verify-dsh-status-ui.mjs`:
+    16/16 checks, 0 console errors, light/dark/390 screenshots in `artifacts/ui/status-*`.
+  - CI gains a `status panel host tests` step. Home half not installed on `personal` (needs approval).

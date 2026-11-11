@@ -71,6 +71,11 @@ Chronological, link-first record of the build. Detail lives in `research/`.
   (bundles, slots, host routes, theme tokens, restart semantics), product surfaces, guardrails, first
   slice = read-only Status/Health then Memory browser. Channel parked.
 
+## 2026-11-11 — reusable by other people's agents
+- Evergreen repo description + topics; new `agents/` section (README, copy-paste prompt, generic build guide,
+  phase checklists) so a user can point their own DSH agent at the repo to build their own assistant.
+  `AGENTS.md` routes external agents there.
+
 ## 2026-11-11 — this repository
 - Public build log created: docs, our plugins, operator scripts, CI (plugin tests + shell syntax + a
   secret-shaped string scan).

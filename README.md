@@ -6,6 +6,19 @@ A personal AI assistant built by **composing pinned plugins on [DeepSeek Harness
 
 [![ci](https://github.com/RegeneratusLabs/dsh-personal-assistant/actions/workflows/ci.yml/badge.svg)](https://github.com/RegeneratusLabs/dsh-personal-assistant/actions/workflows/ci.yml)
 
+## Build your own with your DSH agent
+
+This repo is a working reference, not an installer: **point your own DSH agent at it and it builds the same
+kind of assistant for you** — on your host, with your paths and your persona, asking you before every
+host-level change.
+
+- Start here: [`agents/README.md`](agents/README.md) — what the agent will build, prerequisites, ground rules.
+- Copy-paste brief: [`agents/PROMPT.md`](agents/PROMPT.md) (fill in your profile/home/port).
+- Process and gates: [`agents/GUIDE.md`](agents/GUIDE.md) + [`agents/checklists.md`](agents/checklists.md).
+
+The engineering log in `research/` is the "why" behind every step, including what failed and what was
+rejected. The reference persona and path names are examples — your agent should write yours, not copy them.
+
 ## What it does today
 
 | Layer | Component | State |

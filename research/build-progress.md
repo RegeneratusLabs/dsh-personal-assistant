@@ -127,6 +127,14 @@ assistant's own panels and component layer on DSH's client-plugin seams. The sel
 new session is [`ui-handover.md`](ui-handover.md) (context, verified seams, product asks, guardrails, first
 slice = read-only Status/Health, then Memory browser). Channel stays parked.
 
+## Agent-consumable packaging (2026-11-11)
+
+The repo is now usable by **other people's DSH agents**: `agents/README.md` (what you get, prerequisites,
+ground rules), `agents/PROMPT.md` (copy-paste task brief with placeholders), `agents/GUIDE.md` (generic
+phase-by-phase build guide with parameterised paths) and `agents/checklists.md` (phase gates). `AGENTS.md`
+routes external agents there; the README explains it up front. Repo description is now evergreen (no progress
+status), with topics.
+
 ## Open questions for the human
 
 1. **Channel decision (open):** a live Telegram smoke test needs a BotFather token + your Telegram user id
@@ -340,3 +348,8 @@ slice = read-only Status/Health, then Memory browser). Channel stays parked.
   via `ctx.connection.fetch.register`, `--dsw-*` theme tokens + `ctx.theme`, restart semantics; product
   surfaces: Status/Health → Memory → Identity/Activity/Approvals/Settings; accessibility and untrusted-data
   rules; working agreement incl. explicit git staging). Repo synced and pushed; no host changes.
+
+- **2026-11-11 12:20 AEST — repo packaging for other users' agents:** evergreen GitHub description + topics
+  (`deepseek-harness`, `dsh`, `personal-assistant`, `ai-agent`, `plugins`); new `agents/` section
+  (README/PROMPT/GUIDE/checklists) so anyone can point their own DSH agent at the repo and build their own
+  assistant; `AGENTS.md` now routes external agents to it. No host changes.

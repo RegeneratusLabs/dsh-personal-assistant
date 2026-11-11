@@ -1,5 +1,11 @@
 # AGENTS.md — personal-agent build standing orders
 
+> **Building your *own* personal assistant?** If you are a DSH agent pointed at this repository by a user who
+> cloned it to build their own assistant, read [`agents/README.md`](agents/README.md), follow
+> [`agents/GUIDE.md`](agents/GUIDE.md) and use [`agents/PROMPT.md`](agents/PROMPT.md) as your task brief.
+> The standing orders below govern **maintenance of this reference deployment** (the original homelab host);
+> do not copy its host paths, persona or credentials.
+
 This workspace builds a **personal AI agent on DeepSeek Harness (DSH)**. You are the build agent. These
 are standing orders; the full design lives in `research/`. Read this file first, then follow the reading
 order below. Do not skip the gates.

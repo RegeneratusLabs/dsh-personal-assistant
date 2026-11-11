@@ -145,5 +145,7 @@ literal colour values in the source (enforced by review; `grep -n '#' client.js`
 are injected as one `<style data-plugin="dsh-status">` element and removed when the bundle is
 disabled. Copy is `en` + `zh` behind `t()`.
 
-Verification: `node scripts/verify-dsh-status-ui.mjs` (mints the loopback owner cookie, checks the
-route shape and the rendered panel, screenshots light/dark/390 into `artifacts/ui/`).
+Verification: `node scripts/verify-dsh-status-ui.mjs` (mints the loopback owner cookie, checks the route
+shape and the rendered panel, screenshots light/dark/390 into `artifacts/ui/`) and
+`node scripts/verify-dsh-status-a11y.mjs` (single h1, main landmark, live regions, AA contrast for every
+rendered text style, visible keyboard focus, 200% zoom, reduced motion, 44px coarse-pointer targets).

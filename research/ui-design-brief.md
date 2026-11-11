@@ -454,8 +454,19 @@ toggles, channel, charts beyond a static sparkline, and any change to the `perso
    diagnostic caught it); after the fix, disabling and re-enabling the loader entry applied it **hot** — no
    `dsh-web.service` restart was needed. The personal host still needs approval + one restart.
 
+**Accessibility polish (2026-11-11)**
+
+- AA contrast fixed: the theme's caption/tertiary tokens are too light in light mode (2.1:1 / 3.7:1) and
+  coloured chip text on status tints fails (1.99–3.68:1). All small text now uses `label-secondary`
+  (5.8:1 light, 12.1:1 dark); chips are tinted surfaces with **primary text + a coloured dot** (17.5:1).
+- Added the missing `role="main"` landmark (the shell renders none), kept the shell's 2px focus ring, bumped
+  the refresh control to 44px on coarse pointers, and made the warning line a tinted bar with primary text.
+- `scripts/verify-dsh-status-a11y.mjs`: 10/10 (headings, landmark, live region, 17 contrast samples, keyboard
+  focus, 200% zoom at 720 CSS px, reduced motion, touch target).
+
 **Still open**
 
-- Install on `personal` (human approval, one restart) and re-run the same verify script there.
-- Review at 200% zoom and with a real screen reader (not yet done).
-- Slice 2: Memory tab (documents/observations list + recall search, read-only) reusing `PanelPage`/`Row`.
+- Install on `personal` (human approval, one restart) and re-run both verify scripts there.
+- A real screen-reader pass (NVDA/Orca/VoiceOver) and a human visual review.
+- Slice 2 (chosen order: polish first, then Memory tab): documents/observations list + recall search,
+  read-only, reusing `PanelPage`/`Row`.

@@ -100,3 +100,11 @@ Chronological, link-first record of the build. Detail lives in `research/`.
 - Installed on the coding profile and enabled hot (no restart); `scripts/verify-dsh-status-ui.mjs` passes
   16/16 with zero console errors; light/dark/390 evidence in `artifacts/ui/` (local only). Not installed
   on the `personal` host — that needs human approval and one restart.
+
+## 2026-11-11 — slice 1 accessibility polish
+- Contrast: small text and status chips moved to AA-safe token pairs (5.8:1+ light, 12.1:1 dark; chips use
+  primary text + a coloured dot instead of coloured text on a tint). Added the missing `role="main"` landmark,
+  a live region for freshness, 44px coarse-pointer touch targets, and kept the shell's visible focus ring.
+- New `scripts/verify-dsh-status-a11y.mjs` passes 10/10 (headings, landmark, live region, 17 text-style
+  contrast samples, keyboard focus, 200% zoom, reduced motion, touch target); UI verify stays 16/16.
+- Still pending: real screen-reader pass, and deploying the panel to the `personal` host (approval + restart).

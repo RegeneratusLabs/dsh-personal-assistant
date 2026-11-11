@@ -412,3 +412,17 @@ status), with topics.
     plugin manager — applied hot, **no restart**. Verify script `scripts/verify-dsh-status-ui.mjs`:
     16/16 checks, 0 console errors, light/dark/390 screenshots in `artifacts/ui/status-*`.
   - CI gains a `status panel host tests` step. Home half not installed on `personal` (needs approval).
+
+- **2026-11-11 14:30–14:50 AEST — slice 1 accessibility polish (repo + coding host preview):**
+  - AA contrast pass: in light mode the theme's `caption` (#adb2b8, 2.1:1) and `tertiary` (#81858c, 3.7:1)
+    tokens fail AA at small sizes, and coloured chip text on status tints fails too (1.99–3.68:1). Moved every
+    small label/hint to `label-secondary` (5.8:1 light, 12.1:1 dark) and made chips a tinted surface with
+    **primary text + coloured dot** (17.5:1) so colour is never the only carrier.
+  - added the missing `role="main"` landmark (the shell renders none), `aria-label`, kept the shell's 2px
+    focus ring (verified: `outline: auto 2px #4176e6` on the Refresh button after tabbing), 44px touch targets
+    under `(pointer: coarse)`, and a tinted warning bar with primary text.
+  - new `scripts/verify-dsh-status-a11y.mjs`: single h1 + 7 h2s, main landmark, live region, AA contrast for 17
+    rendered text styles, keyboard focus reach (60 tabs), 200% zoom at 720 CSS px (no overflow), reduced motion
+    (no transitions), coarse-pointer 44px target — **all pass, 0 console errors**. UI verify still 16/16.
+  - still open: a real screen-reader pass (NVDA/Orca/VoiceOver) and a human visual review; deployment to
+    `personal` still needs the human's go-ahead + one restart.

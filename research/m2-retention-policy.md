@@ -53,8 +53,28 @@ First observed usage: Hindsight's own retain/reflect work cost **67 requests / 3
 Snapshot 2026-11-11: sessions 208 KB/16 files · storages 119 KB · backups 9.8 MB (3 daily/1 weekly, newest
 0 d) · telemetry 7.6 KB · service logs 110 KB · journal 1.9 GB · bank docs 8/nodes 30/obs 10.
 
-## 5. Open decisions (M2)
+## 5. Off-host encrypted bundle
 
-1. Off-host + encrypted backups (currently local plaintext containing credentials).
+`scripts/backup/dsh-offsite-bundle.sh` wraps one finished backup into a single AES-256 encrypted archive
+plus a sha256 sidecar, so the copy that leaves the host is safe even though the local backup is plaintext:
+
+```sh
+# symmetric (passphrase kept in your password manager, file 0600):
+printf '%s\n' '<long random passphrase>' > ~/.config/dsh-offsite.pass && chmod 600 ~/.config/dsh-offsite.pass
+scripts/backup/dsh-offsite-bundle.sh --passphrase-file ~/.config/dsh-offsite.pass
+scp ~/backups/offsite/<file>.tar.gz.gpg{,.sha256} <remote>:<path>/
+
+# or asymmetric to an existing GPG key:
+scripts/backup/dsh-offsite-bundle.sh --recipient <key-id>
+```
+
+- The plaintext intermediate is removed unless `--keep-plain`; the encrypted file and checksum are 0600.
+- Decryption is verified against the tar listing before the script reports success (no extraction to disk).
+- The **destination** (which remote, retention there) remains a human decision; the bundle is the safe unit
+  to move. Tested 2026-11-11: 9.7 MB backup → encrypted bundle, decrypt-list verified.
+
+## 6. Open decisions (M2)
+
+1. Off-host destination + how long the encrypted bundles are kept there (the bundle tooling now exists).
 2. Session pruning once the store is large (e.g. archive/remove > 90 d) — needs a safe, backed-up procedure.
 3. Whether to raise the fixed Hindsight prompt overhead issue (~3k tokens/request) into a budget alert.

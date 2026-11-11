@@ -77,6 +77,25 @@ mask() { sed -E 's/([?&]token=)[A-Za-z0-9_-]{8,}/\1<redacted>/g; s/(sk-|oc_sk_)[
   fi
   echo '```'
   echo
+  echo "## Hindsight usage (latest curator report)"
+  echo '```'
+  latest_curate="$(ls -t "$DSH_HOME"/telemetry/curate-*.json 2>/dev/null | head -1)"
+  if [[ -n "$latest_curate" ]]; then
+    python3 - "$latest_curate" <<'PYC'
+import json,sys
+try: d=json.load(open(sys.argv[1]))
+except Exception: print("curator report unreadable"); raise SystemExit
+u=d.get("llm_usage_7d") or {}
+print("7d: requests=%s tokens=%s" % (u.get("requests","?"), u.get("tokens","?")))
+mm=d.get("mental_models") or {}
+print("mental models: total=%s refreshed=%s, consolidation wait=%ss" % (mm.get("total","?"), mm.get("refreshed","?"), d.get("consolidation_wait_seconds","?")))
+print("fixed memory prompt overhead: ~3k tokens/request (Hindsight 0.8.6 block; accepted, M2)")
+PYC
+  else
+    echo "no curator report yet (RUN: scripts/memory/curate.sh)"
+  fi
+  echo '```'
+  echo
   echo "## Hindsight bank \`dsh-personal\`"
   echo '```'
   if command -v curl >/dev/null 2>&1; then

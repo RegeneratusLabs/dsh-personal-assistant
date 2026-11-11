@@ -22,3 +22,6 @@ logs/
 backups/
 *.bak*
 profiles/
+
+# Session scratch (never publish; may contain personal captures)
+.tmp/

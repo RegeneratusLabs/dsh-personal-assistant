@@ -57,6 +57,15 @@ Chronological, link-first record of the build. Detail lives in `research/`.
   sessions, storages, backups 14/8, telemetry 90 d (digest prunes its own reports), journald 2 GB/30 d,
   Hindsight erasure contract (document delete vs derived observations vs bank clear).
 
+## 2026-11-11 — M2 complete
+- Heartbeat live path proven in an integration harness (30/30 tests): one identified nudge per changed
+  state, quiet otherwise, default OFF in production.
+- Encrypted off-host backup bundle (`dsh-offsite-bundle.sh`, AES-256 + sha256, decrypt-verified);
+  retention policy updated with the procedure.
+- Cost/context: digest surfaces Hindsight 7-day LLM usage; fixed ~3k-token memory prompt overhead recorded
+  as accepted.
+- Per-surface autonomy policy written; channel remains deferred by the human, narrative digest → M3.
+
 ## 2026-11-11 — this repository
 - Public build log created: docs, our plugins, operator scripts, CI (plugin tests + shell syntax + a
   secret-shaped string scan).

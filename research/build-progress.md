@@ -7,7 +7,7 @@ Plan: [`personal-agent-design.md`](personal-agent-design.md) · Gates: [`persona
 **Status:** P0 (design + documentation + plugin scouting) **complete**. **M0 ✅ GREEN (2026-11-10 17:07 AEST,
 pragmatic baseline D13)** — unit hardened + verified, telemetry egress off, egress observed + alerted,
 local telemetry live (journald cap, token/cost, digest timer, alerts), `dsh-personal` bank isolated, backup +
-restore drill PASS, residuals recorded. **M0.5 complete; M1 in progress (2026-11-11 07:44 AEST). Public build log:** https://github.com/RegeneratusLabs/dsh-personal-assistant `personal` now runs: official
+restore drill PASS, residuals recorded. **M0.5 complete; M1 in progress (memory/recall/identity/push/heartbeat live; channel deferred by human); M2 complete (2026-11-11). Public build log:** https://github.com/RegeneratusLabs/dsh-personal-assistant `personal` now runs: official
 `session-search@0.2.2-rc.1`, vendor `Hindsight@0.8.6` (config outside Cordis), and **our own** identity,
 push and heartbeat bundles + `SOUL.md` — all verified, live, with no errors. Forgetting is a human-invoked
 script (Hindsight exposes no delete tool; derived observations survive document delete — recorded). Channel
@@ -22,7 +22,7 @@ script (Hindsight exposes no delete tool; derived observations survive document 
 | **M0** | Security & telemetry baseline on the personal host | ✅ **complete 2026-11-10** | Unit hardened + verified, telemetry egress off, egress observed + alerted, local telemetry live, Hindsight `dsh-personal` bank isolated, restore drill passed, residual risks recorded |
 | M0.5 | Plugin admission pass (mature-only, D14) | ✅ **complete** — awaiting sign-off | Ledger rows complete; surprises documented; human sign-off |
 | M1 | Install curated stack into `personal` (D14 mature-only) | 🟨 **in progress** — memory + recall + identity + push + heartbeat installed & verified; channel HOLD; acceptance gaps remain | Design §3 + shortlist §5 acceptance tests |
-| M2 | Curator/digest, notify policy, per-surface autonomy, retention | 🟨 **started** — memory curator + retention policy live | Egress/approval/injection tests pass |
+| M2 | Curator/digest, notify policy, per-surface autonomy, retention | ✅ **complete 2026-11-11** — curator timer, retention + encrypted off-host bundle, autonomy policy; narrative digest deferred to M3 | Egress/approval/injection tests pass |
 | M3 | Optional notes store / memory UI / skill curator / second channel | ⬜ later | Only with a real need |
 
 ## M0 task checklist (pragmatic baseline, D13)
@@ -308,3 +308,21 @@ Telemetry:
     telemetry-retention mechanism).
   - Host changes: one user timer+service (revert: `systemctl --user disable --now dsh-memory-curate.timer` +
     remove the two unit files + `daemon-reload`). No plugin or profile changes.
+
+- **2026-11-11 10:31–10:40 AEST — M2 completed (no Telegram work, per human):**
+  - **Heartbeat live path proven**: added `test/live.test.js` (fake Cordis context) — timer registration,
+    projection collection, `agent.followup()` exactly once on an actionable state change, quiet on unchanged
+    state, missing-agent failure contained, disabled-by-default structural inertness. Suite now **30/30**;
+    production remains **default OFF**.
+  - **Off-host encrypted backups**: `scripts/backup/dsh-offsite-bundle.sh` (gpg AES-256, passphrase-file
+    0600 or recipient key, sha256 sidecar, decrypt-verify, plaintext intermediate removed). Tested on a real
+    backup: 9.7 MB encrypted, decrypt-list verified. Destination remains a human decision; procedure recorded
+    in `m2-retention-policy.md` §5.
+  - **Cost/context**: digest now surfaces Hindsight 7-day LLM usage from the curator report (67 requests /
+    335,897 tokens) and records the fixed ~3k-token/request memory-prompt overhead as accepted (plugin
+    inherent, M2 note; revisit if a knob appears or cache impact grows).
+  - **Per-surface autonomy policy**: `m2-autonomy-policy.md` — Web owner, heartbeat (off), push (inert),
+    scheduled jobs, memory tools, and the landing default for a future channel (DM allowlist, restricted tool
+    set, approval-gated actions, no guest rights).
+  - M2 exit: curator + retention + autonomy + notify policy done; **channel deferred**, **narrative digest
+    deferred to M3**, skill diagnostics N/A (D14 rejected the plugin). No new third-party code.

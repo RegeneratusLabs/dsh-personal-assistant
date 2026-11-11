@@ -95,6 +95,12 @@ loop. Target end state: identity (soul), long-term memory (Hindsight), one chann
   `~/.dsh-personal/telemetry/curate-YYYY-MM-DD.json` (0600, includes Hindsight 7-day LLM usage). Retention
   policy + erasure contract: `research/m2-retention-policy.md`; read-only inventory:
   `scripts/ops/retention-report.sh`. The digest prunes its own reports after 90 days.
+- **M2 complete (2026-11-11):** daily curator timer (above), retention policy + read-only inventory
+  (`scripts/ops/retention-report.sh`), encrypted off-host backup bundles
+  (`scripts/backup/dsh-offsite-bundle.sh` — gpg AES-256 + sha256, plaintext intermediate removed), and
+  `research/m2-autonomy-policy.md` (per-surface defaults; channel landing row). Heartbeat live path is
+  proven by `plugins/dsh-heartbeat/test/live.test.js` but production stays **default OFF**. Channel remains
+  deferred; narrative digest deferred to M3.
 - This workspace (`/home/josh/projects/DSH-playground`) is the build repo; `AGENTS.md` here is
   auto-loaded by DSH's instruction loader when the session workspace is this directory.
 

@@ -116,3 +116,15 @@ Chronological, link-first record of the build. Detail lives in `research/`.
 - Verified live at `:7002` / tailnet `:8454`: route 200 with `serving.unit = dsh-personal.service`, UI verify
   16/16, accessibility verify 10/10, zero console errors. The coding-host preview was removed afterwards.
 - Rollback: remove the dependency + bundle row and restart, or restore backup `20261111T051012Z`.
+
+## 2026-11-11 — Guizang Design + Media Desk moved to the personal host
+- Vetted both community plugins (no prior ledger rows): `dsh-guizang-design@0.1.4` (AGPL-3.0, 779★) and
+  `dsh-media-desk@2.6.2` (MIT, 1023★); no install scripts, no telemetry, no credential access.
+- Security: guizang's own `/guizang-design` routes had no owner auth (200 unauthenticated over the tailnet,
+  private works included); media desk already gated through `connection.requestRejection`. Fixed guizang locally
+  with `scripts/ops/patch-guizang-auth.sh` (fails closed 403) — re-apply on reinstall/upgrade.
+- Migrated data to `~/.dsh-personal/{guizang-design,media-desk}` (library + 2 works + voice profile + thumbs;
+  media-desk state/settings), installed both pinned versions from backup `daily/20261111T060926Z`, one restart of
+  `dsh-personal.service`. Both panels render with their data; routes 401 unauthenticated / 200 authenticated;
+  egress unchanged.
+- Coding profile: both rows disabled live and dependencies removed; data dirs kept as the backup copy.

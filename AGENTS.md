@@ -101,6 +101,13 @@ loop. Target end state: identity (soul), long-term memory (Hindsight), one chann
   `~/.dsh-personal/telemetry/curate-YYYY-MM-DD.json` (0600, includes Hindsight 7-day LLM usage). Retention
   policy + erasure contract: `research/m2-retention-policy.md`; read-only inventory:
   `scripts/ops/retention-report.sh`. The digest prunes its own reports after 90 days.
+- **Content plugins on `personal` (2026-11-11, human-directed):** `dsh-guizang-design@0.1.4` (AGPL-3.0,
+  779★; 3 model-facing tools + skills; **local auth patch required** — `scripts/ops/patch-guizang-auth.sh`
+  gates its `/guizang-design` routes through `connection.requestRejection`; re-apply on any reinstall/upgrade)
+  and `dsh-media-desk@2.6.2` (MIT, 1023★; owner-gated `/media-desk` routes; follows the host's default model;
+  optional image API only if configured). Data lives in `~/.dsh-personal/{guizang-design,media-desk}`; the
+  coding host no longer composes them (data dirs under `~/.dsh` kept as backup). Evidence/conditions:
+  `research/plugin-ledger.md`.
 - **M2 complete (2026-11-11):** daily curator timer (above), retention policy + read-only inventory
   (`scripts/ops/retention-report.sh`), encrypted off-host backup bundles
   (`scripts/backup/dsh-offsite-bundle.sh` — gpg AES-256 + sha256, plaintext intermediate removed), and

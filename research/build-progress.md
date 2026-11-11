@@ -441,3 +441,27 @@ status), with topics.
     row, restart; or restore backup `20261111T051012Z`.
   - verify scripts now take `--unit/--port/--authority/--base` (the personal unit's cookie is scoped to its
     `--public-url` authority); token selection prefers the target unit's journal (a web.log token is 401 on :7002).
+
+- **2026-11-11 16:00–16:30 AEST — content plugins moved from the coding host to `personal` (human-directed):**
+  - **Vetting first** (no ledger rows existed): `dsh-guizang-design@0.1.4` (AGPL-3.0, 779★, deps
+    playwright/puppeteer-core/subset-font, 0 install scripts) and `dsh-media-desk@2.6.2` (MIT, 1023★, zero
+    runtime deps, 0 install scripts). Integrity captured from the registry; per-install static scans recorded in
+    [`plugin-ledger.md`](plugin-ledger.md).
+  - **Security finding:** guizang's custom `/guizang-design` web routes had **no owner auth** — gallery,
+    examples, thumbnails and the private design works answered 200 unauthenticated on both `:7000` and the
+    tailnet, and its POST routes only checked `Origin` when present (so non-browser clients bypassed it). Fixed
+    locally with `scripts/ops/patch-guizang-auth.sh` (calls `ctx.connection.requestRejection`, fails closed);
+    re-apply on any reinstall/upgrade. Media desk already gated correctly (401 unauth / 200 with cookie).
+  - **Data migrated before install:** `~/.dsh/guizang-design/` (library.json, voice.md, thumbs) plus the two
+    referenced works → `~/.dsh-personal/guizang-design/works/<id>/` with library roots rewritten to the personal
+    home; `~/.dsh/media-desk/` (state.json, settings.json, files/) → `~/.dsh-personal/media-desk/`. Coding-host
+    copies left in place as the backup.
+  - **Install:** pinned exact versions (`dsh-guizang-design@0.1.4`, `dsh-media-desk@2.6.2`) after backup
+    `daily/20261111T060926Z`; installer added both bundle rows. One restart of `dsh-personal.service` (new PID,
+    active, 401). Verified: both sidebar entries render; guizang shows **2 works** + voice profile ready, media
+    desk loads its migrated state; guizang routes 401 unauthenticated (patch) / 200 with the owner cookie; media
+    desk 401/200; boot log clean; egress unchanged (`api.deepseek.com` only); alerts unchanged (2 pre-existing
+    warnings, unit-restarts count now 5/24 h from today's installs).
+  - **Coding host cleaned up:** both bundle rows disabled live and `dsh plugin --profile web remove` for both
+    dependencies; profile back to 9 deps / 17 bundles. Data dirs kept as backup; no `dsh-web` restart needed
+    (fibers disabled live, next boot no longer composes them).

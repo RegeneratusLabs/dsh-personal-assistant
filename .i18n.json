@@ -1,0 +1,543 @@
+{
+  "version": 1,
+  "generatedBy": "scripts/docs/i18n-check.mjs --write",
+  "languages": {
+    "zh": "Simplified Chinese (zh-CN)"
+  },
+  "pairs": {
+    "AGENTS.md": {
+      "zh": "AGENTS.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "be560358e64e9498",
+          "zh": "9d3ff69e5e4dcd74"
+        },
+        "mission": {
+          "en": "482683ddc72c921a",
+          "zh": "08314039769ca286"
+        },
+        "read-before-acting-in-this-order": {
+          "en": "161eaf59f9115e42",
+          "zh": "ece4249615276010"
+        },
+        "hard-rules-p0-do-not-violate": {
+          "en": "b4bac74b07f42914",
+          "zh": "3e6dc2bde199c7f5"
+        },
+        "environment-facts": {
+          "en": "824ef67ce77e0829",
+          "zh": "20929591664a9a46"
+        },
+        "phase-plan-see-build-progress-md-for-status": {
+          "en": "f1b8421b0f369710",
+          "zh": "997da1473cfdc6ce"
+        },
+        "acceptance-tests-must-pass-before-claiming-a-phase-done": {
+          "en": "4d83a08f8b43d307",
+          "zh": "a329a6ecb1f4adca"
+        },
+        "working-conventions": {
+          "en": "9627cd9d39b4f206",
+          "zh": "80b0beab080fb36e"
+        }
+      }
+    },
+    "agents/checklists.md": {
+      "zh": "checklists.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "94c913d7c34a3c67",
+          "zh": "e237388e6f18b9a6"
+        },
+        "m0-security-telemetry-baseline": {
+          "en": "dd2113f26512186a",
+          "zh": "25319e2e6728057c"
+        },
+        "m0-5-plugin-admission": {
+          "en": "d21ce640b63294f4",
+          "zh": "9980f9aae22ac282"
+        },
+        "m1-stack-install": {
+          "en": "533a0d11532bebb6",
+          "zh": "228be61dff24b822"
+        },
+        "m2-hygiene-policy": {
+          "en": "f2f484d9b533372d",
+          "zh": "a5c2d684ae472b1b"
+        }
+      }
+    },
+    "agents/GUIDE.md": {
+      "zh": "GUIDE.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "9e17a6580a3158f4",
+          "zh": "5f0a8905cfac057e"
+        },
+        "parameters-used-below": {
+          "en": "e3b0c44298fc1c14",
+          "zh": "e3b0c44298fc1c14"
+        },
+        "phase-0-recon-read-only": {
+          "en": "a1186b6f2b4132fc",
+          "zh": "be20f80612b63dcd"
+        },
+        "phase-m0-security-telemetry-baseline": {
+          "en": "c4d63991a4440dbe",
+          "zh": "0512926f32355814"
+        },
+        "phase-m0-5-plugin-admission-mature-only": {
+          "en": "aa07a244a320c12c",
+          "zh": "4f698fc664a83358"
+        },
+        "phase-m1-install-the-stack": {
+          "en": "b97c05447dc8cb18",
+          "zh": "5ba1fe664ab4d915"
+        },
+        "phase-m2-hygiene-policy": {
+          "en": "e6005403fcf0e916",
+          "zh": "86463cffe4e73b97"
+        },
+        "adapting-the-reference-scripts": {
+          "en": "58c2e666d203ff03",
+          "zh": "2a4dc87ac90f09e5"
+        },
+        "do-not": {
+          "en": "53c572e925aed2a6",
+          "zh": "d2142bb86bdcb4fe"
+        }
+      }
+    },
+    "agents/PROMPT.md": {
+      "zh": "PROMPT.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "70a42acdbe0491ab",
+          "zh": "a9fecf28604976a7"
+        }
+      }
+    },
+    "agents/README.md": {
+      "zh": "README.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "abfef76557076399",
+          "zh": "f25ae53c246a29a4"
+        },
+        "what-the-agent-will-build-after-your-approvals": {
+          "en": "e3b43e831e471f91",
+          "zh": "af19d06daf332366"
+        },
+        "how-to-use-it": {
+          "en": "0b2ea36510f67220",
+          "zh": "4dd50accf5b7cd37"
+        },
+        "prerequisites": {
+          "en": "726f54d07f0a0174",
+          "zh": "af9d5ec7019df2f6"
+        },
+        "what-you-get-from-this-repo": {
+          "en": "e180297a2b7eba37",
+          "zh": "88775fe03e85a598"
+        },
+        "ground-rules-the-agent-must-follow-and-you-should-enforce": {
+          "en": "9c6b696a7850279c",
+          "zh": "7fd125410398f609"
+        },
+        "adapting-vs-copying": {
+          "en": "7ca3fd0d9601d6ec",
+          "zh": "3e5cdbf2745b16b9"
+        },
+        "license": {
+          "en": "ef91e0ade48c46d4",
+          "zh": "1960da9be1affaca"
+        }
+      }
+    },
+    "BUILD-LOG.md": {
+      "zh": "BUILD-LOG.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "3f1f3e51f25a4218",
+          "zh": "acc128fb75d3ff0c"
+        },
+        "2026-11-09-research-design-p0": {
+          "en": "446953ebe3e61c26",
+          "zh": "ad779a28a85f6cd2"
+        },
+        "2026-11-10-security-telemetry-baseline-m0-green": {
+          "en": "992bc99db3b33fa7",
+          "zh": "aa141cfffe5be6ba"
+        },
+        "2026-11-10-plugin-admission-m0-5": {
+          "en": "0bcf928b310b2a36",
+          "zh": "3d6d52a822eba682"
+        },
+        "2026-11-10-curated-stack-m1-in-progress": {
+          "en": "9acbb7000120efd0",
+          "zh": "663db9157231b400"
+        },
+        "2026-11-11-our-own-glue-m1": {
+          "en": "32043ad649c8fb36",
+          "zh": "95b9c4ebb727617c"
+        },
+        "2026-11-11-m1-acceptance-gaps": {
+          "en": "bf602feb8c8fe7fc",
+          "zh": "89a70754fa73db85"
+        },
+        "2026-11-11-m2-start-memory-hygiene-retention": {
+          "en": "23cfecea61108c38",
+          "zh": "c87af8ff206ab3af"
+        },
+        "2026-11-11-m2-complete": {
+          "en": "12d65f82b264a82d",
+          "zh": "f5ec7bf15e64585f"
+        },
+        "2026-11-11-ui-ux-track-handed-over": {
+          "en": "8f4cbdd9dca1a905",
+          "zh": "94c500f66571d33c"
+        },
+        "2026-11-11-reusable-by-other-people-s-agents": {
+          "en": "a857f95119fc237d",
+          "zh": "3fb95d0c7328e7fd"
+        },
+        "2026-11-11-this-repository": {
+          "en": "b98a89dfe193d2b5",
+          "zh": "4cb5077a370cbde0"
+        },
+        "2026-11-11-ui-ux-design-brief-direction-pick-pending": {
+          "en": "0ace614a65334850",
+          "zh": "a586327a60f345ae"
+        },
+        "2026-11-11-ui-slice-1-status-health-panel-live-on-the-coding-host": {
+          "en": "6f663e250b0f886b",
+          "zh": "e6c42c99bbcb47c4"
+        },
+        "2026-11-11-slice-1-accessibility-polish": {
+          "en": "8c31de2cdd9aef7a",
+          "zh": "3159d6861802b55b"
+        },
+        "2026-11-11-status-health-panel-deployed-to-the-personal-host": {
+          "en": "12b08d34e8724200",
+          "zh": "5f6d5103477cf3f7"
+        },
+        "2026-11-11-guizang-design-media-desk-moved-to-the-personal-host": {
+          "en": "24d2dd5b0853ff8d",
+          "zh": "fc790180d44a5e55"
+        },
+        "2026-11-11-pwa-auto-login-fixed-on-the-personal-host": {
+          "en": "21e59a4f8bdf38b8",
+          "zh": "c342d3afac852bfd"
+        },
+        "2026-11-12-deployment-persona-made-the-prompt-opener-hindsight-recall-bounded": {
+          "en": "bbc773ca1d5c58b0",
+          "zh": "8c89b3ba2148843d"
+        },
+        "2026-11-12-assistant-panel-retired-and-removed-human-directed": {
+          "en": "88097875a3cee78e",
+          "zh": "215974f5eac8adbf"
+        },
+        "2026-11-12-public-repo-sanitised-human-directed": {
+          "en": "96f7973aa17b2058",
+          "zh": "e2537799989354f5"
+        },
+        "2026-11-12-chinese-translation-language-option-human-directed": {
+          "en": "b90f1e4c8a291294",
+          "zh": "fc49a3a658efb4de"
+        },
+        "2026-11-12-dsh-0-2-2-rc-2-across-both-hosts": {
+          "en": "89730aa2c4cde254",
+          "zh": "690a408d247e766b"
+        },
+        "2026-11-12-capabilities-page-and-the-first-connector": {
+          "en": "21d47f6c9d260864",
+          "zh": "de4e74669b15be91"
+        }
+      }
+    },
+    "docs/i18n.md": {
+      "zh": "i18n.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "aece98a15e3ea5f6",
+          "zh": "4a118c800afb6609"
+        },
+        "available-languages": {
+          "en": "3868a43ebe6330a2",
+          "zh": "29cec6310ae92be6"
+        },
+        "what-is-translated": {
+          "en": "2c1436041f832f4b",
+          "zh": "175f7331ccf36946"
+        },
+        "rules-for-translations": {
+          "en": "9f8f2dc76cd5beea",
+          "zh": "e6a7fca6359bc71d"
+        },
+        "keeping-pairs-in-sync": {
+          "en": "fe47a72eb9afae38",
+          "zh": "b54cd538b0b845d9"
+        },
+        "adding-another-language": {
+          "en": "b2c2bcc4beda58de",
+          "zh": "1c09c2b8a833392a"
+        },
+        "accuracy-and-feedback": {
+          "en": "3f47c52f6ce9191f",
+          "zh": "005f6f108e8a9564"
+        }
+      }
+    },
+    "README.md": {
+      "zh": "README.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "508d474b64c07f8c",
+          "zh": "a7990e3dc3e29b2a"
+        },
+        "build-your-own-with-your-dsh-agent": {
+          "en": "1439d2ddd8885b12",
+          "zh": "b3fc3a35ece80547"
+        },
+        "what-it-does-today": {
+          "en": "1534ac0145f89391",
+          "zh": "97f8c8f6f8f8974b"
+        },
+        "architecture": {
+          "en": "e3b0c44298fc1c14",
+          "zh": "e3b0c44298fc1c14"
+        },
+        "how-it-is-built-and-what-makes-this-repo-useful": {
+          "en": "4a9951a307235a7d",
+          "zh": "da12d4c7afa12c97"
+        },
+        "using-the-pieces": {
+          "en": "e3b0c44298fc1c14",
+          "zh": "e3b0c44298fc1c14"
+        },
+        "security-notes-for-readers": {
+          "en": "10929d8431bde0b1",
+          "zh": "c75d638487d28232"
+        },
+        "license": {
+          "en": "d058bc82d7243dba",
+          "zh": "52c34329be18ac96"
+        }
+      }
+    },
+    "research/build-progress.md": {
+      "zh": "build-progress.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "717f980d1edb5eb5",
+          "zh": "86821f7000bd2752"
+        },
+        "phase-board": {
+          "en": "3b26405a4a920809",
+          "zh": "dbf8cb3198aa8aff"
+        },
+        "m0-task-checklist-pragmatic-baseline-d13": {
+          "en": "3640ad202acfdd4e",
+          "zh": "cc7d7d92f9fe44ef"
+        },
+        "resolved-m0-decisions-human-sign-off-2026-11-10-superseded-by-d13-where-noted": {
+          "en": "5a4ac243127ed37f",
+          "zh": "eeae5a049c7655f6"
+        },
+        "decisions-log-recent": {
+          "en": "c7239b03ce629e1d",
+          "zh": "64f5b57583986bf3"
+        },
+        "next-track-ui-ux-started-2026-11-11": {
+          "en": "098513d629f613a5",
+          "zh": "0d627518626c9d72"
+        },
+        "agent-consumable-packaging-2026-11-11": {
+          "en": "84be2242743097cc",
+          "zh": "c6c15bcff44f57a4"
+        },
+        "open-questions-for-the-human": {
+          "en": "fa5f8001cadf94bd",
+          "zh": "5bf674a686c78985"
+        },
+        "work-log": {
+          "en": "621d40d53071e6df",
+          "zh": "65adc48375b77547"
+        }
+      }
+    },
+    "research/personal-agent-design.md": {
+      "zh": "personal-agent-design.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "44edff1178c7eb95",
+          "zh": "c77b3164d1b4bec5"
+        },
+        "0-decisions-so-far": {
+          "en": "65ba50b648c529a2",
+          "zh": "93f7dde4e1e4752a"
+        },
+        "1-principles": {
+          "en": "12946c719a7e6fe9",
+          "zh": "3be23250b157f2a8"
+        },
+        "2-target-architecture": {
+          "en": "e3b0c44298fc1c14",
+          "zh": "e3b0c44298fc1c14"
+        },
+        "3-memory-subsystem-added-2026-11-10": {
+          "en": "7bdba21eff909c8a",
+          "zh": "64513e897a7d5cbc"
+        },
+        "4-buy-vs-build-resolved-2026-11-10": {
+          "en": "3e1848e65793bb5f",
+          "zh": "9921d75c9325a5b1"
+        },
+        "5-roadmap": {
+          "en": "bc287d476ddd05d9",
+          "zh": "014140826ddee3bd"
+        },
+        "6-vetting-protocol-for-plugins": {
+          "en": "b2888dabd609e9a4",
+          "zh": "89dd642d722f3e5f"
+        },
+        "7-open-questions": {
+          "en": "07f15146c938277f",
+          "zh": "0ada52e50789a435"
+        }
+      }
+    },
+    "research/personal-agent-security.md": {
+      "zh": "personal-agent-security.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "4409c629a842cf61",
+          "zh": "fb86a8befdb42f62"
+        },
+        "1-what-dsh-does-and-does-not": {
+          "en": "5d89b43b1870cf1a",
+          "zh": "c558a820a586f8ff"
+        },
+        "2-threat-model-for-our-stack": {
+          "en": "b51a4182c960bfba",
+          "zh": "2ec27d73dc2cb460"
+        },
+        "3-static-audit-of-the-six-shortlisted-packages-2026-11-10": {
+          "en": "66b8cc4e0f259645",
+          "zh": "c6c088eccc68c617"
+        },
+        "4-layered-controls-how-we-actually-ensure-security": {
+          "en": "3737a36a31c2c26a",
+          "zh": "7333e06783f4d935"
+        },
+        "5-admission-checklist-copy-for-every-plugin": {
+          "en": "85bd91435f873373",
+          "zh": "450cb8a55afc8657"
+        },
+        "6-telemetry-observability-p0-local-only": {
+          "en": "c631962e49d841bd",
+          "zh": "0053bb04478042af"
+        },
+        "7-residual-risk-be-honest": {
+          "en": "6f2c76536da196ee",
+          "zh": "cc614ba1c282469c"
+        },
+        "8-d13-pragmatic-baseline-revision-2026-11-10-human-decision": {
+          "en": "c12b01122e96ed8b",
+          "zh": "9796a91bde61cf88"
+        }
+      }
+    },
+    "research/plugin-ledger.md": {
+      "zh": "plugin-ledger.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "dab8f4c498a3eb32",
+          "zh": "5ebb886ba74ab743"
+        },
+        "installed-in-personal-2026-11-10-m1-human-sign-off-put-forward": {
+          "en": "d356c324a82223b5",
+          "zh": "57b2579e9ef1bed1"
+        },
+        "content-work-plugins-moved-to-personal-2026-11-11-human-directed": {
+          "en": "23a0530c8cac2b4e",
+          "zh": "2d71178f81234297"
+        },
+        "rejected-by-maturity-gate-d14-2026-11-10-human-decision": {
+          "en": "c1b8da8e1080a2d3",
+          "zh": "427892724230786c"
+        },
+        "under-vetting": {
+          "en": "3cd4ccdfc733e785",
+          "zh": "b02bf8d4e10ae3e0"
+        },
+        "rejected-do-not-install": {
+          "en": "445a5e6bb686f54a",
+          "zh": "5cd7db9547bd5382"
+        },
+        "upgrade-policy": {
+          "en": "051cc12b899b28bb",
+          "zh": "04388ee52c52d2a1"
+        },
+        "our-own-code-installed-in-personal-d14-local-bundles-no-npm-supply-chain": {
+          "en": "b6deac9c18b95903",
+          "zh": "5f5453e594cc3548"
+        },
+        "re-admission-on-dsh-0-2-2-rc-2-2026-11-12": {
+          "en": "2533625972f83a0f",
+          "zh": "1fae0bb182ddceb0"
+        }
+      }
+    },
+    "research/README.md": {
+      "zh": "README.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "4157f23a77bbe3f2",
+          "zh": "c0ac918d9de15d45"
+        },
+        "read-this-first": {
+          "en": "37de063c2788af39",
+          "zh": "9aeaa1a8eca95acc"
+        },
+        "supporting-research-notes": {
+          "en": "09d6d80f4955d206",
+          "zh": "81afe136630b46e7"
+        },
+        "build-phase-docs-m0-m0-5-added-2026-11-10": {
+          "en": "f52e78e182a6e942",
+          "zh": "57d3baecbf5bf0d0"
+        },
+        "one-paragraph-answer": {
+          "en": "b617c639952414bf",
+          "zh": "862bbfd2cee5dadd"
+        },
+        "caveats": {
+          "en": "18dd8b3e948f89c5",
+          "zh": "e7c94b09945e01a6"
+        }
+      }
+    },
+    "SECURITY.md": {
+      "zh": "SECURITY.zh.md",
+      "sections": {
+        "(preamble)": {
+          "en": "c1a6fcb0332ae6ed",
+          "zh": "6a83c5a5013470ea"
+        },
+        "reporting-a-vulnerability": {
+          "en": "ab0824aceddf1496",
+          "zh": "e1cbd65cfd162466"
+        },
+        "scope-and-threat-model-short-version": {
+          "en": "37293d15063a0d57",
+          "zh": "d0c2767e3325b1f6"
+        },
+        "out-of-scope": {
+          "en": "185dabf19479232c",
+          "zh": "3678a0d4d11440ae"
+        }
+      }
+    }
+  }
+}

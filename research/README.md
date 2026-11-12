@@ -1,5 +1,7 @@
 # DSH as a personal AI assistant — research bundle
 
+English | [中文](README.zh.md)
+
 Research run on 2026-11-09 for the question: *how could DSH (`@deepseek-ai/dsh` 0.2.2-rc.1) become a
 personal AI assistant in the style of Hermes Agent / OpenClaw, and what is being done in this space?*
 

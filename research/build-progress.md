@@ -133,7 +133,7 @@ slice = read-only Status/Health, then Memory browser). Channel stays parked.
 settings material), one `Assistant` panel with Status/Memory/Activity tabs, first slice read-only
 Status/Health at 1440 + 390 in both palettes. [`ui-design-brief.md`](ui-design-brief.md), supported by
 [`ui-primitives-slots.md`](ui-primitives-slots.md) (slots/primitives/route recipe; `ui-primitives` is
-runtime-seeded, not an installed package) and [`ui-data-inventory.md`](ui-data-inventory.md) (15 sources,
+runtime-seeded, not an installed package) and `ui-data-inventory.md` (15 sources,
 22 handover corrections, route shape/TTLs).
 
 **Slice 1 built and verified on the coding host (2026-11-11):** `plugins/dsh-status` (`@local/dsh-status`,
@@ -571,3 +571,14 @@ status), with topics.
   a transient-404 readiness false negative; the retry is recorded in [`rc2-upgrade.md`](rc2-upgrade.md).
   **Next:** session-level SOUL/Hindsight acceptance, first MCP connector via `mcp-manager`, and the
   `@local/dsh-capabilities` sidebar page.
+
+- **2026-11-12 20:00 — Capabilities page + first connector plane live (personal):** built
+  [`@local/dsh-capabilities`](../plugins/dsh-capabilities/) (host route + sidebar page: Connectors from
+  `ctx.mcpManager`, Plugins from `ctx.pluginManager`; connector probe/restart; read-only plugins). Added a
+  dependency-free local stdio MCP fixture ([`mcp-ping-server.mjs`](../scripts/fixtures/mcp-ping-server.mjs))
+  through the rc.2 `mcp-manager` row. Live checks: `/api/capabilities` 200 (owner) / 401 (unauth), connector
+  `ping` state `connected`, 31 plugin bundles listed, page renders in Playwright at 1440 and 390 px with 0
+  console errors; personal 80 live client modules, `dsh-pending` clean. Decision record and Western coverage /
+  Composio trigger: [`connectors-options.md`](connectors-options.md). **Next:** the first real Western
+  connector needs a token (GitHub PAT first), then the OAuth probe (Gmail/Calendar) to decide the Composio
+  trigger.

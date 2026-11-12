@@ -1,5 +1,7 @@
 # Copy-paste prompt for your DSH agent
 
+English | [中文](PROMPT.zh.md)
+
 Fill the placeholders below (`<...>`) and paste this as the first message in a DSH session whose workspace
 is a clone of this repository.
 

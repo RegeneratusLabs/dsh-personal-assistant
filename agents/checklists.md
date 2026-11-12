@@ -1,5 +1,7 @@
 # Phase checklists (copy into your build progress file)
 
+English | [中文](checklists.zh.md)
+
 Tick only what you have verified on your host. Every unchecked box is a reason not to install the next
 plugin.
 

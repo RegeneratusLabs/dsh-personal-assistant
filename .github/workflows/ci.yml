@@ -33,6 +33,11 @@ jobs:
           set -e
           for f in $(find plugins -maxdepth 2 -name '*.js' -o -maxdepth 2 -name '*.mjs' | sort); do node --check "$f"; echo "ok $f"; done
 
+      - name: docs translation pairing
+        run: |
+          node --check scripts/docs/i18n-check.mjs
+          node scripts/docs/i18n-check.mjs
+
       - name: secret-shaped string scan
         run: |
           set -e

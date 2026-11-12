@@ -64,6 +64,11 @@ loop. Target end state: identity (soul), long-term memory (Hindsight), one chann
 - DSH 0.2.2-rc.2 at `/home/josh/dsh/node/`; CLI `/home/josh/dsh/node/bin/dsh`; Node 24.22.1. rc.2 adds the official MCP server manager (`mcp-manager`) and `${credential:REF}` MCP templates; Agent Teams moved into core (`agent-team`/`ui-agent-team`), and the old `dsh-experimental-agent-team-profile` bundle was removed.
 - Personal home `~/.dsh-personal` (profile `personal`, systemd user unit `dsh-personal.service`,
   `127.0.0.1:7002`, tailnet `https://homelab.taildace6c.ts.net:8454/`).
+- **Capabilities + connectors (live 2026-11-12):** `@local/dsh-capabilities` adds a **Capabilities**
+  sidebar page on `personal` (Connectors from `ctx.mcpManager`, Plugins from `ctx.pluginManager`; connector
+  probe/restart; read-only plugins). The first connector is a local `ping` stdio fixture through the rc.2
+  `mcp-manager` row (`scripts/connectors/personal-mcp-manager.patch.yml`); the first Western connector needs
+  a token. Coverage matrix + Composio fallback trigger: `research/connectors-options.md`.
 - Hindsight 0.10.3 already runs locally: `http://127.0.0.1:9177` (REST + `/mcp`, embedded Postgres).
 - **Restarting a DSH host:** Settings → **Host control** (local bundle `plugins/dsh-host-control/`) shows
   the unit and which plugins are waiting for a restart, and restarts this host from the browser. Shell

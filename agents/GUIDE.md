@@ -1,5 +1,7 @@
 # Build guide — a personal assistant on DSH (generic)
 
+English | [中文](GUIDE.zh.md)
+
 This is the executable companion to [`README.md`](README.md): the phases, the gates and the commands your
 DSH agent should follow when building **your** assistant. It is deliberately host-agnostic; the reference
 build (this repo) applies it to one homelab host, and `research/` explains each decision in depth.

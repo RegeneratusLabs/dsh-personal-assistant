@@ -1,5 +1,7 @@
 # Security
 
+English | [中文](SECURITY.zh.md)
+
 This repository is a **public build log** for a personal-agent deployment on a single-user host. It contains
 design notes, our own plugin code and operator scripts — **no credentials, no personal data, no captured
 prompts** (raw captures and host state are gitignored).

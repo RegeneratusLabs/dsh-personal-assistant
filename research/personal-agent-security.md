@@ -1,5 +1,7 @@
 # Security model and plugin admission
 
+English | [中文](personal-agent-security.zh.md)
+
 **Question:** unvetted plugins are a real risk — how do we ensure security, and does DSH vet plugins for prompt
 injection or malicious activity? **Short answer: DSH does not vet plugin code or filter prompt injection.**
 It provides compatibility/install-integrity checks and configurable runtime controls, and its own SAFETY

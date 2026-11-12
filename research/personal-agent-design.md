@@ -1,5 +1,7 @@
 # Personal agent on DSH — build plan
 
+English | [中文](personal-agent-design.zh.md)
+
 **Status:** living plan, 2026-11-10. Target: a personal assistant running on the existing `personal` DSH
 host (0.2.2-rc.1, `~/.dsh-personal`, tailnet-published). This file is the decision record; the detailed
 reference material is in [`personal-agent-docs.md`](personal-agent-docs.md) and the plugin scouting

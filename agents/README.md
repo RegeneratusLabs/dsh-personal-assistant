@@ -1,5 +1,7 @@
 # Build your own personal assistant with your DSH agent
 
+English | [中文](README.zh.md)
+
 This repository is a **reference build**: a working personal AI assistant composed on
 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH) from pinned, vetted plugins, with
 an engineering log behind every decision. You can point **your own DSH agent** at it and have it build the

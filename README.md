@@ -30,6 +30,8 @@ rejected. The reference persona and path names are examples — your agent shoul
 | Session recall | `@deepseek-ai/dsh-experimental-session-search@0.2.2-rc.2` (FTS5 index, durable file) | live |
 | Phone push | `@local/dsh-push` — ntfy notifications on turn/approval/question, no message bodies | installed, inert until `NTFY_URL` |
 | Proactivity | `@local/dsh-heartbeat` — quiet, default-OFF loop with quiet hours and change-gated nudges | installed, disabled by design |
+| Connectors | official `mcp-manager` (rc.2) + a local `ping` MCP fixture; `GET /api/capabilities` is owner-gated | live (fixture); first Western connector pending a token |
+| Capabilities UI | `@local/dsh-capabilities` — left-sidebar page listing every connector and plugin, with probe/restart | live on `personal` |
 | Channel | `@xmanrui/dsh-im` (mature Telegram/IM plugin) | **HOLD** — not certified for this DSH version and an open upstream bug (#547) breaks final-answer delivery |
 | Security & telemetry | hardened systemd user unit, DSH telemetry egress disabled, nftables egress observe+alert, journald sink, digest timer, token/cost meter, backups + restore drill | live |
 

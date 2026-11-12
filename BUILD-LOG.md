@@ -191,3 +191,13 @@ Chronological, link-first record of the build. Detail lives in `research/`.
   readiness probe now waits for the exact `401`. The retry completed in ~2 minutes with both hosts healthy,
   `dsh-pending` clean, and 79/90 client modules. Hindsight, session search, guizang/media-desk auth gates,
   profiles and the soul loader were re-verified. Runbook/rollback: `research/rc2-upgrade.md`.
+
+## 2026-11-12 — Capabilities page and the first connector
+- Added `@local/dsh-capabilities`: one left-sidebar **Capabilities** page with two sections — connectors
+  (from the rc.2 MCP manager) and plugins (from the profile bundle list). Connector probe/restart are live;
+  plugin management stays on the official Plugins page. The host route is owner-gated and returns no
+  credentials, commands or profile paths.
+- Proved the connector plane with a dependency-free local stdio MCP fixture (`ping`): the manager reports
+  `connected`, the page lists it, and Playwright verifies both sections at 1440 and 390 px with no console
+  errors. First Western connector (GitHub PAT) and the OAuth/Composio decision are the next step;
+  `research/connectors-options.md` records the coverage matrix and the fallback trigger.

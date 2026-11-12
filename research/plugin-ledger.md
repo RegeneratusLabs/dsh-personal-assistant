@@ -1,5 +1,7 @@
 # Plugin ledger
 
+English | [中文](plugin-ledger.zh.md)
+
 Every plugin install/upgrade passes through this file. **No row = not approved.** The build agent appends
 an entry before installing anything into `personal`, and re-audits on every upgrade. Checklist:
 [`personal-agent-security.md`](personal-agent-security.md) §4–§5.
@@ -80,3 +82,30 @@ shortlist candidate is either rejected by the maturity gate (D14) or replaced by
 | `@local/dsh-soul` | 0.1.0 | `67289628dd20218219dbc52cb37645264b9fcc8a9de6f3517be2be29015aa773` | our code: read-only fs, no network/subprocess/creds; literal section `interpolate:false`; 16 KiB cap | 8/8 selftest + headless persona proof + live journal line | **INSTALLED 2026-11-11** | 2026-11-11 | `dsh plugin --profile personal remove @local/dsh-soul` + restart |
 | `@local/dsh-push` | 0.1.0 | `d55eed7b263cbe9c1ddebcc90c51de082085fd7ec3172970c157184d1fe4b3b4` | our code: no deps; env-only endpoint; payload has no bodies/creds; fail-open | mock: inert=0 requests, active=1 clean POST, dead endpoint=turn unaffected | **INSTALLED, inert (no NTFY_URL)** | 2026-11-11 | remove `@local/dsh-push` + restart |
 | `@local/dsh-heartbeat` | 0.1.0 | `1d5ca8672d3166aeb724e7c5b7c08049ea4883a9253ad5605df322e8972667e0` | our code: no tools/network/shell; default OFF; bounded interval; identified `source.kind:"heartbeat"` | 26/26 unit tests; default-off and enabled boot verified | **INSTALLED, disabled** (live nudge path M2) | 2026-11-11 | remove `@local/dsh-heartbeat` + restart |
+
+## Re-admission on DSH 0.2.2-rc.2 — 2026-11-12
+
+The runtime upgrade was treated as a re-admission event: every installed component was re-checked on rc.2
+(boot, composed tree, live route/UI, repo tests). No new community tarballs were installed in this pass; the
+official packages followed the runtime, and session-search was bumped to the matching rc.2 build.
+
+| Component | Version | rc.2 result |
+|---|---|---|
+| `@deepseek-ai/dsh-experimental-session-search` | **0.2.2-rc.2** | PASS — installed from the profile lockfile; index DB reopened at boot; dump-config clean |
+| `@vectorize-io/hindsight-coding-agents` | 0.8.6 | PASS — 0600 config unchanged, bank `dsh-personal`, API health 200, no boot error |
+| `@local/dsh-soul` | 0.1.0 | PASS — selftest 5/5; journal `loaded SOUL persona … order 0` |
+| `@local/dsh-push` | 0.1.0 | PASS — inert (no `NTFY_URL`) |
+| `@local/dsh-heartbeat` | 0.1.0 | PASS — default off; unit tests pass |
+| `@local/dsh-profiles` | 0.1.0 | PASS — client module served on both hosts |
+| `dsh-guizang-design` | 0.1.4 | PASS — panel loads; `/guizang-design` 401 unauth / 200 owner (auth patch intact) |
+| `dsh-media-desk` | 2.6.2 | PASS — `/media-desk/state` 401 unauth / 200 owner |
+| `@deepseek-ai/dsh-experimental-auto-review` | rc.2 (runtime) | PASS — bundle composes, no boot error |
+| `@deepseek-ai/dsh-experimental-voice-input-bundle` | rc.2 (runtime) | PASS — bundle composes |
+| `@deepseek-ai/dsh-experimental-agent-team-profile` | — | **REMOVED** — no rc.2 release; rc.2 core supplies `agent-team`, `tool-agent-team`, `ui-agent-team` |
+| Coding host: host-control / web-mobile / dshmarket / context / ffmpeg / blender / web-fetch-playwright / web-search / youtube / inspector / plugin-market / forge | as installed | PASS — boot 401, 90 live client modules, `dsh-pending` clean; no per-plugin error in the log |
+
+Residual: full session-level SOUL-opener and Hindsight recall turns are still to be exercised on rc.2; the
+plugin-level checks and the M1 acceptance runs are on rc.1. The rc.1→rc.2 upgrade guide items that touch this
+stack are `subagent-interrupt-default` (our preset now carries `interrupt: false`) and `web-search-billing`
+(no YAML change required; `*ApiKeyEnv` still takes precedence). `BundleInfo.updatable` is now
+`BundleInfo.update`, which the Capabilities host route must use.

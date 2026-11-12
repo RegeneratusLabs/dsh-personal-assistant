@@ -1,5 +1,7 @@
 # Build log
 
+English | [中文](BUILD-LOG.zh.md)
+
 Chronological, link-first record of the build. Detail lives in `research/`.
 
 ## 2026-11-09 — research & design (P0)
@@ -170,3 +172,22 @@ Chronological, link-first record of the build. Detail lives in `research/`.
   the hosted profile and the stock DSH look/identity restored.
 - The generic starter `soul/SOUL.md` is what this repo ships; live personal configuration is not mirrored here.
   A full pre-rewrite history bundle is retained locally (gitignored) for rollback.
+
+## 2026-11-12 — Chinese translation + language option (human-directed)
+- Added a Simplified Chinese (`zh-CN`) version of the user-facing docs beside the English source (`*.zh.md`
+  pairs, e.g. `README.md` ↔ `README.zh.md`), with a language switch line on every translated page and
+  coverage/policy in `docs/i18n.md` + `docs/i18n-glossary.md`. Translated: README, AGENTS, BUILD-LOG,
+  SECURITY, docs/i18n, the four `agents/` pages and five `research/` pages (index, progress, design,
+  security, ledger); code and the remaining engineering notes stay English.
+- Added `.i18n.json` per-section hash pairing + `scripts/docs/i18n-check.mjs` (structure, code-fence parity,
+  link resolution, drift) and a CI step, so a one-sided doc edit fails instead of drifting silently.
+- Workflow for future changes: edit English → mirror in Chinese → `node scripts/docs/i18n-check.mjs --write`.
+
+## 2026-11-12 — DSH 0.2.2-rc.2 across both hosts
+- Upgraded the shared runtime and both profiles to rc.2. The release brings the official MCP server manager
+  and `${credential:REF}` templates (the connector prerequisites) and moves Agent Teams into core; the old
+  `dsh-experimental-agent-team-profile` bundle row is gone.
+- A first detached run rolled back cleanly because the web host briefly answers `404` while booting; the
+  readiness probe now waits for the exact `401`. The retry completed in ~2 minutes with both hosts healthy,
+  `dsh-pending` clean, and 79/90 client modules. Hindsight, session search, guizang/media-desk auth gates,
+  profiles and the soul loader were re-verified. Runbook/rollback: `research/rc2-upgrade.md`.

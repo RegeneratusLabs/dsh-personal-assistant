@@ -1,5 +1,7 @@
 # dsh-personal-assistant
 
+English | [中文](README.zh.md)
+
 A personal AI assistant built by **composing pinned plugins on [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH)** — no fork, no custom agent loop. This repository is both the build and its public engineering log: every decision, plugin admission, security control, failure and fix is recorded under [`research/`](research/).
 
 **Status:** M0 (security & telemetry) ✅ · M0.5 (plugin admission) ✅ · M1 (curated stack) 🟨 — identity, memory, recall, push and heartbeat are live; the Telegram channel is **on hold** pending an upstream delivery fix.
@@ -25,7 +27,7 @@ rejected. The reference persona and path names are examples — your agent shoul
 |---|---|---|
 | Identity | `@local/dsh-soul` + [`soul/SOUL.md`](soul/SOUL.md) — persona, tone, untrusted-content and approval rules injected at prompt order 0 | live |
 | Long-term memory | `@vectorize-io/hindsight-coding-agents@0.8.6`, self-hosted Hindsight on `127.0.0.1:9177`, bank `dsh-personal` only | live |
-| Session recall | `@deepseek-ai/dsh-experimental-session-search@0.2.2-rc.1` (FTS5 index, durable file) | live |
+| Session recall | `@deepseek-ai/dsh-experimental-session-search@0.2.2-rc.2` (FTS5 index, durable file) | live |
 | Phone push | `@local/dsh-push` — ntfy notifications on turn/approval/question, no message bodies | installed, inert until `NTFY_URL` |
 | Proactivity | `@local/dsh-heartbeat` — quiet, default-OFF loop with quiet hours and change-gated nudges | installed, disabled by design |
 | Channel | `@xmanrui/dsh-im` (mature Telegram/IM plugin) | **HOLD** — not certified for this DSH version and an open upstream bug (#547) breaks final-answer delivery |
@@ -39,7 +41,7 @@ where the capability matters, we wrote the small piece ourselves ([`plugins/`](p
 
 ```
 dsh-personal.service (systemd --user, 127.0.0.1:7002, tailnet via tailscale serve)
-├─ DSH 0.2.2-rc.1 (profile "personal", home ~/.dsh-personal)
+├─ DSH 0.2.2-rc.2 (profile "personal", home ~/.dsh-personal)
 │  ├─ identity   @local/dsh-soul ──► $DSH_HOME/soul/SOUL.md (0600)
 │  ├─ memory     @vectorize-io/hindsight-coding-agents ──► Hindsight :9177, bank dsh-personal
 │  ├─ recall     session-search (FTS5) ──► $DSH_HOME/storages/session-search.db

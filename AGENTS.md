@@ -1,5 +1,7 @@
 # AGENTS.md — personal-agent build standing orders
 
+English | [中文](AGENTS.zh.md)
+
 > **Building your *own* personal assistant?** If you are a DSH agent pointed at this repository by a user who
 > cloned it to build their own assistant, read [`agents/README.md`](agents/README.md), follow
 > [`agents/GUIDE.md`](agents/GUIDE.md) and use [`agents/PROMPT.md`](agents/PROMPT.md) as your task brief.
@@ -59,7 +61,7 @@ loop. Target end state: identity (soul), long-term memory (Hindsight), one chann
 
 ## Environment facts
 
-- DSH 0.2.2-rc.1 at `/home/josh/dsh/node/`; CLI `/home/josh/dsh/node/bin/dsh`; Node 24.22.1.
+- DSH 0.2.2-rc.2 at `/home/josh/dsh/node/`; CLI `/home/josh/dsh/node/bin/dsh`; Node 24.22.1. rc.2 adds the official MCP server manager (`mcp-manager`) and `${credential:REF}` MCP templates; Agent Teams moved into core (`agent-team`/`ui-agent-team`), and the old `dsh-experimental-agent-team-profile` bundle was removed.
 - Personal home `~/.dsh-personal` (profile `personal`, systemd user unit `dsh-personal.service`,
   `127.0.0.1:7002`, tailnet `https://homelab.taildace6c.ts.net:8454/`).
 - Hindsight 0.10.3 already runs locally: `http://127.0.0.1:9177` (REST + `/mcp`, embedded Postgres).
@@ -84,7 +86,7 @@ loop. Target end state: identity (soul), long-term memory (Hindsight), one chann
   `~/.dsh-personal/telemetry/`; Hindsight bank `dsh-personal` (shared `:9177`, never `josh`); backups at
   `~/backups/dsh-personal`. Details: `research/m0-*.md`.
 - **M1 state (2026-11-10):** `personal` has two mature plugins installed and accepted —
-  `@deepseek-ai/dsh-experimental-session-search@0.2.2-rc.1` (index at `~/.dsh-personal/storages/session-search.db`,
+  `@deepseek-ai/dsh-experimental-session-search@0.2.2-rc.2` (index at `~/.dsh-personal/storages/session-search.db`,
   `openAt: startup`) and `@vectorize-io/hindsight-coding-agents@0.8.6`. Hindsight reads its config from
   `~/.dsh-personal/hindsight/coding-agent.json` (0600) via the `20-hindsight.conf` unit drop-in — a Cordis
   profile `config:` block does nothing for it. Recall tuned 2026-11-12 (`autoInject: recall`, 800-token cap);
@@ -173,3 +175,7 @@ logs/telemetry; backup restores to a working host.
 - Prefer editing repo files (`research/`, `plugins/`, `scripts/`) over host state; every host change needs a
   human approval and a rollback note.
 - When blocked or a decision needs human judgment (security tradeoff, plugin maturity, cost), stop and ask.
+- **Docs are bilingual.** English `*.md` is the source of truth; Simplified Chinese `*.zh.md` sits beside it
+  with a switch line under the title. Edit both sides in the same commit, then re-record the pairing with
+  `node scripts/docs/i18n-check.mjs --write` (CI fails otherwise). Policy and terminology:
+  `docs/i18n.md`, `docs/i18n-glossary.md`. Never ship a one-sided doc edit.

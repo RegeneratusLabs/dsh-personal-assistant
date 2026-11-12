@@ -1,5 +1,7 @@
 # Build progress
 
+English | [中文](build-progress.zh.md)
+
 Living status for the personal-agent build. The build agent updates this after every work block.
 Plan: [`personal-agent-design.md`](personal-agent-design.md) · Gates: [`personal-agent-security.md`](personal-agent-security.md)
 · Stack: [`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md).
@@ -533,6 +535,20 @@ status), with topics.
   - **Rollback:** restore the two profile backups + `git revert` of the removal commit, reinstall the bundle and
     restart `dsh-personal.service` (one restart).
 
+- **2026-11-12 — Bilingual documentation, Chinese available as an option (human-directed):**
+  - **Request (human):** a Chinese translation of the repo, offered to users as a language option.
+  - **Convention:** English `*.md` stays the source of truth; each translated page gets a `*.zh.md` sibling with
+    a switch line under the title (`English | [中文](…)` / `[English](…) | 中文`), mirroring DSH's own README
+    convention. Policy: `docs/i18n.md`; terminology: `docs/i18n-glossary.md`.
+  - **Translated (14 pages):** README, AGENTS, BUILD-LOG, SECURITY, docs/i18n, `agents/{README, PROMPT, GUIDE,
+    checklists}`, `research/{README, build-progress, personal-agent-design, personal-agent-security,
+    plugin-ledger}`. Code, comments, configs and the remaining deep research notes stay English (coverage table
+    in `docs/i18n.md`).
+  - **Drift control:** `.i18n.json` stores per-section EN/ZH hashes; `scripts/docs/i18n-check.mjs` checks
+    structure, byte-identical code fences, relative links and the recorded hashes; CI runs it on every push/PR.
+    Workflow: edit EN → mirror in ZH → `node scripts/docs/i18n-check.mjs --write`.
+  - **Next:** the remaining `research/` notes can be translated mechanically in a follow-up block.
+
 - **2026-11-12 19:40 — DSH rc.2 preflight (isolated, no live change):** installed
   `@deepseek-ai/dsh@0.2.2-rc.2` into `/tmp/dsh-rc2-preflight/runtime` and booted copies of both real profiles
   on spare ports. `--dump-config` is clean for both; the composed tree gains `mcp-manager`, `agent-team`,
@@ -544,3 +560,14 @@ status), with topics.
   [`scripts/ops/dsh-upgrade-rc2.sh`](../scripts/ops/dsh-upgrade-rc2.sh); runbook and rollback:
   [`rc2-upgrade.md`](rc2-upgrade.md). Dry-run through a transient user unit passes. **Next:** run the detached
   live upgrade (the coding-host restart drops this Web session), then the post-upgrade re-admission checklist.
+
+- **2026-11-12 19:50 — DSH 0.2.2-rc.2 live on both hosts (upgrade block complete):**
+  `npm i -g @deepseek-ai/dsh@0.2.2-rc.2`; profiles updated by
+  [`update-rc2-profiles.mjs`](../scripts/ops/update-rc2-profiles.mjs) (agent-team bundle row removed — rc.2
+  moves Agent Teams into core; personal `preset-standard` regenerated from the shipped rc.2 preset; session-search
+  pinned rc.2; dead web rows removed). Personal 401 in 5 s, web 401 in 7 s, `dsh-pending` clean, 79/90 client
+  modules. Hindsight (0600 config, bank `dsh-personal`, API 200), session-search DB, guizang/media-desk auth
+  gates, profiles, soul loader all re-verified; repo tests pass. The first live attempt rolled back cleanly on
+  a transient-404 readiness false negative; the retry is recorded in [`rc2-upgrade.md`](rc2-upgrade.md).
+  **Next:** session-level SOUL/Hindsight acceptance, first MCP connector via `mcp-manager`, and the
+  `@local/dsh-capabilities` sidebar page.

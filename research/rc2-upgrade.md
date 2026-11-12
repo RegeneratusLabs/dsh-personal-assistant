@@ -82,3 +82,24 @@ systemctl --user start dsh-personal.service dsh-web.service
 4. Agent Teams: `ui-agent-team` serves; the old bundle row is gone; a teammate can be spawned.
 5. Connectors: `mcp-manager` row composed; `ctx.mcpManager.list()` reachable; first connector installs.
 6. Docs/ledger updated; CI secret scan clean; commit + push.
+
+## Result — live (2026-11-12 19:48–19:50 AEST)
+
+- Attempt 1 (19:42) upgraded and validated both profiles, then **rolled back cleanly** because the web
+  readiness probe accepted a transient `404` while the app was still registering routes. Both hosts returned
+  to rc.1 (401) with no data loss; the rollback is now exercised end to end.
+- Attempt 2 (19:48) succeeded: `dsh 0.2.2-rc.2`; both units active; personal reached **401 in 5 s**, web in
+  **7 s**; `dsh-pending.py` clean; client modules **79 / 90** (was 78 / 89; the extra is the core
+  `ui-agent-team` surface). `--dump-config` produced no skipped bundles or unresolved patch rows.
+- Profiles after upgrade: personal bundles no longer contain
+  `@deepseek-ai/dsh-experimental-agent-team-profile`; session-search is **0.2.2-rc.2**; the personal
+  `preset-standard` block is the rc.2 shipped list minus `persona` (tool-office, custom skill dirs,
+  `interrupt: false` present). Web dead rows (`dsh-status`, `guizang-design`, `media-desk`) removed.
+- Live probes: the personal page serves `@deepseek-ai/dsh-client-ui-agent-team`, `dsh-guizang-design`,
+  `dsh-media-desk`, `@local/dsh-profiles`; `/guizang-design` and `/media-desk/state` are **401
+  unauthenticated / 200 owner** (the guizang auth patch survived); Hindsight config is 0600 with bank
+  `dsh-personal`, API health 200; the session-search DB exists and was reopened at boot; the journal records
+  `[dsh-soul] loaded SOUL persona … (1545 bytes, order 0)`.
+- Repo checks after upgrade: heartbeat tests, soul selftest, theme tests, shell syntax — all pass.
+- Still to prove in the next block: a real SOUL-opener turn and a Hindsight recall turn on the upgraded host
+  (plugin-level checks pass; this is the session-level acceptance), the first connector, and Capabilities.

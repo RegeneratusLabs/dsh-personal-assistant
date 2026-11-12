@@ -256,7 +256,7 @@ model is free to treat them as advice.”
    would work — but it is evaluated once at load (no live reload) and is undocumented for this use.
 
 Existing template on this machine: `~/.hermes/SOUL.md` and a worked example at
-`/home/josh/projects/pantler/distribution/SOUL.md` (a business-specific persona — structure is reusable;
+another local agent's `distribution/SOUL.md` (a business-specific persona — structure is reusable;
 it is a Hermes file, not a DSH one).
 
 ## 6. Sessions, workspaces and directories

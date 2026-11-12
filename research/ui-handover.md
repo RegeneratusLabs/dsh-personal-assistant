@@ -8,6 +8,13 @@ Workspace / repo: `/home/josh/projects/DSH-playground` (git working tree of
 https://github.com/RegeneratusLabs/dsh-personal-assistant, branch `main`, **public**).
 Read `AGENTS.md` first; it is auto-loaded and binding. Update `research/build-progress.md` after every block.
 
+> **Update 2026-11-12 (human-directed):** the first UI slice — the Status/Health panel
+> (`@local/dsh-status`, sidebar entry "Assistant") — was **retired and removed**. It is uninstalled from the
+> `personal` profile (backup `…bak-status-removal-20261112-174555`), the host was restarted once, and the plugin
+> code, its verify scripts and the panel-scoped data inventory were deleted from the repo. The route answers
+> `404` and the sidebar entry is gone. This handover and the design docs are kept as the record for the UI/UX
+> track; no UI panel is installed on `personal` today.
+
 ---
 
 ## 1. What already exists (don't rebuild it)
@@ -198,7 +205,8 @@ The human must choose before you build more than one panel.
 ## 8. Definition of done for the UI track
 
 1. `research/ui-design-brief.md` approved by the human (direction + IA + component inventory).
-2. Status/Health panel shipped and reviewed on the coding host, then installed on `personal` (human okay).
+2. ~~Status/Health panel shipped and reviewed on the coding host, then installed on `personal`~~ — done, then
+   **retired 2026-11-12 at the human's request** (see the update note above); pick a new first slice.
 3. Component kit reusable by the next panels; tokens documented; no hard-coded palette.
 4. Accessibility + responsive checklist passes; screenshots captured.
 5. No new unvetted dependency; bundle rows reversible; docs + build log updated; commits pushed, CI green.

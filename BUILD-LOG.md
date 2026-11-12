@@ -136,3 +136,37 @@ Chronological, link-first record of the build. Detail lives in `research/`.
   points it at `dsh-personal.service`; proxy restarted, DSH untouched.
 - `scripts/verify-autologin-proxy.sh` updated to read the personal token from the journal; both entries pass
   inject + own-cookie POST `session/list`; tailnet 200 through the proxy, direct loopback still 401.
+
+## 2026-11-12 — Deployment persona made the prompt opener; Hindsight recall bounded
+- Profile patch on `personal` drops the harness identity line, blanks the global coding-agent persona prefix,
+  and overrides the shipped `standard` preset with its plugin list minus the scope-only `persona` row, so the
+  installed deployment persona is the first system-prompt section. Verified live: the 9,391-char prompt starts
+  with `# Identity`, no coding-agent or harness-identity lines, reply in 6 s.
+- Hindsight's first-prompt dump was a degraded fallback, not a plugin bug: its synthesis LLM returns
+  `402 Insufficient Balance` (Hermes-side instance), so every first prompt waited ~19 s and then injected
+  17.7 KB of raw observations. The client config now uses retrieval-only `autoInject: recall` (3 s budget,
+  800-token cap): 1.2 s, 8 observations, 12.8 KB injected. Upstream credit error untouched.
+- Documented with rollback in `research/persona-and-memory-tuning.md`. The repo ships the generic starter
+  `soul/SOUL.md`; the live deployment's actual persona is private and not part of this repo.
+
+## 2026-11-12 — Assistant panel retired and removed (human-directed)
+- Human: the Assistant plugin/feature "is not required — disable and remove", personal profile. Target
+  confirmed as `@local/dsh-status` (sidebar entry **Assistant**, Status/Health page).
+- Uninstalled from `~/.dsh-personal` (profile `personal`) after backing up
+  `package.json`/`cordis.patch.yml` (`…bak-status-removal-20261112-174555`); one restart of
+  `dsh-personal.service` (PID 1648385 → 1736271, active, 401 serving, clean journal; `dsh-pending.py`: nothing
+  pending). Verified authenticated: no Assistant sidebar entry at 1440 or 390, `GET /api/dsh-status/status` →
+  404, no console errors.
+- Removed from the repo: `plugins/dsh-status/` (host + client halves, 15 tests, README),
+  `scripts/verify-dsh-status-ui.mjs`, `scripts/verify-dsh-status-a11y.mjs`, the CI status-panel test step and
+  `research/ui-data-inventory.md`. `research/ui-design-brief.md` + `research/ui-handover.md` stay as the UI-track
+  design record with retirement notes; `AGENTS.md`, `research/README.md` and `research/build-progress.md` updated.
+- Rollback: restore the two profile backups, `git revert` this commit, reinstall the bundle, restart once.
+
+## 2026-11-12 — Public repo sanitised (human-directed)
+- Removed an accidental cross-project theme/logo experiment and the deployment's personal persona text from the
+  public repo, including the commits that introduced them; history was rewritten and force-pushed, repo stays
+  public. The live assistant keeps its private persona; the experimental theme/logo bundle was uninstalled from
+  the hosted profile and the stock DSH look/identity restored.
+- The generic starter `soul/SOUL.md` is what this repo ships; live personal configuration is not mirrored here.
+  A full pre-rewrite history bundle is retained locally (gitignored) for rollback.

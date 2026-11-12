@@ -1,8 +1,12 @@
 # UI design brief — the assistant's own surfaces
 
-Status: **approved and slice 1 deployed to the personal host 2026-11-11** — direction: hybrid (A bones + B voice); read-only Status/Health at 1440 + 390 in both palettes; one "Assistant" entry with tabs. `plugins/dsh-status/` is installed on `~/.dsh-personal` (profile `personal`, `:7002`) after backup `20261111T051012Z`; UI verify 16/16, accessibility 10/10, zero console errors; the coding-host preview was removed. Screenshots `artifacts/ui/status-personal-*`.
+Status: **slice 1 (read-only Status/Health panel) retired 2026-11-12 at the human's request** — the panel was
+built and verified on the coding host and installed on the personal host 2026-11-11 (UI verify 16/16,
+accessibility 10/10, zero console errors, screenshots `artifacts/ui/status-personal-*`), then uninstalled and its
+code and panel-scoped data inventory removed. This brief is kept as the design record for the UI/UX track (IA,
+tokens, three directions, component kit); **no UI panel is currently installed on `personal`**.
 Track handover: [`ui-handover.md`](ui-handover.md). Verified seams: [`ui-primitives-slots.md`](ui-primitives-slots.md).
-Data contracts: [`ui-data-inventory.md`](ui-data-inventory.md). Mockups are local evidence in `artifacts/ui/` (gitignored).
+Mockups are local evidence in `artifacts/ui/` (gitignored).
 
 ## 1. What this brief decides
 
@@ -346,7 +350,11 @@ reduced-motion (inline React styles cannot express `:hover`/media queries).
 | <768 (drawer sidebar, shell) | single column, 16px gutter; 2×2 vitals; page title + actions stack; mono values wrap or scroll in place |
 | 390 verified | no horizontal overflow, 44px touch rows, refresh reachable |
 
-## 11. First slice — Status / Health (read-only)
+## 11. First slice — Status / Health (read-only) — **retired 2026-11-12**
+
+> Historical design and implementation record for the retired slice: the files, scripts and CI step named in
+> §11 and §15 **no longer exist** (deleted with the panel on 2026-11-12). Kept for the design rationale and
+> because later panels reused these patterns.
 
 ### 11.1 Scope
 
@@ -360,7 +368,7 @@ New bundle `plugins/dsh-status/` (`@local/dsh-status`), zero-build, same shape a
 | `client.js` | panel: `main` keyed `assistant` + `sidebar.panellist` icon + (later tabs); locale `en`/`zh`; one `useStatus` hook; loading/empty/error/degraded; token-only styles; visibility-gated 60s refresh + backoff + manual refresh |
 | `README.md` | contract, data fields, degradation matrix, rollback (`remove_bundle` + restart) |
 
-Route response: the v1 shape in [`ui-data-inventory.md`](ui-data-inventory.md) §D.3 — `agent`, `health.{alerts,
+Route response: the v1 shape in the retired slice's data inventory (deleted 2026-11-12, kept in git history) §D.3 — `agent`, `health.{alerts,
 backup,egress,cost,jobs,curator}`, `memory`, `retention`, `identity`, `sources[]`, `degraded[]`. Data sources:
 systemd (unit/timers), `check-alerts --json`, egress summary, retention report, Hindsight `/health` + bank
 `/stats` + `/llm-requests/stats`, telemetry JSON (cost/curate), backup manifests, SOUL metadata. Session search
@@ -423,10 +431,12 @@ toggles, channel, charts beyond a static sparkline, and any change to the `perso
   rendered from the real token values in `.tmp/mockups/` (gitignored).
 - Seam verification: [`ui-primitives-slots.md`](ui-primitives-slots.md) — slot catalog, 311 primitive exports,
   client-module contract, route recipe, defensive rules.
-- Data contracts: [`ui-data-inventory.md`](ui-data-inventory.md) — 15 sources with sanitized live schemas, 22
-  handover corrections, recommended route shape, TTLs and degradation matrix.
+- Data contracts: the retired slice's data inventory (deleted 2026-11-12, kept in git history) — 15 sources with
+  sanitized live schemas, 22 handover corrections, recommended route shape, TTLs and degradation matrix.
 
-## 15. Slice 1 review note (implemented 2026-11-11)
+## 15. Slice 1 review note (implemented 2026-11-11, retired 2026-11-12)
+
+> Historical note — every file and script below was removed on 2026-11-12; the slice is no longer installed.
 
 **Shipped** `plugins/dsh-status/` (zero-build, `@local/dsh-status`), installed on the **coding host only**:
 

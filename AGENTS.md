@@ -87,11 +87,15 @@ loop. Target end state: identity (soul), long-term memory (Hindsight), one chann
   `@deepseek-ai/dsh-experimental-session-search@0.2.2-rc.1` (index at `~/.dsh-personal/storages/session-search.db`,
   `openAt: startup`) and `@vectorize-io/hindsight-coding-agents@0.8.6`. Hindsight reads its config from
   `~/.dsh-personal/hindsight/coding-agent.json` (0600) via the `20-hindsight.conf` unit drop-in — a Cordis
-  profile `config:` block does nothing for it. Bank `dsh-personal` only. Channel (`@xmanrui/dsh-im`) is HOLD
+  profile `config:` block does nothing for it. Recall tuned 2026-11-12 (`autoInject: recall`, 800-token cap);
+  the synthesis LLM upstream returns 402 Insufficient Balance (Hermes side) — see
+  `research/persona-and-memory-tuning.md`. Bank `dsh-personal` only. Channel (`@xmanrui/dsh-im`) is HOLD
   pending a Telegram smoke test (#547); identity/push/heartbeat are our own bundles, installed 2026-11-11
   (next bullet). Evidence: `research/m1-install-verification.md`.
 - **Our own M1 bundles (2026-11-11):** `@local/dsh-soul` (injects `~/.dsh-personal/soul/SOUL.md` 0600 at
-  persona order 0; edit source `soul/SOUL.md` then copy + restart), `@local/dsh-push` (ntfy; **inert** until
+  persona order 0; edit source `soul/SOUL.md` then copy + restart; since 2026-11-12 SOUL is the prompt's
+  opener via a profile-level `preset-standard` override — `research/persona-and-memory-tuning.md`),
+  `@local/dsh-push` (ntfy; **inert** until
   `NTFY_URL` is set in a 0600 unit drop-in), `@local/dsh-heartbeat` (**default OFF**; enable only after
   M2 live-nudge proof via `DSH_HEARTBEAT=1`). Forget is human-invoked: `scripts/memory/forget.sh` (bank
   locked to `dsh-personal`; Hindsight has no delete tool and derived observations survive document deletes —
@@ -148,8 +152,11 @@ loop. Target end state: identity (soul), long-term memory (Hindsight), one chann
 - **M3 — Optional.** Notes store (`dsh-memento`/`dsh-hermes-memory`), memory UI, skill curator, second
   channel/voice — only with a real need.
 - **UI/UX track (parallel, started 2026-11-11).** Extend the Web UI with our own client plugins (panels,
-  Status/Health, Memory browser, Identity, Activity, Approvals, Settings) on DSH client seams. Handover:
-  `research/ui-handover.md`. Channel remains parked.
+  Memory browser, Identity, Activity, Approvals, Settings) on DSH client seams. The first slice —
+  Status/Health `@local/dsh-status` with its "Assistant" sidebar entry — was built, installed on `personal`
+  and then **retired and removed at the human's request (2026-11-12)**: uninstalled, host restarted once,
+  plugin code + verify scripts + panel-scoped data inventory deleted. No UI panel is installed today.
+  Handover + design record: `research/ui-handover.md`, `research/ui-design-brief.md`. Channel remains parked.
 
 ## Acceptance tests (must pass before claiming a phase done)
 

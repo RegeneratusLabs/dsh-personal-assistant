@@ -1,5 +1,0 @@
-# Bundle patch for the Status/Health panel: one Host row owns the bundle, and its
-# `dsh.client` declaration loads the browser half (a sidebar entry plus its main page).
-- insert:
-    - id: dsh-status
-      name: '@local/dsh-status'

@@ -482,3 +482,53 @@ status), with topics.
     tailnet root and `/api/dsh-status/status` return 200 through the proxy; direct loopback `:7002` still 401.
   - **Rollback:** remove the drop-in + `systemctl --user daemon-reload && systemctl --user restart
     dsh-pwa-autologin-personal.service` (reverts to the stale log-file behaviour); script change is in git.
+
+- **2026-11-12 — Deployment persona made the prompt opener; Hindsight recall bounded (human-directed):**
+  - **Prompt stack:** the profile patch on `personal` sets `system-prompt: {includeHarnessIdentity: false,
+    personaPrefix: ''}` and overrides `preset-standard` with the shipped 0.2.2-rc.1 plugin list minus its
+    scope-only `persona` row, so the installed deployment persona is the first system-prompt section (the row
+    shadowed the global prefix for every web session). Verified on a live session: restart PID 1613944 →
+    1648385, boot clean, stored system prompt 9,391 chars starting with `# Identity`, 0 matches for the
+    coding-agent and harness-identity lines, reply in 6 s. The host-specific fragment is intentionally not
+    committed; the two rows above are the reproducible form. Rollback: restore the profile backup and restart.
+  - **Memory:** the 17.7 KB unsynthesized first-prompt dump was a degraded fallback, not a plugin bug —
+    Hindsight's synthesis returned 500 `402 Insufficient Balance` (diag `reflect_failed` after 19,043 ms, then
+    page search → 22 raw observations). Client config (`~/.dsh-personal/hindsight/coding-agent.json`) is now
+    `autoInject: recall`, `injectTimeoutMs: 3000`, `recallOptions.max_tokens: 800`: `inject_recall` 1,222 ms,
+    8 observations, injection 12,801 chars, no `reflect_failed`. Upstream 402 is Hermes-side and untouched.
+    Docs: [`persona-and-memory-tuning.md`](persona-and-memory-tuning.md).
+  - **Privacy note:** this repo ships the generic starter `soul/SOUL.md`; the live deployment's actual persona
+    and its prompt text are private and deliberately not mirrored here.
+
+- **2026-11-12 — Public repo sanitised (human-directed):**
+  - **Request (human):** the cross-project theme/logo experiment and the personal persona text must not be in the
+    public repo; live theme/logo also to be reverted.
+  - **Repo:** dropped the theme/logo experiment (bundle, generated tokens/assets, verify harness, docs) and the
+    persona-port commits from public history; restored the generic starter `soul/SOUL.md`; genericised the
+    persona/prompt-stack documentation (no persona text, name, session ids or host-specific fragments); kept the
+    legitimate memory-recall tuning record and the Assistant-panel retirement. History rewritten and
+    force-pushed to `main`; repo remains public.
+  - **Live host:** uninstalled the experimental theme/logo bundle from the `personal` profile, one restart;
+    stock DSH palette and brand are back. The private deployment persona stays installed and untouched.
+  - **Rollback:** full pre-rewrite history bundle under `.tmp/history-backup/` (gitignored); reinstall the bundle
+    from a gitignored local archive if the experiment is ever wanted privately again.
+
+- **2026-11-12 — Assistant panel retired and removed (human-directed):**
+  - **Request (human):** "The assistant plugin and feature is not required — disable and remove" (personal
+    profile). Target confirmed: `@local/dsh-status`, the sidebar entry **Assistant** and its Status/Health page.
+  - **Host change (one restart):** uninstalled the package from the `personal` profile
+    (`DSH_HOME=~/.dsh-personal dsh plugin --profile personal remove @local/dsh-status`; dependency + bundle row
+    gone, `node_modules/@local/dsh-status` symlink removed) after backing up the profile config
+    (`package.json.bak-status-removal-20261112-174555`, `cordis.patch.yml.bak-status-removal-20261112-174555`).
+    `scripts/ops/dsh-restart.sh dsh-personal.service`: PID 1648385 → 1736271, active, journal clean (soul,
+    push, heartbeat, model listing only), no `dsh-status` line. `dsh-pending.py`: nothing pending on either host.
+  - **Verified live:** loopback `:7002` 401 (auth intact); authenticated tailnet probe shows the sidebar with
+    Plugins / Media Desk / Profiles / Guizang Design / Automation tasks only — **no Assistant entry** (desktop
+    1440 and mobile 390); `GET /api/dsh-status/status` → **404**; no console/page errors beyond the probe's own
+    404. Screenshots in `/tmp/assistant-removed/` (local evidence, not committed).
+  - **Repo removal:** deleted `plugins/dsh-status/` (code, tests, README), `scripts/verify-dsh-status-ui.mjs`,
+    `scripts/verify-dsh-status-a11y.mjs`, the CI "status panel host tests" step, and `research/ui-data-inventory.md`
+    (scoped 1:1 to the panel). `ui-design-brief.md` and `ui-handover.md` are kept as the UI-track design record
+    with retirement notes; `AGENTS.md`, `research/README.md` and the status board above updated.
+  - **Rollback:** restore the two profile backups + `git revert` of the removal commit, reinstall the bundle and
+    restart `dsh-personal.service` (one restart).

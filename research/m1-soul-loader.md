@@ -173,7 +173,7 @@ agent / AI agent powered by DSH; includes `{{model}}` and `{{cwd}}` as literal p
 
 | Run | Command | stdout |
 |---|---|---|
-| **With SOUL** | `dsh --profile soul-headless "Who are you? Answer in one short sentence."` | `I'm Mochi, Josh's concise personal assistant.` |
+| **With SOUL** | `dsh --profile soul-headless "Who are you? Answer in one short sentence."` | `I'm Mochi, the user's concise personal assistant.` |
 | **Negative control** (existing `headless` profile, plugin not installed) | same prompt | `I'm an AI coding agent powered by the DeepSeek Harness, here to help you with software engineering tasks.` |
 
 stderr of the SOUL run carried only the diagnostic

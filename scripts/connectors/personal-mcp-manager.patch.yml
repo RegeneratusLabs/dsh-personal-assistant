@@ -1,0 +1,16 @@
+# Capabilities connector fixture — one local, dependency-free MCP server.
+#
+# Appended to ~/.dsh-personal/profiles/personal/cordis.patch.yml after the
+# persona preset block. It proves the rc.2 mcp-manager + Capabilities page end
+# to end (stdio transport, tool discovery, live status, probe/restart) without a
+# third-party supply chain or any credential. Replace `ping` with a real
+# connector once its token/OAuth story is admitted; keep one server per key.
+- id: mcp-manager
+  config:
+    servers:
+      ping:
+        transport: stdio
+        command: /home/josh/dsh/node/bin/node
+        args:
+          - /home/josh/projects/dsh-personal-assistant/scripts/fixtures/mcp-ping-server.mjs
+        enabled: true

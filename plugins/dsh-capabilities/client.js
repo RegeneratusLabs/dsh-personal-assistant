@@ -52,8 +52,10 @@ window.__ModuleLoader__.load({
       probeOk: 'Probe finished',
       restartOk: 'Connector restarted',
       actionFailed: 'Action failed',
+      credentialMissing: 'Credential not configured',
       statusConnected: 'connected',
       statusConnecting: 'connecting',
+      statusWaiting: 'waiting for credentials',
       statusDisabled: 'disabled',
       statusFailed: 'failed',
       statusDisconnected: 'disconnected',
@@ -88,8 +90,10 @@ window.__ModuleLoader__.load({
       probeOk: '探测完成',
       restartOk: '连接器已重启',
       actionFailed: '操作失败',
+      credentialMissing: '凭据未配置',
       statusConnected: '已连接',
       statusConnecting: '连接中',
+      statusWaiting: '等待凭据',
       statusDisabled: '已禁用',
       statusFailed: '失败',
       statusDisconnected: '已断开',
@@ -125,6 +129,7 @@ window.__ModuleLoader__.load({
     const STATE_TONE = {
       connected: 'ok',
       connecting: 'warn',
+      'waiting-credentials': 'warn',
       disabled: 'muted',
       failed: 'danger',
       error: 'danger',
@@ -136,6 +141,7 @@ window.__ModuleLoader__.load({
       switch (state) {
         case 'connected': return t('statusConnected');
         case 'connecting': return t('statusConnecting');
+        case 'waiting-credentials': return t('statusWaiting');
         case 'disabled': return t('statusDisabled');
         case 'failed': return t('statusFailed');
         case 'disconnected': return t('statusDisconnected');
@@ -272,6 +278,10 @@ window.__ModuleLoader__.load({
       const tone = STATE_TONE[state] || 'muted';
       const pending = busy === connector.name;
       const disabled = pending || !connector.configured;
+      const waitingRef =
+        state === 'waiting-credentials'
+          ? (/credential "([^"]+)"/.exec(connector.error || '') || [])[1]
+          : null;
       return h(
         'div',
         { style: S.card },
@@ -286,7 +296,11 @@ window.__ModuleLoader__.load({
           { style: S.meta },
           connector.configured ? t('configured') : t('removed'),
         ),
-        connector.error ? h('div', { style: S.err }, connector.error) : null,
+        waitingRef
+          ? h('div', { style: S.meta }, `${t('credentialMissing')}: ${waitingRef}`)
+          : connector.error
+            ? h('div', { style: S.err }, connector.error)
+            : null,
         h(
           'div',
           { style: S.actions },

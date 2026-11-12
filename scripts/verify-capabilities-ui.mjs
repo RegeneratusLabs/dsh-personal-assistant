@@ -63,6 +63,8 @@ try {
   summary.steps.connectorPing = text.includes('ping');
   summary.steps.panelBundle = text.includes('@local/dsh-capabilities');
   summary.steps.connected = text.includes('connected');
+  summary.steps.connectorGithub = text.includes('github');
+  summary.steps.waitingCredentials = /waiting for credentials/i.test(text);
   await page.screenshot({ path: `${out}/${label}-desktop.png`, fullPage: true });
 
   await page.setViewportSize({ width: 390, height: 844 });

@@ -1,10 +1,17 @@
-# Capabilities connector fixture — one local, dependency-free MCP server.
+# Capabilities connectors — the profile's `mcp-manager` servers.
 #
 # Appended to ~/.dsh-personal/profiles/personal/cordis.patch.yml after the
-# persona preset block. It proves the rc.2 mcp-manager + Capabilities page end
-# to end (stdio transport, tool discovery, live status, probe/restart) without a
-# third-party supply chain or any credential. Replace `ping` with a real
-# connector once its token/OAuth story is admitted; keep one server per key.
+# persona preset block. One server per key; the manager mounts each enabled
+# entry and the Capabilities page lists its live status.
+#
+# `ping` is a dependency-free local fixture (stdio, no credential): it proves
+# discovery, tool registration, probe/restart and the page itself.
+#
+# `github` is the first real Western connector: GitHub's hosted remote MCP,
+# read-only, limited to three toolsets, authenticated by a PAT held in the DSH
+# credential store. With no PAT stored the manager reports
+# `waiting-credentials` and makes no request. Store the token with
+# `scripts/connectors/set-credential.py GITHUB_PERSONAL_ACCESS_TOKEN`.
 - id: mcp-manager
   config:
     servers:
@@ -13,4 +20,12 @@
         command: /home/josh/dsh/node/bin/node
         args:
           - /home/josh/projects/dsh-personal-assistant/scripts/fixtures/mcp-ping-server.mjs
+        enabled: true
+      github:
+        transport: streamable-http
+        url: https://api.githubcopilot.com/mcp/
+        headers:
+          Authorization: 'Bearer ${credential:GITHUB_PERSONAL_ACCESS_TOKEN}'
+          X-MCP-Toolsets: repos,issues,pull_requests
+          X-MCP-Readonly: 'true'
         enabled: true

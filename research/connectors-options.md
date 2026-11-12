@@ -12,10 +12,16 @@ which route, and the written trigger for switching to Composio.
 - The **Capabilities** sidebar page (`@local/dsh-capabilities`): Connectors and Plugins in one read-only hub,
   with connector Probe/Restart. Host route `GET /api/capabilities` is owner-gated; no credential, command or
   profile path is returned.
-- **One connector, `ping`**: a dependency-free local stdio MCP server
-  (`scripts/fixtures/mcp-ping-server.mjs`) wired through the `mcp-manager` row. It proves discovery, tool
-  registration, live status (`connected`), probe/restart and the page end to end with **no third-party
-  supply chain and no egress**. It is a fixture, not a product connector.
+- **Two connectors configured** through the `mcp-manager` row
+  ([`scripts/connectors/personal-mcp-manager.patch.yml`](../scripts/connectors/personal-mcp-manager.patch.yml)):
+  - `ping` — a dependency-free local stdio MCP server (`scripts/fixtures/mcp-ping-server.mjs`). It proves
+    discovery, tool registration, live status (`connected`), a real model→tool→reply turn (`pong`),
+    probe/restart and the page end to end with **no third-party supply chain and no egress**.
+  - `github` — GitHub's hosted remote MCP at `https://api.githubcopilot.com/mcp/`, deliberately
+    **read-only** and limited to the `repos,issues,pull_requests` toolsets via `X-MCP-Readonly` and
+    `X-MCP-Toolsets`; the PAT is referenced as `${credential:GITHUB_PERSONAL_ACCESS_TOKEN}`. It currently
+    reports `waiting-credentials` (no request is made) until the token is stored with
+    `scripts/connectors/set-credential.py`.
 
 ## Western coverage matrix
 
@@ -69,9 +75,11 @@ connector touches mail/calendar. No Composio account is created without a separa
 
 ## Next actions
 
-1. Human supplies a **GitHub PAT** (or names a different first Western app and its token). Configure it under
-   the `mcp-manager` row with `env: { GITHUB_PERSONAL_ACCESS_TOKEN: '${credential:GITHUB_PERSONAL_ACCESS_TOKEN}' }`,
-   store the token in the credential store, restart, and verify the tool list/read call.
+1. Store a **GitHub PAT** with
+   `python3 scripts/connectors/set-credential.py GITHUB_PERSONAL_ACCESS_TOKEN` (no echo, 0600); the manager
+   reconnects the read-only `github` server automatically. Then verify the `mcp__github__*` tools and a
+   repository read in a new session. If the first Western app should be something else (Stripe key, Notion,
+   Slack, Gmail), name it and provide its token through the same helper.
 2. Attempt the first OAuth app (default Gmail/Calendar) in a scratch profile; if it blocks, record the
    trigger above and ask before opening Composio.
 3. Keep the `ping` fixture as the regression connector in the Capabilities verification script.

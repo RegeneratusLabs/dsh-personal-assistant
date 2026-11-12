@@ -13,7 +13,8 @@ Upgrades both hosts (`dsh-web.service` :7000, `dsh-personal.service` :7002) from
 |---|---|
 | Preflight in an isolated temp runtime + copied homes | **PASS** (2026-11-12) |
 | Scripts written and dry-run through a transient user unit | **PASS** |
-| Live upgrade (detached, auto-rollback) | run via `scripts/ops/dsh-upgrade-rc2.sh` |
+| Live upgrade, attempt 1 | **rolled back cleanly** — a booting host briefly answers `404` before its auth routes register; the readiness probe accepted the first non-zero code and rolled back a good install. Fixed to wait for the exact `401` (120 s), with boot diagnostics captured on timeout and a profile-install reconciliation in rollback. |
+| Live upgrade, retry | run via `scripts/ops/dsh-upgrade-rc2.sh` |
 | Post-upgrade plugin re-admission | pending; see checklist below |
 
 ## Preflight evidence

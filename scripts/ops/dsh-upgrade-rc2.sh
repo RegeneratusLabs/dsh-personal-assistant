@@ -111,17 +111,21 @@ restore_files() {
   say 'profile files restored'
 }
 
-wait_http() {
-  local url=$1 i code
-  for ((i = 0; i < 90; i++)); do
+# Wait for the EXACT expected status. A booting host can answer 404 (or 000)
+# while its auth/SPA routes are not registered yet; the first live run caught
+# that and rolled back a good upgrade. 120 s is generous for either profile.
+wait_http_code() {
+  local url=$1 expected=$2 i code
+  code=''
+  for ((i = 0; i < 120; i++)); do
     code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 2 "$url" 2>/dev/null || true)
-    if [[ -n $code && $code != '000' ]]; then
+    if [[ $code == "$expected" ]]; then
       printf '%s' "$code"
       return 0
     fi
     sleep 1
   done
-  printf 'timeout'
+  printf 'last=%s' "${code:-none}"
   return 1
 }
 
@@ -132,9 +136,12 @@ rollback() {
   restore_files
   "$NPM" --cache "$NPM_CACHE" install -g "@deepseek-ai/dsh@$FROM" --no-audit --no-fund
   "$DSH_BIN" --version
+  if ! DSH_HOME=$PERSONAL_HOME "$DSH_BIN" plugin --profile personal install; then
+    say 'WARN: rollback profile install failed; node_modules may not match the restored lockfile'
+  fi
   systemctl --user start dsh-personal.service
   systemctl --user start dsh-web.service
-  say "ROLLBACK done; personal=$(wait_http http://127.0.0.1:7002/) web=$(wait_http http://127.0.0.1:7000/)"
+  say "ROLLBACK done; personal=$(wait_http_code http://127.0.0.1:7002/ 401 || echo timeout) web=$(wait_http_code http://127.0.0.1:7000/ 401 || echo timeout)"
   say "ROLLBACK report: $LOG"
 }
 
@@ -221,16 +228,18 @@ main() {
 
   say 'starting dsh-personal.service'
   systemctl --user start dsh-personal.service
-  local personal_code
-  personal_code=$(wait_http http://127.0.0.1:7002/) || fail 'personal host did not answer'
-  [[ $personal_code == '401' ]] || fail "personal host answered $personal_code, expected 401"
+  if ! wait_http_code http://127.0.0.1:7002/ 401 >/dev/null; then
+    journalctl --user -u dsh-personal.service --since "$(date -d '-3 minutes' '+%Y-%m-%d %H:%M:%S')" --no-pager >>"$BK/personal-start.err" 2>&1 || true
+    fail "personal host did not reach 401 (see $BK/personal-start.err)"
+  fi
   say 'personal host up (401)'
 
   say 'starting dsh-web.service'
   systemctl --user start dsh-web.service
-  local web_code
-  web_code=$(wait_http http://127.0.0.1:7000/) || fail 'web host did not answer'
-  [[ $web_code == '401' ]] || fail "web host answered $web_code, expected 401"
+  if ! wait_http_code http://127.0.0.1:7000/ 401 >/dev/null; then
+    tail -120 /home/josh/dsh/logs/web.log >>"$BK/web-start.err" 2>&1 || true
+    fail "web host did not reach 401 (see $BK/web-start.err)"
+  fi
   say 'web host up (401)'
 
   {

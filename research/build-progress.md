@@ -532,3 +532,15 @@ status), with topics.
     with retirement notes; `AGENTS.md`, `research/README.md` and the status board above updated.
   - **Rollback:** restore the two profile backups + `git revert` of the removal commit, reinstall the bundle and
     restart `dsh-personal.service` (one restart).
+
+- **2026-11-12 19:40 — DSH rc.2 preflight (isolated, no live change):** installed
+  `@deepseek-ai/dsh@0.2.2-rc.2` into `/tmp/dsh-rc2-preflight/runtime` and booted copies of both real profiles
+  on spare ports. `--dump-config` is clean for both; the composed tree gains `mcp-manager`, `agent-team`,
+  `tool-agent-team`, `ui-agent-team`; both hosts answer 401 in 7 s with no error lines. The old
+  `dsh-experimental-agent-team-profile` bundle has no rc.2 release and cannot resolve — rc.2 core replaces it,
+  so the row is removed. The personal `preset-standard` override was regenerated from the shipped rc.2 preset
+  minus `persona` (adds `tool-office`, `skill-filesystem.customSkillDirs`, `tool-subagent-control.interrupt:false`).
+  Scripts: [`scripts/ops/update-rc2-profiles.mjs`](../scripts/ops/update-rc2-profiles.mjs),
+  [`scripts/ops/dsh-upgrade-rc2.sh`](../scripts/ops/dsh-upgrade-rc2.sh); runbook and rollback:
+  [`rc2-upgrade.md`](rc2-upgrade.md). Dry-run through a transient user unit passes. **Next:** run the detached
+  live upgrade (the coding-host restart drops this Web session), then the post-upgrade re-admission checklist.

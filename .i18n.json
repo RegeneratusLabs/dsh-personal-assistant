@@ -256,6 +256,10 @@
         "2026-11-13-personal-agent-memory-layer-hindsight-right-shaped": {
           "en": "9b9212babb188661",
           "zh": "fb4d54b36af91f1a"
+        },
+        "2026-11-13-memory-layer-installed-on-the-personal-host": {
+          "en": "8ab7a66f258d794f",
+          "zh": "d8e596f7aadcf2e1"
         }
       }
     },
@@ -365,8 +369,8 @@
           "zh": "5bf674a686c78985"
         },
         "work-log": {
-          "en": "5e741f4f56e9b917",
-          "zh": "63972975a87bb5bb"
+          "en": "0d5460b2e7a4c818",
+          "zh": "9b2d7970f98dbb5d"
         }
       }
     },

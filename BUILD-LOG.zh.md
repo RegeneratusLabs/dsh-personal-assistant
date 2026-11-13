@@ -116,3 +116,7 @@
 - 构建 `@local/dsh-memory-personal`：有上限的策展档案（2,200/4,000 字符）作为单个静态提示段，外加走 Hindsight REST 的 `memory_remember`/`memory_recall`/`memory_forget`。schema 共 459 token，零依赖，失败即降级。
 - 隔离 profile 验证：写入偏好（5 步、70.8k token）→ 下一会话直接由提示块回答：1 步 / 5.5 秒 / 12.2k token / 0 次工具调用；retain 落到 `dsh-personal` 库（158→160 节点）。
 - 线上主机未改动。文档：`research/memory-personal-agent.md`。
+
+## 2026-11-13 —— 记忆层安装到 personal 主机
+- `dsh plugin --profile personal add`（link:），禁用编码代理 `hindsight` 条目，用 `dsh-restart.sh` 重启（pid 3028723 → 3258661，`:7002` 401，active）。
+- 新进程日志：`[dsh-memory-personal] bank=dsh-personal … budgets=2200/4000`。该单元的 `dsh-pending` 干净。回滚与备份记录在 `research/build-progress.md`。

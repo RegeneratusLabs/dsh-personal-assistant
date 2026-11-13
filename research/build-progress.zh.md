@@ -591,3 +591,13 @@ Status/Health，覆盖 1440 与 390 两种宽度、两套配色。[`ui-design-br
   审批步骤（加组合包、禁用 `hindsight` 条目、重启、重跑两项测试）。设计、实测、被否方案与回滚：
   [`memory-personal-agent.md`](memory-personal-agent.md)。**下一步：** 审批并安装到 `personal`，再决定编码代理
   插件是否以 `autoInject: "none"` 保留。
+
+- **2026-11-13 15:08 —— 记忆层已在 `personal` 上线（人工批准）：** 用 `dsh plugin --profile personal add`
+  （link:）安装，在 profile 补丁里禁用编码代理的 `hindsight` 条目，并用 `dsh-restart.sh dsh-personal.service`
+  重启（旧 pid 3028723 → 新 3258661，`:7002` 401，active）。新进程日志：
+  `[dsh-memory-personal] bank=dsh-personal … entries=0user/0agent budgets=2200/4000`；`dsh-pending`
+  显示该单元没有待生效插件。`~/.dsh-personal/memory/` 尚不存在——它会在第一次 `memory_remember` 时以 0700 创建。
+  回滚：移除组合包、删掉 `- id: hindsight` 禁用条目、重启；库与其 160 条事实不受影响。Profile 备份：
+  `package.json.bak-memory-20261113T150344`、`cordis.patch.yml.bak-memory-20261113T150344`、
+  `pnpm-lock.yaml.bak-memory-20261113T150344`。**下一步：** 第一次真实对话应写入 profile 文件；在真实 UI 里
+  确认跨会话召回。

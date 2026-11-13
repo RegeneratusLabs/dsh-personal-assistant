@@ -207,3 +207,7 @@ Chronological, link-first record of the build. Detail lives in `research/`.
 - Built `@local/dsh-memory-personal`: bounded curated profile (2,200/4,000 chars) as one static prompt section, plus `memory_remember` / `memory_recall` / `memory_forget` over Hindsight REST. 459 tokens of schema, no dependencies, fail-open.
 - Isolated-profile proof: preference write (5 steps, 70.8k tokens) → the next session answered from the block in 1 step / 5.5 s / 12.2k tokens / 0 tool calls; retain landed in bank `dsh-personal` (158→160 nodes).
 - Live host untouched. Docs: `research/memory-personal-agent.md`.
+
+## 2026-11-13 — memory layer installed on the personal host
+- `dsh plugin --profile personal add` (link:), coding-agent `hindsight` row disabled, restart via `dsh-restart.sh` (pid 3028723 → 3258661, `:7002` 401, active).
+- Journal on the new process: `[dsh-memory-personal] bank=dsh-personal … budgets=2200/4000`. `dsh-pending` clean for the unit. Rollback and backups recorded in `research/build-progress.md`.

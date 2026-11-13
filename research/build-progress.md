@@ -594,3 +594,14 @@ status), with topics.
   approved step (add bundle, disable the `hindsight` row, restart, re-run both tests). Design, measurements,
   rejected options and rollback: [`memory-personal-agent.md`](memory-personal-agent.md). **Next:** approve
   and install on `personal`, then decide whether the coding-agent plugin stays with `autoInject: "none"`.
+
+- **2026-11-13 15:08 — memory layer live on `personal` (human-approved):** installed with
+  `dsh plugin --profile personal add` (link:), the coding-agent `hindsight` row disabled in the profile
+  patch, and `dsh-restart.sh dsh-personal.service` (old pid 3028723 → new 3258661, `:7002` 401, active).
+  Journal on the new process: `[dsh-memory-personal] bank=dsh-personal … entries=0user/0agent
+  budgets=2200/4000`; `dsh-pending` shows no waiting plugin for this unit. `~/.dsh-personal/memory/`
+  does not exist yet — it is created 0700 on the first `memory_remember`. Rollback: remove the bundle,
+  delete the `- id: hindsight` disable row, restart; the bank and its 160 facts are untouched. Profile
+  backups: `package.json.bak-memory-20261113T150344`, `cordis.patch.yml.bak-memory-20261113T150344`,
+  `pnpm-lock.yaml.bak-memory-20261113T150344`. **Next:** first live conversation should write the
+  profile file; confirm cross-session recall in the real UI.

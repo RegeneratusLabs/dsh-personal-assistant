@@ -1,7 +1,31 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdtempSync, rmSync, statSync } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
 import { apply, bundleView, collect, serverView } from '../index.js';
+import { APPS, composioStatus, identity } from '../composio.js';
+
+function ctxWith({ credentials, pluginManager, mcpManager, routes = [] } = {}) {
+  return {
+    get(name) {
+      if (name === 'pluginManager') return pluginManager;
+      if (name === 'mcpManager') return mcpManager;
+      return undefined;
+    },
+    credentials: credentials ?? { resolve: async () => undefined },
+    connection: {
+      fetch: {
+        register: async (route) => {
+          routes.push(route);
+          return async () => {};
+        },
+      },
+    },
+    effect: () => {},
+  };
+}
 
 test('bundleView keeps management facts and drops paths', () => {
   const view = bundleView({
@@ -48,65 +72,60 @@ test('serverView keeps identity and live status', () => {
   });
 });
 
-test('collect joins both planes and tolerates missing managers', async () => {
-  const ctx = {
-    get(name) {
-      if (name === 'pluginManager') {
-        return { listBundles: async () => [{ name: 'p', enabled: true, rows: [] }] };
-      }
-      if (name === 'mcpManager') {
-        return { list: () => [{ name: 'c', configured: true, status: { state: 'connected' } }] };
-      }
-      return undefined;
-    },
-  };
+test('collect joins all three planes and tolerates missing managers', async () => {
+  const ctx = ctxWith({
+    pluginManager: { listBundles: async () => [{ name: 'p', enabled: true, rows: [] }] },
+    mcpManager: { list: () => [{ name: 'c', configured: true, status: { state: 'connected' } }] },
+  });
   const out = await collect(ctx);
   assert.equal(out.plugins.length, 1);
   assert.equal(out.connectors.length, 1);
-  assert.deepEqual(out.available, { pluginManager: true, mcpManager: true });
+  assert.equal(out.composio.configured, false);
+  assert.equal(out.composio.apps.length, APPS.length);
+  assert.deepEqual(out.available, { pluginManager: true, mcpManager: true, composio: false });
 
-  const empty = await collect({ get: () => undefined });
+  const empty = await collect(ctxWith());
   assert.deepEqual(empty.plugins, []);
   assert.deepEqual(empty.connectors, []);
-  assert.deepEqual(empty.available, { pluginManager: false, mcpManager: false });
+  assert.equal(empty.available.pluginManager, false);
 });
 
-test('apply registers the read route and both connector actions', async () => {
-  const routes = [];
-  const calls = [];
-  const ctx = {
-    get(name) {
-      if (name === 'pluginManager') return { listBundles: async () => [] };
-      if (name === 'mcpManager') {
-        return {
-          list: () => [],
-          probe: async (name) => {
-            calls.push(['probe', name]);
-            return { ok: true };
-          },
-          restart: async (name) => {
-            calls.push(['restart', name]);
-          },
-        };
-      }
-      return undefined;
-    },
-    connection: {
-      fetch: {
-        register: async (route) => {
-          routes.push(route);
-          return async () => {};
-        },
-      },
-    },
-    effect: () => {},
-  };
+test('composioStatus without a key reports every app unconnected and not connectable', async () => {
+  const status = await composioStatus(ctxWith());
+  assert.equal(status.configured, false);
+  assert.equal(status.error, null);
+  assert.equal(status.apps.length, APPS.length);
+  assert.ok(status.apps.every((app) => app.state === 'not_connected' && app.canConnect === false));
+});
 
+test('identity is one opaque id per home, created 0600 and reused', () => {
+  const dir = mkdtempSync(path.join(os.tmpdir(), 'cap-identity-'));
+  const previous = process.env.DSH_HOME;
+  process.env.DSH_HOME = dir;
+  try {
+    const first = identity();
+    const second = identity();
+    assert.match(first, /^dsh_personal_[0-9a-f]{32}$/);
+    assert.equal(first, second);
+    const file = path.join(dir, 'connectors', 'identity.json');
+    assert.equal(statSync(file).mode & 0o777, 0o600);
+  } finally {
+    if (previous === undefined) delete process.env.DSH_HOME;
+    else process.env.DSH_HOME = previous;
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('apply registers the read, connect, disconnect and MCP action routes', async () => {
+  const routes = [];
+  const ctx = ctxWith({ routes });
   await apply(ctx);
   assert.deepEqual(
     routes.map((route) => `${route.methods.join(',')} ${route.path}`),
     [
       'GET /api/capabilities',
+      'POST /api/capabilities/connect',
+      'POST /api/capabilities/disconnect',
       'POST /api/capabilities/connectors/probe',
       'POST /api/capabilities/connectors/restart',
     ],
@@ -114,22 +133,24 @@ test('apply registers the read route and both connector actions', async () => {
 
   const read = await routes[0].fetch(new Request('http://host/api/capabilities'));
   assert.equal(read.status, 200);
-  assert.deepEqual((await read.json()).connectors, []);
+  const body = await read.json();
+  assert.equal(body.composio.configured, false);
+  assert.equal(body.composio.apps.length, APPS.length);
 
-  const probe = await routes[1].fetch(
-    new Request('http://host/api/capabilities/connectors/probe', {
+  const unknown = await routes[1].fetch(
+    new Request('http://host/api/capabilities/connect', {
       method: 'POST',
-      body: JSON.stringify({ name: 'ping' }),
+      body: JSON.stringify({ app: 'not-an-app' }),
     }),
   );
-  assert.equal(probe.status, 200);
-  assert.deepEqual(calls, [['probe', 'ping']]);
+  assert.equal(unknown.status, 404);
 
-  const bad = await routes[2].fetch(
-    new Request('http://host/api/capabilities/connectors/restart', {
+  const noKey = await routes[1].fetch(
+    new Request('http://host/api/capabilities/connect', {
       method: 'POST',
-      body: JSON.stringify({ name: '../etc' }),
+      body: JSON.stringify({ app: 'gmail' }),
     }),
   );
-  assert.equal(bad.status, 400);
+  assert.equal(noKey.status, 409);
+  assert.equal((await noKey.json()).code, 'not_configured');
 });

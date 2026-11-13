@@ -1,6 +1,6 @@
 {
   "name": "@local/dsh-capabilities",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Capabilities panel for the DeepSeek Harness web GUI: one sidebar page listing every MCP connector and every plugin bundle in the profile, with live status, connector probe/restart, and links to the official management surfaces.",
   "type": "module",
@@ -12,6 +12,7 @@
   },
   "files": [
     "index.js",
+    "composio.js",
     "client.js",
     "cordis.patch.yml",
     "icon.svg",

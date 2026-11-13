@@ -2,11 +2,14 @@
  * Browser half of the Capabilities panel.
  *
  * One left-sidebar entry (`sidebar.panellist`, id `capabilities`) and the
- * central page that entry selects (`main`, key `capabilities`). The page joins
- * the two planes rc.2 already owns: **Connectors** from the MCP manager
- * (`ctx.mcpManager`) and **Plugins** from the profile's bundle list
- * (`ctx.pluginManager`). It is a read-only hub: connector probe/restart are
- * safe runtime operations; installing, toggling and configuring stay on the
+ * central page that entry selects (`main`, key `capabilities`).
+ *
+ * The page's primary section is the **Connectors catalog**: a curated set of
+ * Western apps with Connect/Disconnect. Connect asks the host for a Composio
+ * sign-in link, opens it in a tab, and the card flips to connected when the
+ * broker reports the account ACTIVE. The **Advanced** disclosure keeps the
+ * technical MCP server list (ping/github) with probe/restart; **Plugins** lists
+ * the profile's bundles. Installing, toggling and configuring stay on the
  * official Plugins page and Settings.
  */
 window.__ModuleLoader__.load({
@@ -15,36 +18,50 @@ window.__ModuleLoader__.load({
     const React = require('react');
     const h = React.createElement;
 
-    /** Sidebar entry id; the `main` panel registers under the same key. */
     const PANEL_ID = 'capabilities';
-    /** Locale namespace owned by this plugin. */
     const NS = 'dsh-capabilities';
-    /** Status refresh cadence (ms). */
-    const REFRESH_MS = 15000;
+    const REFRESH_MS = 8000;
 
-    // ── Dictionaries ────────────────────────────────────────────────────────
     const en = {
       panel: 'Capabilities',
       title: 'Capabilities',
       subtitle:
-        'Everything this profile can do, in two planes: connectors (MCP servers) and the plugins that compose this host.',
+        'Connect the apps this assistant can use, see each live connection, and check what is composed in this profile.',
       refresh: 'Refresh',
       refreshing: 'Refreshing…',
       loading: 'Reading capabilities…',
       loadFailed: 'Could not read capabilities',
       retry: 'Retry',
       connectors: 'Connectors',
+      appsHint: 'Click Connect to open the provider’s sign-in page. The card turns green when the account is active.',
       plugins: 'Plugins',
-      connectorsHint: 'MCP servers from the mcp-manager row. Add or edit them in Settings → Plugins (MCP).',
       pluginsHint: 'Install, remove and toggle bundles on the Plugins page. This page reports what is live.',
-      emptyConnectors: 'No connectors yet. Configure an MCP server in Settings → Plugins (MCP).',
+      advanced: 'Advanced — MCP servers',
+      advancedHint: 'Raw MCP servers configured in the mcp-manager row. Probe and restart act on the live manager.',
       emptyPlugins: 'No plugin bundles are composed in this profile.',
-      configured: 'configured',
-      removed: 'removed',
-      official: 'official',
-      on: 'on',
-      off: 'off',
-      rows: 'rows',
+      emptyServers: 'No MCP servers configured.',
+      composioMissing:
+        'Composio is not configured. Store COMPOSIO_API_KEY in the credential store to enable the Connect buttons.',
+      composioError: 'Composio is not reachable',
+      stateConnected: 'connected',
+      statePending: 'waiting for sign-in',
+      stateNotConnected: 'not connected',
+      stateNeedsAttention: 'needs attention',
+      stateInactive: 'inactive',
+      connect: 'Connect',
+      connecting: 'Opening…',
+      disconnect: 'Disconnect',
+      disconnecting: 'Disconnecting…',
+      waiting: 'Waiting for sign-in…',
+      reopen: 'Reopen sign-in',
+      connectOpened: 'Sign-in page opened. Finish there and this card will update.',
+      connectBlocked: 'The browser blocked the sign-in tab. Use this link:',
+      connectDone: 'Connected.',
+      connectPending: 'Sign-in is still pending.',
+      connectFailed: 'Could not start the connection',
+      disconnectDone: 'Disconnected.',
+      disconnectFailed: 'Could not disconnect',
+      disconnectConfirm: 'Disconnect',
       probe: 'Probe',
       restart: 'Restart',
       probing: 'Probing…',
@@ -53,36 +70,53 @@ window.__ModuleLoader__.load({
       restartOk: 'Connector restarted',
       actionFailed: 'Action failed',
       credentialMissing: 'Credential not configured',
-      statusConnected: 'connected',
-      statusConnecting: 'connecting',
-      statusWaiting: 'waiting for credentials',
-      statusDisabled: 'disabled',
-      statusFailed: 'failed',
-      statusDisconnected: 'disconnected',
-      statusUnknown: 'unknown',
-      footer: 'Connector status refreshes every 15 s. Probe and restart act on the live manager, never on the profile files.',
+      configured: 'configured',
+      removed: 'removed',
+      official: 'official',
+      on: 'on',
+      off: 'off',
+      rows: 'rows',
+      footer:
+        'Connectors refresh every 8 s. Connect and Disconnect act on the broker account, never on profile files.',
     };
     const zh = {
       panel: '能力',
       title: '能力',
-      subtitle: '此配置的全部能力：连接器（MCP 服务器）与组成此主机的插件。',
+      subtitle: '连接助手可用的应用，查看每个连接的状态，以及此配置组合的内容。',
       refresh: '刷新',
       refreshing: '刷新中…',
       loading: '正在读取能力…',
       loadFailed: '无法读取能力',
       retry: '重试',
       connectors: '连接器',
+      appsHint: '点击「连接」打开服务商的登录页；账号激活后卡片会变绿。',
       plugins: '插件',
-      connectorsHint: '来自 mcp-manager 的 MCP 服务器。请在「设置 → 插件（MCP）」中添加或编辑。',
       pluginsHint: '在「插件」页面安装、移除和开关 bundle；本页只报告运行状态。',
-      emptyConnectors: '还没有连接器。请在「设置 → 插件（MCP）」中配置 MCP 服务器。',
+      advanced: '高级 — MCP 服务器',
+      advancedHint: 'mcp-manager 行里配置的原始 MCP 服务器。探测和重启作用于运行中的 manager。',
       emptyPlugins: '此配置没有组合任何插件 bundle。',
-      configured: '已配置',
-      removed: '已移除',
-      official: '官方',
-      on: '开启',
-      off: '关闭',
-      rows: '行',
+      emptyServers: '没有配置 MCP 服务器。',
+      composioMissing: 'Composio 未配置。请在凭据库中保存 COMPOSIO_API_KEY 以启用连接按钮。',
+      composioError: 'Composio 不可达',
+      stateConnected: '已连接',
+      statePending: '等待登录',
+      stateNotConnected: '未连接',
+      stateNeedsAttention: '需要处理',
+      stateInactive: '未激活',
+      connect: '连接',
+      connecting: '正在打开…',
+      disconnect: '断开',
+      disconnecting: '正在断开…',
+      waiting: '等待登录…',
+      reopen: '重新打开登录页',
+      connectOpened: '登录页已打开。完成授权后此卡片会自动更新。',
+      connectBlocked: '浏览器拦截了登录标签页。请使用此链接：',
+      connectDone: '已连接。',
+      connectPending: '登录仍在等待中。',
+      connectFailed: '无法开始连接',
+      disconnectDone: '已断开。',
+      disconnectFailed: '无法断开',
+      disconnectConfirm: '断开',
       probe: '探测',
       restart: '重启',
       probing: '探测中…',
@@ -91,17 +125,14 @@ window.__ModuleLoader__.load({
       restartOk: '连接器已重启',
       actionFailed: '操作失败',
       credentialMissing: '凭据未配置',
-      statusConnected: '已连接',
-      statusConnecting: '连接中',
-      statusWaiting: '等待凭据',
-      statusDisabled: '已禁用',
-      statusFailed: '失败',
-      statusDisconnected: '已断开',
-      statusUnknown: '未知',
-      footer: '连接器状态每 15 秒刷新。探测和重启只作用于运行中的 manager，不修改配置文件。',
+      configured: '已配置',
+      removed: '已移除',
+      official: '官方',
+      on: '开启',
+      off: '关闭',
+      rows: '行',
+      footer: '连接器每 8 秒刷新。连接与断开只作用于 broker 账号，不修改配置文件。',
     };
-
-    // ── Data ────────────────────────────────────────────────────────────────
 
     function routeUrl(relative) {
       return new URL(relative, document.baseURI).toString();
@@ -121,36 +152,13 @@ window.__ModuleLoader__.load({
         /* non-JSON error body */
       }
       if (!response.ok) {
-        throw new Error(payload?.error || `HTTP ${response.status}`);
+        const error = new Error(payload?.error || `HTTP ${response.status}`);
+        error.code = payload?.code;
+        throw error;
       }
       return payload;
     }
 
-    const STATE_TONE = {
-      connected: 'ok',
-      connecting: 'warn',
-      'waiting-credentials': 'warn',
-      disabled: 'muted',
-      failed: 'danger',
-      error: 'danger',
-      disconnected: 'muted',
-      unknown: 'muted',
-    };
-
-    function stateLabel(t, state) {
-      switch (state) {
-        case 'connected': return t('statusConnected');
-        case 'connecting': return t('statusConnecting');
-        case 'waiting-credentials': return t('statusWaiting');
-        case 'disabled': return t('statusDisabled');
-        case 'failed': return t('statusFailed');
-        case 'disconnected': return t('statusDisconnected');
-        default: return t('statusUnknown');
-      }
-    }
-
-    // ── Styles ──────────────────────────────────────────────────────────────
-    // Token-driven with neutral fallbacks, so the page follows the active theme.
     const TONE = {
       ok: 'var(--dsw-alias-state-success-primary, #1a7f37)',
       warn: 'var(--dsw-alias-state-warning-primary, #a15c00)',
@@ -158,6 +166,25 @@ window.__ModuleLoader__.load({
       muted: 'var(--dsw-alias-label-secondary, #6b7280)',
       brand: 'var(--dsw-alias-brand-primary, #3b6ef6)',
     };
+
+    const APP_TONE = {
+      connected: 'ok',
+      pending: 'warn',
+      needs_attention: 'danger',
+      not_connected: 'muted',
+      inactive: 'muted',
+    };
+
+    function appStateLabel(t, state) {
+      switch (state) {
+        case 'connected': return t('stateConnected');
+        case 'pending': return t('statePending');
+        case 'needs_attention': return t('stateNeedsAttention');
+        case 'inactive': return t('stateInactive');
+        default: return t('stateNotConnected');
+      }
+    }
+
     const S = {
       page: {
         height: '100%',
@@ -204,6 +231,7 @@ window.__ModuleLoader__.load({
       },
       cardHead: { display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
       name: { fontSize: 15, fontWeight: 600, overflowWrap: 'anywhere' },
+      group: { color: 'var(--dsw-alias-label-secondary, #6b7280)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '.04em' },
       badge: {
         display: 'inline-flex',
         alignItems: 'center',
@@ -254,6 +282,12 @@ window.__ModuleLoader__.load({
         fontSize: 13,
         lineHeight: 1.5,
       },
+      details: {
+        border: '1px solid var(--dsw-alias-border-l1, rgba(127,127,127,.28))',
+        borderRadius: 12,
+        padding: '10px 14px',
+      },
+      summary: { cursor: 'pointer', fontSize: 14, fontWeight: 600 },
       footer: { color: 'var(--dsw-alias-label-secondary, #6b7280)', fontSize: 12, lineHeight: 1.5 },
     };
 
@@ -273,14 +307,75 @@ window.__ModuleLoader__.load({
       );
     }
 
-    function ConnectorCard({ connector, t, busy, onAction }) {
-      const state = connector.state || 'unknown';
-      const tone = STATE_TONE[state] || 'muted';
-      const pending = busy === connector.name;
-      const disabled = pending || !connector.configured;
+    function AppCard({ app, t, busy, onConnect, onDisconnect, onReopen, signInUrl }) {
+      const state = app.state || 'not_connected';
+      const tone = APP_TONE[state] || 'muted';
+      const isBusy = busy === app.id;
+      const pending = state === 'pending';
+      const primaryStyle =
+        isBusy || !app.canConnect || pending
+          ? { ...S.buttonPrimary, opacity: 0.5, cursor: 'not-allowed' }
+          : S.buttonPrimary;
+      return h(
+        'div',
+        { style: S.card },
+        h(
+          'div',
+          { style: S.cardHead },
+          h('span', { style: S.name }, app.name),
+          h(Badge, { tone }, appStateLabel(t, state)),
+        ),
+        h('div', { style: S.group }, app.group),
+        h('div', { style: S.meta }, app.description),
+        app.account?.displayName
+          ? h('div', { style: S.meta }, app.account.displayName)
+          : null,
+        app.reason && state !== 'connected' ? h('div', { style: S.meta }, app.reason) : null,
+        h(
+          'div',
+          { style: S.actions },
+          state === 'connected'
+            ? h(
+                'button',
+                {
+                  type: 'button',
+                  style: S.button,
+                  disabled: isBusy,
+                  'aria-label': `${t('disconnect')} ${app.name}`,
+                  onClick: () => onDisconnect(app),
+                },
+                isBusy ? t('disconnecting') : t('disconnect'),
+              )
+            : h(
+                'button',
+                {
+                  type: 'button',
+                  style: primaryStyle,
+                  disabled: isBusy || !app.canConnect || pending,
+                  'aria-label': `${t('connect')} ${app.name}`,
+                  onClick: () => onConnect(app),
+                },
+                isBusy ? t('connecting') : pending ? t('waiting') : t('connect'),
+              ),
+          pending && signInUrl
+            ? h(
+                'button',
+                { type: 'button', style: S.button, onClick: () => onReopen(signInUrl) },
+                t('reopen'),
+              )
+            : null,
+        ),
+      );
+    }
+
+    function ServerCard({ server, t, busy, onAction }) {
+      const state = server.state || 'unknown';
+      const tone = state === 'connected' ? 'ok' : state === 'waiting-credentials' ? 'warn' : 'muted';
+      const pending = busy === server.name;
+      const disabled = pending || !server.configured;
       const waitingRef =
         state === 'waiting-credentials'
-          ? (/credential "([^"]+)"/.exec(connector.error || '') || [])[1]
+          ? (/credential "([^"]+)"/.exec(server.error || '') || [])[1]
           : null;
       return h(
         'div',
@@ -288,42 +383,26 @@ window.__ModuleLoader__.load({
         h(
           'div',
           { style: S.cardHead },
-          h('span', { style: S.name }, connector.name),
-          h(Badge, { tone }, stateLabel(t, state)),
+          h('span', { style: S.name }, server.name),
+          h(Badge, { tone }, state),
         ),
-        h(
-          'div',
-          { style: S.meta },
-          connector.configured ? t('configured') : t('removed'),
-        ),
+        h('div', { style: S.meta }, server.configured ? t('configured') : t('removed')),
         waitingRef
           ? h('div', { style: S.meta }, `${t('credentialMissing')}: ${waitingRef}`)
-          : connector.error
-            ? h('div', { style: S.err }, connector.error)
+          : server.error
+            ? h('div', { style: S.err }, server.error)
             : null,
         h(
           'div',
           { style: S.actions },
           h(
             'button',
-            {
-              type: 'button',
-              style: S.button,
-              disabled,
-              'aria-label': `${t('probe')} ${connector.name}`,
-              onClick: () => onAction('probe', connector.name),
-            },
+            { type: 'button', style: S.button, disabled, onClick: () => onAction('probe', server.name) },
             pending ? t('probing') : t('probe'),
           ),
           h(
             'button',
-            {
-              type: 'button',
-              style: S.button,
-              disabled,
-              'aria-label': `${t('restart')} ${connector.name}`,
-              onClick: () => onAction('restart', connector.name),
-            },
+            { type: 'button', style: S.button, disabled, onClick: () => onAction('restart', server.name) },
             pending ? t('restarting') : t('restart'),
           ),
         ),
@@ -344,9 +423,7 @@ window.__ModuleLoader__.load({
         h(
           'div',
           { style: S.meta },
-          [plugin.version ? `v${plugin.version}` : null, `${plugin.rows} ${t('rows')}`]
-            .filter(Boolean)
-            .join(' · '),
+          [plugin.version ? `v${plugin.version}` : null, `${plugin.rows} ${t('rows')}`].filter(Boolean).join(' · '),
         ),
         plugin.description ? h('div', { style: S.meta }, plugin.description) : null,
         plugin.error ? h('div', { style: S.err }, `${plugin.error.code}: ${plugin.error.message || ''}`) : null,
@@ -359,6 +436,8 @@ window.__ModuleLoader__.load({
       const [loading, setLoading] = React.useState(true);
       const [busy, setBusy] = React.useState('');
       const [notice, setNotice] = React.useState('');
+      const [signIn, setSignIn] = React.useState(null); // { app, url }
+      const [pendingApp, setPendingApp] = React.useState('');
 
       const load = React.useCallback(async () => {
         try {
@@ -388,16 +467,82 @@ window.__ModuleLoader__.load({
           }
         };
         void tick();
-        const timer = setInterval(() => {
-          void tick();
-        }, REFRESH_MS);
+        const timer = setInterval(() => void tick(), REFRESH_MS);
         return () => {
           alive = false;
           clearInterval(timer);
         };
       }, []);
 
-      const act = async (kind, name) => {
+      React.useEffect(() => {
+        if (!pendingApp || !data) return;
+        const app = (data.composio?.apps || []).find((candidate) => candidate.id === pendingApp);
+        if (!app) return;
+        if (app.state === 'connected') {
+          setNotice(t('connectDone'));
+          setSignIn(null);
+          setPendingApp('');
+        } else if (app.state !== 'pending') {
+          setNotice(t('connectPending'));
+          setPendingApp('');
+        }
+      }, [data, pendingApp, t]);
+
+      const connect = async (app) => {
+        setBusy(app.id);
+        setError('');
+        setNotice('');
+        const tab = window.open('about:blank', '_blank');
+        try {
+          const result = await call('api/capabilities/connect', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ app: app.id }),
+          });
+          if (result.url) {
+            setSignIn({ app: app.id, url: result.url });
+            if (tab) {
+              tab.location.href = result.url;
+              setNotice(t('connectOpened'));
+            } else {
+              setNotice(t('connectBlocked'));
+            }
+            setPendingApp(app.id);
+          } else {
+            if (tab) tab.close();
+            setNotice(t('connectDone'));
+          }
+          await load();
+        } catch (cause) {
+          if (tab) tab.close();
+          setError(`${t('connectFailed')}: ${cause?.message || String(cause)}`);
+        } finally {
+          setBusy('');
+        }
+      };
+
+      const disconnect = async (app) => {
+        if (!window.confirm(`${t('disconnectConfirm')} ${app.name}?`)) return;
+        setBusy(app.id);
+        setError('');
+        setNotice('');
+        try {
+          await call('api/capabilities/disconnect', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ app: app.id }),
+          });
+          setNotice(t('disconnectDone'));
+          setSignIn(null);
+          await load();
+        } catch (cause) {
+          setError(`${t('disconnectFailed')}: ${cause?.message || String(cause)}`);
+        } finally {
+          setBusy('');
+        }
+      };
+
+      const mcpAction = async (kind, name) => {
         setBusy(name);
         setNotice('');
         try {
@@ -415,8 +560,11 @@ window.__ModuleLoader__.load({
         }
       };
 
-      const connectors = data?.connectors ?? [];
+      const composio = data?.composio ?? { configured: false, error: null, apps: [] };
+      const apps = composio.apps || [];
+      const servers = data?.connectors ?? [];
       const plugins = data?.plugins ?? [];
+      const waiting = signIn && pendingApp === signIn.app ? signIn.url : null;
 
       return h(
         'div',
@@ -448,6 +596,16 @@ window.__ModuleLoader__.load({
           ),
 
           notice ? h('div', { style: S.banner }, notice) : null,
+          !composio.configured
+            ? h('div', { style: { ...S.banner, borderColor: TONE.warn, color: TONE.warn } }, t('composioMissing'))
+            : null,
+          composio.error
+            ? h(
+                'div',
+                { style: { ...S.banner, borderColor: TONE.danger, color: TONE.danger } },
+                `${t('composioError')}: ${composio.error.message}`,
+              )
+            : null,
           error
             ? h(
                 'div',
@@ -469,24 +627,47 @@ window.__ModuleLoader__.load({
               'div',
               { style: S.sectionHead },
               h('h2', { style: S.h2 }, t('connectors')),
-              h('span', { style: S.count }, String(connectors.length)),
+              h('span', { style: S.count }, String(apps.length)),
             ),
-            h('p', { style: S.hint }, t('connectorsHint')),
-            connectors.length
+            h('p', { style: S.hint }, t('appsHint')),
+            apps.length
               ? h(
                   'div',
                   { style: S.grid },
-                  connectors.map((connector) =>
-                    h(ConnectorCard, {
-                      key: connector.name,
-                      connector,
+                  apps.map((app) =>
+                    h(AppCard, {
+                      key: app.id,
+                      app,
                       t,
                       busy,
-                      onAction: act,
+                      onConnect: connect,
+                      onDisconnect: disconnect,
+                      onReopen: (url) => window.open(url, '_blank'),
+                      signInUrl: pendingApp === app.id ? waiting : null,
                     }),
                   ),
                 )
-              : h('div', { style: S.empty }, t('emptyConnectors')),
+              : h('div', { style: S.empty }, t('loading')),
+          ),
+
+          h(
+            'details',
+            { style: S.details },
+            h(
+              'summary',
+              { style: S.summary },
+              `${t('advanced')} (${servers.length})`,
+            ),
+            h('p', { style: { ...S.hint, marginTop: 10 } }, t('advancedHint')),
+            servers.length
+              ? h(
+                  'div',
+                  { style: { ...S.grid, marginTop: 12 } },
+                  servers.map((server) =>
+                    h(ServerCard, { key: server.name, server, t, busy, onAction: mcpAction }),
+                  ),
+                )
+              : h('div', { style: { ...S.empty, marginTop: 12 } }, t('emptyServers')),
           ),
 
           h(
@@ -512,8 +693,6 @@ window.__ModuleLoader__.load({
         ),
       );
     }
-
-    // ── Plugin ──────────────────────────────────────────────────────────────
 
     function apply(ctx) {
       ctx.effect(() => ctx.locale.register(NS, { en, zh }), 'dsh-capabilities: dictionaries');

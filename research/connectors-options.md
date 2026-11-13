@@ -1,85 +1,64 @@
-# External-service connectors — decision record (2026-11-12)
+# External-service connectors — decision and current state (2026-11-13)
 
-Direction confirmed by the human: **local-first, official MCP plane; Composio is the fallback if it does not
-work.** This record is the short version of the full options pack: what is live, which Western apps fit
-which route, and the written trigger for switching to Composio.
+The requirement that settled the architecture: **a user-facing Connect button that opens the provider's OAuth
+page.** DSH 0.2.2-rc.2's MCP client/manager has no OAuth flow, no needs-auth state, and no sign-in link, so
+that UX cannot be built on the local MCP plane alone. **Composio is the OAuth broker; the local MCP plane keeps
+token-based connectors.** This supersedes the earlier “local-first only” decision.
 
-## What is live now
+## What is live
 
-- DSH **0.2.2-rc.2** on both hosts, which supplies the two prerequisites: the official MCP server manager
-  (`mcp-manager`, status/restart/probe over Remote and Settings) and `${credential:REF}` templates in the MCP
-  client.
-- The **Capabilities** sidebar page (`@local/dsh-capabilities`): Connectors and Plugins in one read-only hub,
-  with connector Probe/Restart. Host route `GET /api/capabilities` is owner-gated; no credential, command or
-  profile path is returned.
-- **Two connectors configured** through the `mcp-manager` row
-  ([`scripts/connectors/personal-mcp-manager.patch.yml`](../scripts/connectors/personal-mcp-manager.patch.yml)):
-  - `ping` — a dependency-free local stdio MCP server (`scripts/fixtures/mcp-ping-server.mjs`). It proves
-    discovery, tool registration, live status (`connected`), a real model→tool→reply turn (`pong`),
-    probe/restart and the page end to end with **no third-party supply chain and no egress**.
-  - `github` — GitHub's hosted remote MCP at `https://api.githubcopilot.com/mcp/`, deliberately
-    **read-only** and limited to the `repos,issues,pull_requests` toolsets via `X-MCP-Readonly` and
-    `X-MCP-Toolsets`; the PAT is referenced as `${credential:GITHUB_PERSONAL_ACCESS_TOKEN}`. It currently
-    reports `waiting-credentials` (no request is made) until the token is stored with
-    `scripts/connectors/set-credential.py`.
+| Piece | State |
+|---|---|
+| **Capabilities** sidebar page on `personal` | live — 12-app Western catalog with Connect/Disconnect, live state, Advanced MCP servers, Plugins |
+| **Connect** | host route `POST /api/capabilities/connect` → Composio `POST /connected_accounts/link` → a real `dashboard.composio.dev` sign-in URL, opened in a popup; the card flips to connected when the account is `ACTIVE` |
+| **Disconnect** | host route revokes the account (`DELETE /connected_accounts/{id}?revoke_on_delete=true`) |
+| **Composio user id** | opaque per-profile `dsh_personal_<32 hex>` in `~/.dsh-personal/connectors/identity.json` (0600); never an email, never `default` |
+| **Tools** | a Composio **session MCP** is registered with the rc.2 manager at runtime as `composio` (state `connected`); it exposes `COMPOSIO_SEARCH_TOOLS`, `COMPOSIO_GET_TOOL_SCHEMAS`, `COMPOSIO_MULTI_EXECUTE_TOOL` |
+| **Token connectors** | `ping` local fixture (connected) and `github` remote read-only MCP (PAT still pending) stay on the local MCP plane |
 
-## Western coverage matrix
+Verified live: `/api/capabilities` returns `composio.configured: true`, 12 apps, the session tools registered,
+and the MCP fleet `ping / github / composio`; Playwright confirms the Connect popup opens to Composio, the
+pending state renders, and the page has 0 console errors at 1440 and 390 px. A model turn has already called
+the local `mcp__ping__ping` tool and received `pong`.
 
-Route order: **official/provider MCP → community MCP (vet) → Composio**. Status is what has been verified,
-not what the vendor claims.
+## Key source and its risk (must be read)
 
-| App | Route | Status / next step |
-|---|---|---|
-| GitHub | official `github/github-mcp-server` (local stdio/Docker or remote with PAT) | **First real pilot** — token-based, no OAuth; needs a PAT |
-| Stripe | official MCP (restricted API key or OAuth) | verify the auth mode; token-based → second pilot candidate |
-| Notion | official remote MCP | OAuth → **Composio trigger candidate** |
-| Slack | official/community MCP | OAuth → trigger candidate |
-| Gmail / Google Calendar / Drive | community Google Workspace MCP | OAuth → trigger candidate |
-| Outlook / Microsoft 365 | community Graph MCP | OAuth → trigger candidate |
-| QuickBooks / Xero | community MCP | OAuth → trigger candidate (accounting = high value) |
-| HubSpot | community MCP | token/OAuth to verify |
-| Shopify | official/community MCP | API-key/token to verify |
-| Dropbox / OneDrive | community/remote MCP | OAuth → trigger candidate |
+The Composio project key currently in `~/.dsh-personal/.credentials.yaml` was **imported from the pantler
+agent's dev profile** at the user's direction. Consequences:
 
-The matrix is deliberately honest: the DSH-native market has **no mature Western connector catalog**.
-`dsh-mcp-connector` (124★) is a Chinese-first data marketplace plus a generic MCP importer — it can import a
-Western server, but it does not supply a Western catalog. `dsh-mcp-panel` (93★) is a neutral management
-console, not a catalog. Western coverage therefore comes from **per-provider MCP servers** or **Composio**.
+- The personal agent and pantler share one Composio **project** (and its auth configs / billing). The
+  assistant uses its own opaque `user_id`, so the panel and tools only see accounts connected under
+  `dsh_personal_…`, but the *key* can reach every account in that project. A compromised personal host could
+  query pantler's connected accounts.
+- Before this becomes a product surface, create a **dedicated Composio project (and key) for the personal
+  assistant**, or keep the shared key only for prototyping. Rotate the pantler key if it was ever exposed.
+- Hosted custody: Composio stores provider tokens and executes calls; tool payloads are logged by default.
+  Zero-data-retention is the paid Standard tier. Treat this as a deliberate exception to the local-first
+  posture.
 
-## Fallback trigger (write it down, don't vibe it)
+## Catalog (Western apps)
 
-Switch the connector plan to **Composio** when any of these is true:
+`gmail`, `outlook`, `slack`, `gcal`, `gdrive`, `dropbox`, `notion`, `hubspot`, `stripe`, `quickbooks`, `xero`,
+`shopify`. Slugs were verified against Composio's toolkit search. `xero` and `shopify` have **no managed
+OAuth** in this project: their Connect button is disabled with a reason until an auth config is created in
+Composio. Everything else uses managed auth.
 
-1. **Two of the first three Western apps need OAuth** that the DSH MCP client cannot perform (no OAuth flow,
-   no needs-auth state); or
-2. the app has **no credible official/community MCP server** and building one is not justified; or
-3. per-app setup exceeds roughly **one day** of vetting/wiring; or
-4. the assistant must serve a **multi-user base** with per-user connected accounts.
+## Tool-plane trade-off
 
-When triggered: use Composio **session MCP with the direct-tools preset** (exact tools, per-action DSH
-approval), **not** the Connect meta-tools (`COMPOSIO_MULTI_EXECUTE_TOOL` runs up to 50 actions;
-`COMPOSIO_REMOTE_BASH_TOOL` is remote code execution). Store the key in the DSH credential store, put the
-MCP URL/headers behind `${credential:…}` where possible, observe egress, and take the paid ZDR tier if the
-connector touches mail/calendar. No Composio account is created without a separate human approval.
+The session MCP uses **search + schemas + multi-execute** (3 tools) to avoid injecting hundreds of per-app
+schemas. The cost: `COMPOSIO_MULTI_EXECUTE_TOOL` can batch up to 50 actions, and DSH approval is per tool call,
+not per inner action. This is acceptable for the first slice but is **not** a write-safety boundary.
 
-## Security notes that apply to every connector
-
-- **MCP tools are ordinary tools.** DSH's approval policy is per-tool; a remote write tool is not
-  automatically "ask every time". Before adding a connector with write tools, add an explicit allowlist/policy
-  or use a read-only tool preset. This is the gap the Capabilities page does not close.
-- **stdio = arbitrary code**: pin the server version, scan it, never let the model install one.
-- **Secrets**: `${credential:REF}` only; `mcp-manager` enables template expansion; never a literal token in
-  the profile patch, env, or logs.
-- **Egress**: the fixture is local; a real connector adds its provider domains. Keep `dsh_egress` observed.
-- **Prompt injection**: tool results are data, never instructions. Write actions need human approval.
+Next refinement: a **direct-tools** session with an explicit per-app tool allowlist (e.g. Gmail read/draft
+only, Calendar read/create) so each action is its own DSH tool and approval. That needs a curated slug list per
+app and a session refresh when the allowlist changes.
 
 ## Next actions
 
-1. Store a **GitHub PAT** with
-   `python3 scripts/connectors/set-credential.py GITHUB_PERSONAL_ACCESS_TOKEN` (no echo, 0600); the manager
-   reconnects the read-only `github` server automatically. Then verify the `mcp__github__*` tools and a
-   repository read in a new session. If the first Western app should be something else (Stripe key, Notion,
-   Slack, Gmail), name it and provide its token through the same helper.
-2. Attempt the first OAuth app (default Gmail/Calendar) in a scratch profile; if it blocks, record the
-   trigger above and ask before opening Composio.
-3. Keep the `ping` fixture as the regression connector in the Capabilities verification script.
+1. Complete the OAuth for **Gmail** or **Google Calendar** from the Capabilities page; the card should turn
+   connected and the session tools should see the account. Test one read (“list my last 3 emails”) and one
+   draft/read-only Calendar call.
+2. Decide on a **dedicated Composio project/key** for the assistant (recommended) vs keeping pantler's.
+3. Replace the multi-execute session with the direct-tools allowlist once the first apps are proven.
+4. Store the GitHub PAT when convenient; the local read-only GitHub connector remains the token-based
+   reference.

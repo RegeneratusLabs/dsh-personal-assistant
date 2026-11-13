@@ -104,3 +104,15 @@ _无 —— M0.5 准入已完成（2026-11-10）。上面已批准的条目各�
 | 编码主机：host-control / web-mobile / dshmarket / context / ffmpeg / blender / web-fetch-playwright / web-search / youtube / inspector / plugin-market / forge | 按已安装版本 | PASS —— 启动 401，90 个实时客户端模块，`dsh-pending` 干净；日志中无逐插件错误 |
 
 残留：完整的会话级 SOUL 开场与 Hindsight 召回轮次仍待在 rc.2 上演练；插件级检查与 M1 验收运行是在 rc.1 上完成的。rc.1→rc.2 升级指南中触及本技术栈的条目是 `subagent-interrupt-default`（我们的预设现在带 `interrupt: false`）与 `web-search-billing`（无需改动 YAML；`*ApiKeyEnv` 仍然优先）。`BundleInfo.updatable` 现在是 `BundleInfo.update`，Capabilities 宿主路由必须使用它。
+
+## `@local/dsh-memory-personal` 0.1.0（2026-11-13）—— 个人助理记忆，替换编码代理客户端
+
+| 字段 | 值 |
+|---|---|
+| 组件 | `@local/dsh-memory-personal` 0.1.0（第一方、仓库内、无第三方代码） |
+| 来源 | [`plugins/dsh-memory-personal`](../plugins/dsh-memory-personal/)——零依赖（Node 内置 + 全局 `fetch`） |
+| 替换 | `@vectorize-io/hindsight-coding-agents` 0.8.6 **作为记忆客户端**（服务端与库不变） |
+| 理由 | 非编码任务上实测每步注入 3,175 token，约 75% 是工具手册；本主机没有仓库 |
+| 试用 | `.tmp/` 下的隔离 `$DSH_HOME`：2 次运行，retain 与跨会话召回均验证；线上主机未动 |
+| 回滚 | 移除组合包（或禁用条目）、重新启用 `hindsight`、重启；`profile.json` 与库都不受影响 |
+| 待办 | 线上安装尚未获批；`hindsight_reflect` 上游仍为 402 |

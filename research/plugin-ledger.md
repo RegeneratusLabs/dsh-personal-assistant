@@ -111,3 +111,15 @@ plugin-level checks and the M1 acceptance runs are on rc.1. The rc.1→rc.2 upgr
 stack are `subagent-interrupt-default` (our preset now carries `interrupt: false`) and `web-search-billing`
 (no YAML change required; `*ApiKeyEnv` still takes precedence). `BundleInfo.updatable` is now
 `BundleInfo.update`, which the Capabilities host route must use.
+
+## `@local/dsh-memory-personal` 0.1.0 (2026-11-13) — personal-agent memory, replaces the coding-agent client
+
+| Field | Value |
+|---|---|
+| Component | `@local/dsh-memory-personal` 0.1.0 (first-party, in-repo, no third-party code) |
+| Provenance | [`plugins/dsh-memory-personal`](../plugins/dsh-memory-personal/) — dependency-free (node builtins + global `fetch`) |
+| Replaces | `@vectorize-io/hindsight-coding-agents` 0.8.6 **as the memory client** (server and bank unchanged) |
+| Why | measured 3,175 tokens/step of injection on a non-coding task, ~75 % a tool manual; no repository exists on this host |
+| Trial | isolated `$DSH_HOME` under `.tmp/`: 2 runs, retain + cross-session recall verified; live host untouched |
+| Rollback | remove the bundle (or disable the row), re-enable `hindsight`, restart; `profile.json` and the bank are untouched |
+| Open | live install not approved yet; `hindsight_reflect` still 402 upstream |

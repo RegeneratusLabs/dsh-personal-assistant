@@ -580,3 +580,14 @@ Status/Health，覆盖 1440 与 390 两种宽度、两套配色。[`ui-design-br
   Composio 触发条件：[`connectors-options.md`](connectors-options.md)。**下一步：** 第一个真实西方
   connector 需要 token（先 GitHub PAT），然后做 OAuth 探测（Gmail/Calendar）以决定 Composio
   触发条件。
+
+- **2026-11-13 14:45 —— Hindsight 个人助理记忆层（客户端换型）：** 在一个非编码会话里实测了编码代理插件的每步注入
+  （12,066 字符 ≈ 3,175 token，其中约 75% 是工具手册），并替换了客户端：构建
+  [`@local/dsh-memory-personal`](../plugins/dsh-memory-personal/)——把有上限的策展档案（2,200/4,000 字符，
+  `$DSH_HOME/memory/profile.json`）作为单个静态提示段注入，另加 `memory_remember` / `memory_recall` /
+  `memory_forget` 三个走 Hindsight REST API 的工具（schema 共 459 token）。隔离 profile 测试：写入偏好
+  → 5 步 / 51 秒 / 70,850 token；下一个会话直接由提示块回答，**1 步、5.5 秒、12,150 token、0 次工具调用**；
+  retain 已在 `dsh-personal` 库中验证（158 → 160 节点，打 `user` 标签）。线上主机未改动——安装是单独的
+  审批步骤（加组合包、禁用 `hindsight` 条目、重启、重跑两项测试）。设计、实测、被否方案与回滚：
+  [`memory-personal-agent.md`](memory-personal-agent.md)。**下一步：** 审批并安装到 `personal`，再决定编码代理
+  插件是否以 `autoInject: "none"` 保留。

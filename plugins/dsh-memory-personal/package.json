@@ -1,0 +1,22 @@
+{
+  "name": "@local/dsh-memory-personal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Personal-agent memory for the DeepSeek Harness: a bounded curated profile block plus retain/recall/forget tools over the Hindsight REST API. Replaces the coding-agent-shaped Hindsight integration.",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

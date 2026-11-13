@@ -582,3 +582,15 @@ status), with topics.
   Composio trigger: [`connectors-options.md`](connectors-options.md). **Next:** the first real Western
   connector needs a token (GitHub PAT first), then the OAuth probe (Gmail/Calendar) to decide the Composio
   trigger.
+
+- **2026-11-13 14:45 — Personal-agent memory layer on Hindsight (right-shaped client):** measured the
+  coding-agent plugin's per-step injection (12,066 chars ≈ 3,175 tokens, ~75 % a tool manual) on a
+  non-coding session and replaced the client: built [`@local/dsh-memory-personal`](../plugins/dsh-memory-personal/)
+  — a bounded curated profile (2,200/4,000 chars, `$DSH_HOME/memory/profile.json`) injected as one static
+  prompt section, plus `memory_remember` / `memory_recall` / `memory_forget` over the Hindsight REST API
+  (459 tokens of schema). Isolated-profile tests: preference write → 5 steps / 51 s / 70,850 tokens; the
+  next session answered from the block in **1 step, 5.5 s, 12,150 tokens, 0 tool calls**; retain verified
+  in bank `dsh-personal` (158 → 160 nodes, tagged `user`). Live host untouched — install is a separate
+  approved step (add bundle, disable the `hindsight` row, restart, re-run both tests). Design, measurements,
+  rejected options and rollback: [`memory-personal-agent.md`](memory-personal-agent.md). **Next:** approve
+  and install on `personal`, then decide whether the coding-agent plugin stays with `autoInject: "none"`.

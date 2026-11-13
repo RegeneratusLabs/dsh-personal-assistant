@@ -252,6 +252,10 @@
         "2026-11-12-capabilities-page-and-the-first-connector": {
           "en": "21d47f6c9d260864",
           "zh": "de4e74669b15be91"
+        },
+        "2026-11-13-personal-agent-memory-layer-hindsight-right-shaped": {
+          "en": "9b9212babb188661",
+          "zh": "fb4d54b36af91f1a"
         }
       }
     },
@@ -361,8 +365,8 @@
           "zh": "5bf674a686c78985"
         },
         "work-log": {
-          "en": "621d40d53071e6df",
-          "zh": "65adc48375b77547"
+          "en": "5e741f4f56e9b917",
+          "zh": "63972975a87bb5bb"
         }
       }
     },
@@ -486,6 +490,10 @@
         "re-admission-on-dsh-0-2-2-rc-2-2026-11-12": {
           "en": "2533625972f83a0f",
           "zh": "1fae0bb182ddceb0"
+        },
+        "local-dsh-memory-personal-0-1-0-2026-11-13-personal-agent-memory-replaces-the-coding-agent-client": {
+          "en": "ed60bad33c0a8184",
+          "zh": "d38aa11293b7a573"
         }
       }
     },

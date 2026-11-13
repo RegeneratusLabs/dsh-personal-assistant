@@ -201,3 +201,9 @@ Chronological, link-first record of the build. Detail lives in `research/`.
   `connected`, the page lists it, and Playwright verifies both sections at 1440 and 390 px with no console
   errors. First Western connector (GitHub PAT) and the OAuth/Composio decision are the next step;
   `research/connectors-options.md` records the coverage matrix and the fallback trigger.
+
+## 2026-11-13 — personal-agent memory layer (Hindsight, right-shaped)
+- Measured the coding-agent Hindsight client on a non-coding session: 12,066 chars ≈ 3,175 tokens injected per step, ~75 % a tool manual, knowledge pages empty (synthesis 402 upstream).
+- Built `@local/dsh-memory-personal`: bounded curated profile (2,200/4,000 chars) as one static prompt section, plus `memory_remember` / `memory_recall` / `memory_forget` over Hindsight REST. 459 tokens of schema, no dependencies, fail-open.
+- Isolated-profile proof: preference write (5 steps, 70.8k tokens) → the next session answered from the block in 1 step / 5.5 s / 12.2k tokens / 0 tool calls; retain landed in bank `dsh-personal` (158→160 nodes).
+- Live host untouched. Docs: `research/memory-personal-agent.md`.

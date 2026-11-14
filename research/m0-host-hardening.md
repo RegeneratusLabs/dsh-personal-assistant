@@ -1,6 +1,8 @@
 # M0 host hardening — `dsh-personal` systemd user unit (D13 pragmatic baseline)
 
-Status: **prepared, not applied.** This block is a host change and needs the human's go-ahead
+> **Document status: HISTORICAL PRE-APPLY SNAPSHOT (2026-11-10).** The M0 block was applied and verified later the same day; see [build-progress.md](build-progress.md) and [AGENTS.md](../AGENTS.md) for the current state. Do not read a "not applied" line below as current.
+
+State at writing (pre-apply): **prepared, not applied.** This block is a host change and needs the human's go-ahead
 (`AGENTS.md`: ask before host service config changes).
 Owner: Lead. Related: [`m0-baseline-recon.md`](m0-baseline-recon.md) ·
 [`personal-agent-security.md`](personal-agent-security.md) §4/§7/§8 · [`build-progress.md`](build-progress.md).

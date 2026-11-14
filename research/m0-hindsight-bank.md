@@ -1,6 +1,8 @@
 # M0 Hindsight bank — `dsh-personal` on the shared instance (D13)
 
-Status: **prepared, not applied** — creating a bank is a host-data change and needs the human's go-ahead.
+> **Document status: HISTORICAL PRE-APPLY SNAPSHOT (2026-11-10).** The M0 block was applied and verified later the same day; see [build-progress.md](build-progress.md) and [AGENTS.md](../AGENTS.md) for the current state. Do not read a "not applied" line below as current.
+
+State at writing (pre-apply): **prepared, not applied** — creating a bank is a host-data change and needs the human's go-ahead.
 Owner: Lead. Related: [`m0-baseline-recon.md`](m0-baseline-recon.md) §3 ·
 [`personal-agent-security.md`](personal-agent-security.md) §8 (D13) · [`build-progress.md`](build-progress.md).
 

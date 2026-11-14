@@ -2,11 +2,13 @@
 
 [English](build-progress.md) | 中文
 
-个人 agent 构建的实时状态。构建 agent 在每个工作块结束后更新本文件。
+> **文档状态：工作日志（2026-11-10 → 2026-11-14）。** 阶段历史与证据；最新条目在底部。当前计划见 [docs/product/DIRECTION.md](../docs/product/DIRECTION.md)。
+
+个人 agent 构建的工作日志。新条目追加到底部；当前计划不在这里。
 计划：[`personal-agent-design.md`](personal-agent-design.zh.md) · 门禁：[`personal-agent-security.md`](personal-agent-security.zh.md)
 · 技术栈：[`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md)。
 
-**状态：** P0（设计 + 文档 + 插件探查）**已完成**。**M0 ✅ GREEN（2026-11-10 17:07 AEST，务实基线 D13）**
+**截至最后一个工作块（2026-11-13）：** P0（设计 + 文档 + 插件探查）**已完成**。**M0 ✅ GREEN（2026-11-10 17:07 AEST，务实基线 D13）**
 —— 单元已加固并验证、遥测出站关闭、出站流量已观测 + 告警、本地遥测在线（journald 容量上限、token/成本、
 摘要定时器、告警）、`dsh-personal` 记忆库已隔离、备份 + 恢复演练 PASS、残余风险已记录。**M0.5 已完成；
 M1 进行中（记忆/召回/身份/推送/心跳已上线；渠道由人工决定延后）；M2 已完成（2026-11-11）。公开构建日志：**
@@ -609,3 +611,8 @@ Status/Health，覆盖 1440 与 390 两种宽度、两套配色。[`ui-design-br
   `apply` 时被捕获为字符串，写入要重启才可见——现改为每请求求值的函数，并加回归测试。推送负载不再包含会话标题；
   插件主目录回退改为 DSH 的 `~/.dsh`；CI 运行 capabilities 测试；修正插件 README 中过期的安装路径。**下一步：**
   由人决定 D15–D18，然后进入里程碑 A（冻结的 profile bundle）。
+
+- **2026-11-14 — 文档审计（仅仓库改动）：** 新增 [`docs/INDEX.md`](../docs/INDEX.md)（唯一的文档地图：状态图例、
+  按角色阅读路径、所有受跟踪文档的分类）与 [`docs/DECISIONS.md`](../docs/DECISIONS.md)（D1–D20 登记册，含
+  生效/被取代/提议状态与来源链接）。为应用前的 M0 文档、被取代的计划/采购清单、rc.1 参考快照、准入/调研报告
+  与已退役的 UI 交接文档添加状态横幅；把研究索引改写为档案索引；修正 egress 中错误的“未应用”状态。未改主机。

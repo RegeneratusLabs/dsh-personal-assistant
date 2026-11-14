@@ -2,7 +2,9 @@
 
 English | [中文](personal-agent-design.zh.md)
 
-**Status:** living plan, 2026-11-10. Target: a personal assistant running on the existing `personal` DSH
+> **Document status: HISTORICAL PLAN (2026-11-10).** Superseded for product direction by [docs/product/DIRECTION.md](../docs/product/DIRECTION.md); decisions are indexed in [DECISIONS.md](../docs/DECISIONS.md). Kept as the rationale record.
+
+**At the time:** living plan, 2026-11-10. Target: a personal assistant running on the existing `personal` DSH
 host (0.2.2-rc.1, `~/.dsh-personal`, tailnet-published). This file is the decision record; the detailed
 reference material is in [`personal-agent-docs.md`](personal-agent-docs.md) and the plugin scouting
 results in [`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md) (once written).

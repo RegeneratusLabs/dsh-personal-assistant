@@ -1,6 +1,9 @@
 # scripts/egress — DSH personal egress observation (M0) and optional deny upgrade
 
-**Status: repo artifacts only. Nothing in this directory has been applied to the host.**
+**Status: applied 2026-11-10.** The observe table (`inet dsh_egress`) is live and kept fresh by
+`dsh-egress-keepalive.timer`; the deny stack was never applied and is not planned (D13). The runbook and the
+pre-apply evidence are in [`research/m0-egress.md`](../../research/m0-egress.md) — its "nothing applied"
+status line is historical.
 `nftables`, systemd units and journald are only *read* by these scripts unless the
 human runs an `apply` subcommand with `sudo`.
 

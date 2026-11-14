@@ -126,3 +126,7 @@
   新增 `docs/product/` 下的[审计](docs/product/AUDIT-2026-11-14.md)与[方向](docs/product/DIRECTION.md)。
 - 修复记忆提示词段落（此前写入要重启才生效），推送负载移除会话标题，修正 DSH 主目录回退，
   把缺失的 capabilities 测试加入 CI。
+
+## 2026-11-14 — 文档审计
+- 一份地图（`docs/INDEX.md`）与一份决策登记册（`docs/DECISIONS.md`）；所有受跟踪文档完成分类。
+- 为应用前、被取代、参考与已退役文档添加状态横幅；研究索引改为档案索引。

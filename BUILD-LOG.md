@@ -217,3 +217,7 @@ Chronological, link-first record of the build. Detail lives in `research/`.
   New [audit](docs/product/AUDIT-2026-11-14.md) and [direction](docs/product/DIRECTION.md) under `docs/product/`.
 - Fixed the memory prompt section (writes were frozen until restart), removed session titles from push
   payloads, corrected DSH-home fallbacks, added the missing capabilities test to CI.
+
+## 2026-11-14 — documentation audit
+- One map (`docs/INDEX.md`) and one decision register (`docs/DECISIONS.md`); every tracked doc classified.
+- Status banners on pre-apply, superseded, reference and retired docs; research index is now an archive index.

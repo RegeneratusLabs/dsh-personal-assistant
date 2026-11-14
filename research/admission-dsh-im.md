@@ -1,5 +1,7 @@
 # Admission trial — `@xmanrui/dsh-im@5.10.0` on DSH 0.2.2-rc.1
 
+> **Document status: HISTORICAL ADMISSION EVIDENCE (M0.5, DSH 0.2.2-rc.1; HOLD on #547).** Outcomes are recorded in [plugin-ledger.md](plugin-ledger.md).
+
 **Task:** the gating question for the personal-agent channel. The human's maturity rule (D14) selects the
 mature `@xmanrui/dsh-im@5.10.0` over the 1★ `dsh-switchboard`, but the package declares
 `dsh.compatibility.dsh: "0.2.1-rc.2"` and `dshReleases` lists only `0.2.0-rc.2` / `0.2.1-rc.2` — it does

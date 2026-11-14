@@ -1,10 +1,12 @@
 # Personal agent — plug-and-play plugin shortlist
 
+> **Document status: HISTORICAL SCOUT (2026-11-10).** D14 and the actual installs superseded this adopt list. The authority is [plugin-ledger.md](plugin-ledger.md); the current product plan is [DIRECTION](../docs/product/DIRECTION.md).
+
 **Question:** how much of the build plan can we buy instead of write? **Answer: almost all of it.** The
 mechanism layer is ~90% available as compatible DSH plugins; our custom code shrinks from ~1,000–1,100
 LOC to **~40–100 LOC plus configuration/content**.
 
-**Status:** verified 2026-11-10 against DSH **0.2.2-rc.1**, Node 24.22.1, Linux host. Compatibility was
+**State at writing (2026-11-10):** verified against DSH **0.2.2-rc.1**, Node 24.22.1, Linux host. Compatibility was
 checked from live npm metadata (`engines.dsh`, peers, `dsh.bundle`) plus the market's precomputed
 compatibility cache; README claims are marked as claims. **No plugin in this document has been installed
 or run yet** — every ADOPT is "adopt after a scratch-profile smoke test".

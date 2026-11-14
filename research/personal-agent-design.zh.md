@@ -2,7 +2,9 @@
 
 [English](personal-agent-design.md) | 中文
 
-**状态：** 活文档，2026-11-10。目标：在现有的 `personal` DSH 主机（0.2.2-rc.1、`~/.dsh-personal`、
+> **文档状态：历史计划（2026-11-10）。** 产品方向已由 [docs/product/DIRECTION.md](../docs/product/DIRECTION.md) 取代；决策索引见 [DECISIONS.md](../docs/DECISIONS.md)。保留作为决策依据记录。
+
+**当时状态：** 活文档，2026-11-10。目标：在现有的 `personal` DSH 主机（0.2.2-rc.1、`~/.dsh-personal`、
 已通过 tailnet 发布）上运行的个人助手。本文件是决策记录；详细的参考资料见
 [`personal-agent-docs.md`](personal-agent-docs.md)，插件调研结果见
 [`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md)（待撰写）。

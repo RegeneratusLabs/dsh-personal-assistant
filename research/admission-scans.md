@@ -1,5 +1,7 @@
 # Admission static scans — M0.5 (task-4)
 
+> **Document status: HISTORICAL ADMISSION EVIDENCE (M0.5, DSH 0.2.2-rc.1).** Outcomes are recorded in [plugin-ledger.md](plugin-ledger.md).
+
 **Scope:** static analysis of the three pinned candidates that clear the D14 maturity gate. **No install, no
 host change, no process started.** Trial results are separate artifacts (`admission-trials.md` for
 session-search/Hindsight, `admission-dsh-im.md` for the channel). Verdicts here are "adopt after trial"

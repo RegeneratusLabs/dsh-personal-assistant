@@ -1,6 +1,8 @@
 # M0 egress — observe + alert tooling, runbook and optional deny upgrade
 
-**Status (2026-11-10):** repo artifacts delivered; **nothing applied to the host**.
+> **Document status: HISTORICAL PRE-APPLY SNAPSHOT (2026-11-10).** The M0 block was applied and verified later the same day; see [build-progress.md](build-progress.md) and [AGENTS.md](../AGENTS.md) for the current state. Do not read a "not applied" line below as current.
+
+**State at writing (pre-apply, 2026-11-10):** repo artifacts delivered; **nothing applied to the host**.
 `scripts/egress/` contains an apply-ready observe stack plus an optional (not-M0)
 deny stack. Human-root commands below are the only host changes; every one has a
 one-command rollback.

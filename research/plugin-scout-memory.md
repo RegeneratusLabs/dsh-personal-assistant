@@ -1,5 +1,7 @@
 # Memory + identity plugin scout — plug-and-play DSH components
 
+> **Document status: HISTORICAL MARKET SCOUT (2026-11-09).** D14 overrode most of these verdicts; see [plugin-ledger.md](plugin-ledger.md).
+
 **Scout:** memory-scout (task-3) · **Date:** 2026-11-10 · **Target host:** DSH `0.2.2-rc.1` (installed at `/home/josh/dsh/node/lib/node_modules/@deepseek-ai/dsh`, cordis `4.1.0`), profile `web`.
 **Scope:** MEMORY and IDENTITY layers of the personal agent. Read-only recon: nothing installed, no profile touched.
 

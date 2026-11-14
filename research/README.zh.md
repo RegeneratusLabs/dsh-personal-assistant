@@ -1,27 +1,33 @@
-# DSH 作为个人 AI 助手 — 研究资料集
+# 研究档案 —— DSH 作为个人 AI 助手
 
 [English](README.md) | 中文
 
-本项研究开展于 2026-11-09，围绕的问题是：*DSH（`@deepseek-ai/dsh` 0.2.2-rc.1）怎样成为像 Hermes Agent /
-OpenClaw 那样的个人 AI 助手，以及这个方向上目前都有哪些工作在推进？*
+> **文档状态：历史档案（2026-11-09 → 2026-11-14）。** 这些笔记记录构建背后的研究与决策，**不是**当前计划。
+> 当前事实见 [`docs/INDEX.md`](../docs/INDEX.md) → [`docs/product/DIRECTION.md`](../docs/product/DIRECTION.md)。
+
+研究始于 2026-11-09，问题是：*DSH（`@deepseek-ai/dsh` 0.2.2-rc.1）怎样成为像 Hermes Agent / OpenClaw
+那样的个人 AI 助手，以及这个方向上目前都有哪些工作在推进？* 下面的数字与市场数据均来自该日期。实际构建了什么见
+[`build-progress.md`](build-progress.zh.md) 与 [`plugin-ledger.md`](plugin-ledger.zh.md)。
 
 ## 先读这些
 
-- **[`dsh-as-personal-assistant.md`](dsh-as-personal-assistant.md)** — 综述：生态全景、DSH 能力映射、差距分析、
-  三条构建路径、含验收测试的分阶段计划，以及待解问题。（主要交付物。）
-- **准备现在就动手构建这个 agent？** 请从 **[`personal-agent-design.md`](personal-agent-design.zh.md)** 开始 ——
-  构建计划（决策、架构、记忆子系统、阶段、审查流程）—— 再加上
-  **[`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md)**：经过验证的自建 vs 采购技术栈
-  （约 90% 开箱即用）。文档地图见 [`personal-agent-docs.md`](personal-agent-docs.md)。
+- **当前产品方向：** [`docs/product/DIRECTION.md`](../docs/product/DIRECTION.md) 与
+  [`2026-11-14 审计`](../docs/product/AUDIT-2026-11-14.md)。完整文档地图见 [`docs/INDEX.md`](../docs/INDEX.md)。
+- **当时的综述：** [`dsh-as-personal-assistant.md`](dsh-as-personal-assistant.md) —— 生态全景、DSH 能力映射、
+  差距分析、三条构建路径（2026-11-09）。
+- **实际构建了什么：** [`build-progress.md`](build-progress.zh.md)、[`plugin-ledger.md`](plugin-ledger.zh.md)、
+  [`m1-install-verification.md`](m1-install-verification.md)。
+- **已被取代的计划：** [`personal-agent-design.md`](personal-agent-design.zh.md)（历史计划）与
+  [`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md)（采购清单已被 D14 取代）。
 
 ## 支撑研究笔记
 
 | 文件 | 范围 | 依据 |
 |---|---|---|
-| [`personal-agent-design.md`](personal-agent-design.zh.md) | **构建计划**：决策 D1–D8、架构、记忆设计（3 层/Hindsight）、阶段、插件审查 | 本次会话 |
-| [`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md) | **自建 vs 采购技术栈**：各层固定版本的候选插件、自研增量（约 140–200 行代码）、安装顺序、冒烟测试、禁用清单 | 3 项探查 + npm/兼容性验证 |
+| [`personal-agent-design.md`](personal-agent-design.zh.md) | **历史构建计划**（2026-11-10）：决策 D1–D14、架构、记忆设计（3 层/Hindsight）、阶段、插件审查 —— 产品方向已被取代 | 本次会话 |
+| [`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md) | **历史自建 vs 采购调研**（2026-11-10）：采购清单已被 D14 取代 —— 见[插件台账](plugin-ledger.zh.md) | 3 项探查 + npm/兼容性验证 |
 | [`personal-agent-security.md`](personal-agent-security.zh.md) | **安全模型**：DSH 审查什么（不审查代码/提示词注入）、威胁模型、候选清单的 tarball 审计、OS 隔离、遥测基线、准入清单、事件响应 | DSH 文档 + 六个 tarball 的静态扫描 |
-| [`build-progress.md`](build-progress.zh.md) | 阶段看板、M0 安全/遥测清单、决策、待解问题 —— 每个工作块结束后更新 | 本次会话 |
+| [`build-progress.md`](build-progress.zh.md) | 工作日志（2026-11-10 → 2026-11-14）：阶段看板、M0 清单、决策、每个工作块；最新在底部 | 本次会话 |
 | [`plugin-ledger.md`](plugin-ledger.zh.md) | 每个已批准/审查中/已拒绝的插件，含版本、sha512、扫描结果、回滚方式 | 本次会话 |
 | [`plugin-scout-memory.md`](plugin-scout-memory.md) | 记忆/身份：15 个候选插件，Hindsight vs memento vs mem0，身份矩阵 | 索引 + npm + README |
 | [`plugin-scout-channels.md`](plugin-scout-channels.md) | 渠道/通知/远程/语音：24 个候选插件，switchboard vs dsh-im，出站流量/安全 | 索引 + npm + README |
@@ -57,7 +63,7 @@ OpenClaw 那样的个人 AI 助手，以及这个方向上目前都有哪些工�
 | [`ui-primitives-slots.md`](ui-primitives-slots.md) | 已验证的 DSH 客户端 seam：slot 目录与 props、311 个 primitive 导出、客户端模块契约、`/api` 路由配方、防御性规则 |
 | [`dsh-restart-runbook.md`](dsh-restart-runbook.md) | 重启 DSH 主机 + 待生效插件检测（host-control UI、scripts/ops） |
 
-## 一段话总结
+## 一段话总结（2026-11-09）
 
 这个领域已经收敛到一种架构 —— 通用 agent 框架外面包一层常驻运行时，再加上聊天渠道、分层记忆、
 调度/心跳、信任/策略层和人格。DSH 已经交付了框架那一半（会话、工具、沙箱、审批、技能、MCP、子代理/团队、目标、

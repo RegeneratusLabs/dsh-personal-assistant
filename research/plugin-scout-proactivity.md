@@ -1,5 +1,7 @@
 # Plugin scout — proactivity / session / skill / security (task-5)
 
+> **Document status: HISTORICAL MARKET SCOUT (2026-11-09).** D14 overrode most of these verdicts; see [plugin-ledger.md](plugin-ledger.md).
+
 Scout: `proactivity-scout`. Snapshot 2026-11-10 ~14:25 Australia/Brisbane.
 Host under test: DSH **0.2.2-rc.1** (verified `require('@deepseek-ai/dsh/package.json').version`), Node **v24.22.1**, pnpm 12.9.1, profile `web`.
 Write scope: this file only. Nothing was installed; no profile was modified.

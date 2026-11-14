@@ -1,5 +1,7 @@
 # Documentation map: building a personal agent on DSH
 
+> **Document status: REFERENCE SNAPSHOT (DSH 0.2.2-rc.1, 2026-11-10).** Not current; verify against the installed version.
+
 **Question answered:** where is the documentation for building *our own* personal agent on DeepSeek
 Harness (`@deepseek-ai/dsh` 0.2.2-rc.1), what does each corpus cover, and what should we read in what
 order?

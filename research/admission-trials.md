@@ -1,5 +1,7 @@
 # M0.5 admission trials — Hindsight memory + official session search
 
+> **Document status: HISTORICAL ADMISSION EVIDENCE (M0.5, DSH 0.2.2-rc.1).** Outcomes are recorded in [plugin-ledger.md](plugin-ledger.md).
+
 **Scope:** scratch-profile trials (not `personal`) for the two memory/recall adoptions pinned by the
 shortlist: `@vectorize-io/hindsight-coding-agents@0.8.6` (self-hosted, bank `dsh-personal`) and
 `@deepseek-ai/dsh-experimental-session-search@0.2.2-rc.1`. Static scans are in

@@ -1,5 +1,7 @@
 # DSH plugin scout — channels / notify / remote / voice
 
+> **Document status: HISTORICAL MARKET SCOUT (2026-11-09).** D14/D17 overrode these verdicts; see [plugin-ledger.md](plugin-ledger.md) and [DIRECTION](../docs/product/DIRECTION.md).
+
 Scouted for the personal-agent build: **one excellent inbound IM channel (Telegram-first), outbound phone notify, approvals-over-chat, mobile access, TTS**. Read-only survey; nothing installed or modified. Facts collected 2026-11-10 (UTC).
 
 ## 1. Method

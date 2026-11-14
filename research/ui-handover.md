@@ -1,5 +1,7 @@
 # HANDOVER — UI / UX & front-end track (paste this into a new DSH session)
 
+> **Document status: RETIRED (2026-11-12).** Do **not** execute this handover: the Status panel it describes was removed. The design-system material may be reused; the product UI plan is [DIRECTION](../docs/product/DIRECTION.md) §7.
+
 You are taking over the **UI/UX and front-end** track of a working personal-agent build. This document is
 self-contained: read it, then the files it names, then start. Do not re-litigate the backend decisions; they
 are made, tested and documented.

@@ -1,5 +1,7 @@
 # Installed DSH package documentation map (0.2.2-rc.1)
 
+> **Document status: REFERENCE SNAPSHOT (DSH 0.2.2-rc.1, 2026-11-10).** Package list and counts drift; verify against the installed tree.
+
 Read-only survey of the English READMEs shipped inside the installed DeepSeek Harness package tree, focused on what matters for building a **personal AI agent** on DSH. Companion to the other `research/` notes; this file is the package-level documentation index.
 
 - Installed package root: `/home/josh/dsh/node/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/` (referred to below as `$PKG`). **330 packages**: 319 `@deepseek-ai/dsh-*` plus 11 third-party/vendor packages.

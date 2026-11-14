@@ -1,5 +1,7 @@
 # Official DSH Documentation Site — Map for Building a Personal Agent
 
+> **Document status: REFERENCE SNAPSHOT (DSH 0.2.2-rc.1, 2026-11-09).** Not current; the docs ship with the installed version.
+
 **Purpose.** Map every English page of the published DSH documentation site
 (<https://deepseek-harness.github.io/deepseek-harness/>) against the job of building a
 *personal AI agent* on DSH 0.2.2-rc.1 — a profile/bundle that behaves like a personal

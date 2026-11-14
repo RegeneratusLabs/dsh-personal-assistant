@@ -1,5 +1,7 @@
 # M0 local telemetry — sinks, digest, alerts, and the DSH egress patch
 
+> **Document status: HISTORICAL PRE-APPLY SNAPSHOT (2026-11-10).** The M0 block was applied and verified later the same day; see [build-progress.md](build-progress.md) and [AGENTS.md](../AGENTS.md) for the current state. Do not read a "not applied" line below as current.
+
 Scope: the M0 telemetry block (repo artifacts only, nothing applied to the host). Companion artifacts:
 [`scripts/telemetry/patch-telemetry.yml`](../scripts/telemetry/patch-telemetry.yml) (profile patch draft),
 [`scripts/telemetry/check-alerts.sh`](../scripts/telemetry/check-alerts.sh) (read-only alert checker),

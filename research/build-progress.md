@@ -2,11 +2,13 @@
 
 English | [中文](build-progress.zh.md)
 
-Living status for the personal-agent build. The build agent updates this after every work block.
+> **Document status: WORK LOG (2026-11-10 → 2026-11-14).** Phase history and evidence; newest entries at the bottom. The current plan is [docs/product/DIRECTION.md](../docs/product/DIRECTION.md).
+
+Work log for the personal-agent build. New entries go at the bottom; the current plan is not here.
 Plan: [`personal-agent-design.md`](personal-agent-design.md) · Gates: [`personal-agent-security.md`](personal-agent-security.md)
 · Stack: [`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md).
 
-**Status:** P0 (design + documentation + plugin scouting) **complete**. **M0 ✅ GREEN (2026-11-10 17:07 AEST,
+**State at the last work block (2026-11-13):** P0 (design + documentation + plugin scouting) **complete**. **M0 ✅ GREEN (2026-11-10 17:07 AEST,
 pragmatic baseline D13)** — unit hardened + verified, telemetry egress off, egress observed + alerted,
 local telemetry live (journald cap, token/cost, digest timer, alerts), `dsh-personal` bank isolated, backup +
 restore drill PASS, residuals recorded. **M0.5 complete; M1 in progress (memory/recall/identity/push/heartbeat live; channel deferred by human); M2 complete (2026-11-11). Public build log:** https://github.com/RegeneratusLabs/dsh-personal-assistant `personal` now runs: official
@@ -616,3 +618,10 @@ status), with topics.
   regression tests. Push payloads no longer carry the session title; plugin home fallbacks now use DSH's
   `~/.dsh`; CI runs the capabilities tests; stale plugin README install paths corrected. **Next:** human
   decision on D15–D18, then Milestone A (frozen profile bundle).
+
+- **2026-11-14 — documentation audit (repo-only):** added [`docs/INDEX.md`](../docs/INDEX.md) (the single
+  document map: status legend, read-by-role paths, every tracked doc classified) and
+  [`docs/DECISIONS.md`](../docs/DECISIONS.md) (D1–D20 register with active/superseded/proposed status and
+  source links). Added status banners to the pre-apply M0 docs, the superseded plan/shortlist, the rc.1
+  reference snapshots, the admission/scout surveys and the retired UI handover; rewrote the research index
+  as an archive index. Fixed the false "nothing applied" egress status. No host change.

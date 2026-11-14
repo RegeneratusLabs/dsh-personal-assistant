@@ -1,6 +1,8 @@
 # M1 own-code: identity (SOUL.md) loader — `@local/dsh-soul`
 
-**Status:** built + tested on a scratch profile (2026-11-10 19:54–20:04 AEST); **not installed into
+> **Document status: HISTORICAL BUILD NOTE (2026-11-10).** The loader was installed on 2026-11-11; the "not installed" line below is the state at writing. Current component doc: [plugins/dsh-soul/README.md](../plugins/dsh-soul/README.md).
+
+**State at writing (2026-11-10):** built + tested on a scratch profile (2026-11-10 19:54–20:04 AEST); **not installed into
 `personal`** (Lead does that). Live hosts (`:7000`, `:7002`) untouched; no sudo, no systemctl, no
 credentials read.
 

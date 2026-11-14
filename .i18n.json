@@ -264,6 +264,10 @@
         "2026-11-14-product-readiness-audit": {
           "en": "5622adf989743c72",
           "zh": "d32607b8bc4a35cc"
+        },
+        "2026-11-14-documentation-audit": {
+          "en": "79a06bffff2d2b0b",
+          "zh": "df790c6eeb98fd54"
         }
       }
     },
@@ -279,8 +283,8 @@
           "zh": "29cec6310ae92be6"
         },
         "what-is-translated": {
-          "en": "2c1436041f832f4b",
-          "zh": "175f7331ccf36946"
+          "en": "1c5dae89050a3b35",
+          "zh": "f4ec01afbb06cea7"
         },
         "rules-for-translations": {
           "en": "9f8f2dc76cd5beea",
@@ -341,8 +345,8 @@
       "zh": "build-progress.zh.md",
       "sections": {
         "(preamble)": {
-          "en": "717f980d1edb5eb5",
-          "zh": "86821f7000bd2752"
+          "en": "f5b71fecfc83ce91",
+          "zh": "6d8c1c64af643442"
         },
         "phase-board": {
           "en": "3b26405a4a920809",
@@ -373,8 +377,8 @@
           "zh": "5bf674a686c78985"
         },
         "work-log": {
-          "en": "26eba610d81f1616",
-          "zh": "37e07fdacbbaa24d"
+          "en": "588160cc8d30912a",
+          "zh": "1a7382c349e2a0fe"
         }
       }
     },
@@ -382,8 +386,8 @@
       "zh": "personal-agent-design.zh.md",
       "sections": {
         "(preamble)": {
-          "en": "44edff1178c7eb95",
-          "zh": "c77b3164d1b4bec5"
+          "en": "4191bd1d4f56829f",
+          "zh": "daccabd8a223d3d5"
         },
         "0-decisions-so-far": {
           "en": "65ba50b648c529a2",
@@ -509,22 +513,22 @@
       "zh": "README.zh.md",
       "sections": {
         "(preamble)": {
-          "en": "4157f23a77bbe3f2",
-          "zh": "c0ac918d9de15d45"
+          "en": "1f138cde74927e7a",
+          "zh": "7252e6210f518a17"
         },
         "read-this-first": {
-          "en": "37de063c2788af39",
-          "zh": "9aeaa1a8eca95acc"
+          "en": "2246d83bd6f071cf",
+          "zh": "dd523ce59c06bcfb"
         },
         "supporting-research-notes": {
-          "en": "09d6d80f4955d206",
-          "zh": "81afe136630b46e7"
+          "en": "ce20e553fa108b34",
+          "zh": "acce6efb327afec0"
         },
         "build-phase-docs-m0-m0-5-added-2026-11-10": {
           "en": "f52e78e182a6e942",
           "zh": "57d3baecbf5bf0d0"
         },
-        "one-paragraph-answer": {
+        "one-paragraph-answer-2026-11-09": {
           "en": "b617c639952414bf",
           "zh": "862bbfd2cee5dadd"
         },

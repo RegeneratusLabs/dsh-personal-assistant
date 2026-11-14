@@ -1,5 +1,7 @@
 # Personal DSH host + Profiles panel — setup runbook
 
+> **Document status: HISTORICAL RUNBOOK (2026-11-09).** Host-specific first-setup notes, not the product installer; the live script is [scripts/setup-personal-profile.sh](../scripts/setup-personal-profile.sh).
+
 Built 2026-11-09. Two independent DSH hosts run side by side, both published **only through Tailscale**,
 plus a sidebar **Profiles** panel (design A) in both UIs that lets you jump between them.
 

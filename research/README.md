@@ -1,29 +1,36 @@
-# DSH as a personal AI assistant — research bundle
+# Research archive — DSH as a personal AI assistant
 
 English | [中文](README.zh.md)
 
-Research run on 2026-11-09 for the question: *how could DSH (`@deepseek-ai/dsh` 0.2.2-rc.1) become a
-personal AI assistant in the style of Hermes Agent / OpenClaw, and what is being done in this space?*
+> **Document status: HISTORICAL ARCHIVE (2026-11-09 → 2026-11-14).** These notes record the research and
+> decisions behind the build. They are **not** the current plan. Current truth:
+> [`docs/INDEX.md`](../docs/INDEX.md) → [`docs/product/DIRECTION.md`](../docs/product/DIRECTION.md).
+
+Research began on 2026-11-09 with the question: *how could DSH (`@deepseek-ai/dsh` 0.2.2-rc.1) become a
+personal AI assistant in the style of Hermes Agent / OpenClaw, and what is being done in this space?* The
+counts and market data below are from that date. What was actually built is in
+[`build-progress.md`](build-progress.md) and [`plugin-ledger.md`](plugin-ledger.md).
 
 ## Read this first
 
-- **[`dsh-as-personal-assistant.md`](dsh-as-personal-assistant.md)** — the synthesis: landscape, DSH
-  capability map, gap analysis, three build paths, phased plan with acceptance tests, and open questions.
-  (The main deliverable.)
-- **Building the agent now?** Start with **[`personal-agent-design.md`](personal-agent-design.md)** — the
-  build plan (decisions, architecture, memory subsystem, phases, vetting protocol) — plus
-  **[`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md)**: the verified
-  buy-vs-build stack (~90% plug-and-play). The documentation map is
-  [`personal-agent-docs.md`](personal-agent-docs.md).
+- **Current product direction:** [`docs/product/DIRECTION.md`](../docs/product/DIRECTION.md) and the
+  [`2026-11-14 audit`](../docs/product/AUDIT-2026-11-14.md). The full document map is
+  [`docs/INDEX.md`](../docs/INDEX.md).
+- **The dated synthesis:** [`dsh-as-personal-assistant.md`](dsh-as-personal-assistant.md) — landscape, DSH
+  capability map, gap analysis, three build paths (2026-11-09).
+- **What was actually built:** [`build-progress.md`](build-progress.md), [`plugin-ledger.md`](plugin-ledger.md),
+  [`m1-install-verification.md`](m1-install-verification.md).
+- **Superseded plans:** [`personal-agent-design.md`](personal-agent-design.md) (historical plan) and
+  [`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md) (adopt list overridden by D14).
 
 ## Supporting research notes
 
 | File | Scope | Basis |
 |---|---|---|
-| [`personal-agent-design.md`](personal-agent-design.md) | **the build plan**: decisions D1–D8, architecture, memory design (3 tiers/Hindsight), phases, plugin vetting | this session |
-| [`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md) | **buy-vs-build stack**: pinned candidates per layer, custom delta (~140–200 LOC), install order, smoke tests, do-not-use | 3 scouts + npm/compat verification |
+| [`personal-agent-design.md`](personal-agent-design.md) | **historical build plan** (2026-11-10): decisions D1–D14, architecture, memory design (3 tiers/Hindsight), phases, plugin vetting — superseded for product direction | this session |
+| [`personal-agent-plugin-shortlist.md`](personal-agent-plugin-shortlist.md) | **historical buy-vs-build survey** (2026-11-10): the adopt list was overridden by D14 — see the [plugin ledger](plugin-ledger.md) | 3 scouts + npm/compat verification |
 | [`personal-agent-security.md`](personal-agent-security.md) | **security model**: what DSH vets (not code/injection), threat model, tarball audit of the shortlist, OS isolation, telemetry baseline, admission checklist, incident response | DSH docs + static scan of six tarballs |
-| [`build-progress.md`](build-progress.md) | phase board, M0 security/telemetry checklist, decisions, open questions — updated every work block | this session |
+| [`build-progress.md`](build-progress.md) | work log (2026-11-10 → 2026-11-14): phase board, M0 checklist, decisions, every work block; newest at the bottom | this session |
 | [`plugin-ledger.md`](plugin-ledger.md) | every plugin approved/under vetting/rejected with version, sha512, scan result, rollback | this session |
 | [`plugin-scout-memory.md`](plugin-scout-memory.md) | memory/identity: 15 candidates, Hindsight vs memento vs mem0, identity matrix | index + npm + READMEs |
 | [`plugin-scout-channels.md`](plugin-scout-channels.md) | channels/notify/remote/voice: 24 candidates, switchboard vs dsh-im, egress/security | index + npm + READMEs |
@@ -59,7 +66,7 @@ personal AI assistant in the style of Hermes Agent / OpenClaw, and what is being
 | [`ui-primitives-slots.md`](ui-primitives-slots.md) | verified DSH client seams: slot catalog + props, 311 primitive exports, client-module contract, `/api` route recipe, defensive rules | installed 0.2.2-rc.1 tree + shell bundle |
 | [`dsh-restart-runbook.md`](dsh-restart-runbook.md) | restarting a DSH host + pending-plugin detection (host-control UI, scripts/ops) |
 
-## One-paragraph answer
+## One-paragraph answer (2026-11-09)
 
 The field has converged on one architecture — a general agent harness wrapped in an always-on runtime with
 chat channels, memory tiers, scheduling/heartbeat, a trust/policy layer and a persona. DSH already ships

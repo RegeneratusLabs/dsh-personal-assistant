@@ -59,7 +59,11 @@ const ctx = {
 apply(ctx, { bankId: 'test-bank', profilePath: file });
 
 check('prompt section registered', section !== null && section.name === 'memory:personal-profile');
-check('section carries the profile', section.text.includes('Sunshine Coast'));
+// The registry renders a function-valued `text` per request; a string here would
+// freeze the block at boot (the regression this assertion exists to prevent).
+const sectionText = () => (typeof section.text === 'function' ? section.text() : section.text);
+check('section text is dynamic', typeof section.text === 'function', typeof section.text);
+check('section carries the profile', sectionText().includes('Sunshine Coast'));
 check('section order sits after the persona', section.order === 1);
 check('three tools registered', registered.length === 3, registered.map((t) => t.name).join(','));
 check(
@@ -94,6 +98,7 @@ const forget = registered.find((t) => t.name === 'memory_forget');
 
 const remembered = await remember.execute({ text: 'Runs a small avocado orchard near Cooroy.', target: 'user' });
 check('remember writes the profile', readProfile(file).profile.user.some((entry) => entry.includes('avocado')), remembered.message);
+check('remember is visible in the same-session prompt block', sectionText().includes('avocado'), sectionText());
 check('remember retains to Hindsight', calls.some((call) => String(call.url).endsWith('/memories')), JSON.stringify(calls));
 check('remember tags the fact', calls.some((call) => String(call.body).includes('"tags":["user"]')));
 
@@ -102,6 +107,7 @@ check('recall formats results', recalled.message.includes('avocados') && recalle
 
 const forgot = await forget.execute({ text: 'avocado', target: 'user' });
 check('forget removes the entry', !readProfile(file).profile.user.some((entry) => entry.includes('avocado')), forgot.message);
+check('forget leaves the same-session prompt block immediately', !sectionText().includes('avocado'), sectionText());
 
 // ── budget overflow contract ─────────────────────────────────────────────────
 const tight = path.join(home, 'memory', 'tight.json');

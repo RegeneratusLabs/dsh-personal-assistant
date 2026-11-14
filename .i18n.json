@@ -9,12 +9,12 @@
       "zh": "AGENTS.zh.md",
       "sections": {
         "(preamble)": {
-          "en": "be560358e64e9498",
-          "zh": "9d3ff69e5e4dcd74"
+          "en": "7057ac27c773ab9a",
+          "zh": "0afe16f9144cb206"
         },
         "mission": {
-          "en": "482683ddc72c921a",
-          "zh": "08314039769ca286"
+          "en": "4b11e57be9a6a208",
+          "zh": "56099060246ab739"
         },
         "read-before-acting-in-this-order": {
           "en": "161eaf59f9115e42",
@@ -25,8 +25,8 @@
           "zh": "3e6dc2bde199c7f5"
         },
         "environment-facts": {
-          "en": "824ef67ce77e0829",
-          "zh": "20929591664a9a46"
+          "en": "6e383392407193eb",
+          "zh": "b7e4c650f21e0229"
         },
         "phase-plan-see-build-progress-md-for-status": {
           "en": "f1b8421b0f369710",
@@ -260,6 +260,10 @@
         "2026-11-13-memory-layer-installed-on-the-personal-host": {
           "en": "8ab7a66f258d794f",
           "zh": "d8e596f7aadcf2e1"
+        },
+        "2026-11-14-product-readiness-audit": {
+          "en": "5622adf989743c72",
+          "zh": "d32607b8bc4a35cc"
         }
       }
     },
@@ -300,24 +304,24 @@
       "zh": "README.zh.md",
       "sections": {
         "(preamble)": {
-          "en": "508d474b64c07f8c",
-          "zh": "a7990e3dc3e29b2a"
+          "en": "4ec39d75f6ee1582",
+          "zh": "0671cc6732bceb33"
         },
         "build-your-own-with-your-dsh-agent": {
           "en": "1439d2ddd8885b12",
           "zh": "b3fc3a35ece80547"
         },
         "what-it-does-today": {
-          "en": "1534ac0145f89391",
-          "zh": "97f8c8f6f8f8974b"
+          "en": "aa58e8459d59e083",
+          "zh": "583c652b5a1f7fc9"
         },
         "architecture": {
           "en": "e3b0c44298fc1c14",
           "zh": "e3b0c44298fc1c14"
         },
         "how-it-is-built-and-what-makes-this-repo-useful": {
-          "en": "4a9951a307235a7d",
-          "zh": "da12d4c7afa12c97"
+          "en": "61e7302fab08d0df",
+          "zh": "f0bd1bbdb10773fb"
         },
         "using-the-pieces": {
           "en": "e3b0c44298fc1c14",
@@ -369,8 +373,8 @@
           "zh": "5bf674a686c78985"
         },
         "work-log": {
-          "en": "0d5460b2e7a4c818",
-          "zh": "9b2d7970f98dbb5d"
+          "en": "26eba610d81f1616",
+          "zh": "37e07fdacbbaa24d"
         }
       }
     },

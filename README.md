@@ -2,9 +2,15 @@
 
 English | [中文](README.zh.md)
 
-A personal AI assistant built by **composing pinned plugins on [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH)** — no fork, no custom agent loop. This repository is both the build and its public engineering log: every decision, plugin admission, security control, failure and fix is recorded under [`research/`](research/).
+A personal AI assistant built by **composing pinned plugins on [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH)** — no fork, no custom agent loop. This repository is both the reference deployment and its public engineering log: every decision, plugin admission, security control, failure and fix is recorded under [`research/`](research/).
 
-**Status:** M0 (security & telemetry) ✅ · M0.5 (plugin admission) ✅ · M1 (curated stack) 🟨 — identity, memory, recall, push and heartbeat are live; the Telegram channel is **on hold** pending an upstream delivery fix.
+> **Product status (2026-11-14).** The installable consumer product is **not built yet**. This repo today is a
+> working single-user reference deployment plus the kit to rebuild it with a DSH agent. The audit, the target
+> product shape and the 90-day plan are in [`docs/product/`](docs/product/):
+> [audit](docs/product/AUDIT-2026-11-14.md) · [direction](docs/product/DIRECTION.md). Start there before
+> treating anything below as a product.
+
+**Reference-deployment status:** M0 (security & telemetry) ✅ · M0.5 (plugin admission) ✅ · M1 (curated stack) 🟨 — identity, recall and the new memory layer are installed; push and heartbeat are installed but inert/default-off; the Telegram channel is **on hold** pending an upstream delivery fix.
 
 [![ci](https://github.com/RegeneratusLabs/dsh-personal-assistant/actions/workflows/ci.yml/badge.svg)](https://github.com/RegeneratusLabs/dsh-personal-assistant/actions/workflows/ci.yml)
 
@@ -26,12 +32,12 @@ rejected. The reference persona and path names are examples — your agent shoul
 | Layer | Component | State |
 |---|---|---|
 | Identity | `@local/dsh-soul` + [`soul/SOUL.md`](soul/SOUL.md) — persona, tone, untrusted-content and approval rules injected at prompt order 0 | live |
-| Long-term memory | `@vectorize-io/hindsight-coding-agents@0.8.6`, self-hosted Hindsight on `127.0.0.1:9177`, bank `dsh-personal` only | live |
+| Long-term memory | `@local/dsh-memory-personal` — bounded curated profile + `memory_remember/recall/forget`; Hindsight on `127.0.0.1:9177` is the optional semantic backend, bank `dsh-personal` only. The old coding-agent client is disabled | installed; code fixed 2026-11-14 (host picks it up on the next approved restart) |
 | Session recall | `@deepseek-ai/dsh-experimental-session-search@0.2.2-rc.2` (FTS5 index, durable file) | live |
-| Phone push | `@local/dsh-push` — ntfy notifications on turn/approval/question, no message bodies | installed, inert until `NTFY_URL` |
+| Phone push | `@local/dsh-push` — ntfy notifications on turn/approval/question; no message bodies or session titles | installed, inert until `NTFY_URL` |
 | Proactivity | `@local/dsh-heartbeat` — quiet, default-OFF loop with quiet hours and change-gated nudges | installed, disabled by design |
 | Connectors | official `mcp-manager` (rc.2) + a local `ping` MCP fixture; `GET /api/capabilities` is owner-gated | live (fixture); first Western connector pending a token |
-| Capabilities UI | `@local/dsh-capabilities` — left-sidebar page listing every connector and plugin, with probe/restart | live on `personal` |
+| Capabilities UI | `@local/dsh-capabilities` — left-sidebar page listing every connector and plugin, with probe/restart (an operator surface; not part of the consumer plan) | live on `personal` |
 | Channel | `@xmanrui/dsh-im` (mature Telegram/IM plugin) | **HOLD** — not certified for this DSH version and an open upstream bug (#547) breaks final-answer delivery |
 | Security & telemetry | hardened systemd user unit, DSH telemetry egress disabled, nftables egress observe+alert, journald sink, digest timer, token/cost meter, backups + restore drill | live |
 
@@ -45,7 +51,7 @@ where the capability matters, we wrote the small piece ourselves ([`plugins/`](p
 dsh-personal.service (systemd --user, 127.0.0.1:7002, tailnet via tailscale serve)
 ├─ DSH 0.2.2-rc.2 (profile "personal", home ~/.dsh-personal)
 │  ├─ identity   @local/dsh-soul ──► $DSH_HOME/soul/SOUL.md (0600)
-│  ├─ memory     @vectorize-io/hindsight-coding-agents ──► Hindsight :9177, bank dsh-personal
+│  ├─ memory     @local/dsh-memory-personal ──► $DSH_HOME/memory/profile.json + Hindsight :9177 (bank dsh-personal)
 │  ├─ recall     session-search (FTS5) ──► $DSH_HOME/storages/session-search.db
 │  ├─ push       @local/dsh-push ──► ntfy (inert by default)
 │  └─ heartbeat  @local/dsh-heartbeat (default OFF)
@@ -55,7 +61,9 @@ dsh-personal.service (systemd --user, 127.0.0.1:7002, tailnet via tailscale serv
 
 ## How it is built (and what makes this repo useful)
 
-The engineering record is the product. Read in this order:
+The engineering record explains **why** the product looks the way it does — including what failed and what was
+rejected. It is not a substitute for an install path; see [`docs/product/DIRECTION.md`](docs/product/DIRECTION.md)
+for the product plan and the current gaps.
 
 | Doc | What it covers |
 |---|---|
@@ -83,7 +91,7 @@ The engineering record is the product. Read in this order:
 
 ```sh
 # unit tests (no host needed)
-cd plugins/dsh-heartbeat && node --test          # 26 tests
+cd plugins/dsh-heartbeat && node --test          # 30 tests
 node plugins/dsh-soul/selftest.mjs              # loader edge cases
 
 # host checks (read-only)

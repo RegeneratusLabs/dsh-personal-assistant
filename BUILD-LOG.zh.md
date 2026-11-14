@@ -120,3 +120,9 @@
 ## 2026-11-13 —— 记忆层安装到 personal 主机
 - `dsh plugin --profile personal add`（link:），禁用编码代理 `hindsight` 条目，用 `dsh-restart.sh` 重启（pid 3028723 → 3258661，`:7002` 401，active）。
 - 新进程日志：`[dsh-memory-personal] bank=dsh-personal … budgets=2200/4000`。该单元的 `dsh-pending` 干净。回滚与备份记录在 `research/build-progress.md`。
+
+## 2026-11-14 — 产品就绪度审计
+- 三次审计（代码、分发、用户旅程）加人工复核。结论：底层不错，但还没有产品。
+  新增 `docs/product/` 下的[审计](docs/product/AUDIT-2026-11-14.md)与[方向](docs/product/DIRECTION.md)。
+- 修复记忆提示词段落（此前写入要重启才生效），推送负载移除会话标题，修正 DSH 主目录回退，
+  把缺失的 capabilities 测试加入 CI。

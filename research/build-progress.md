@@ -605,3 +605,14 @@ status), with topics.
   backups: `package.json.bak-memory-20261113T150344`, `cordis.patch.yml.bak-memory-20261113T150344`,
   `pnpm-lock.yaml.bak-memory-20261113T150344`. **Next:** first live conversation should write the
   profile file; confirm cross-session recall in the real UI.
+
+- **2026-11-14 — product-readiness audit + direction (repo-only; no host change):** three independent audits
+  (code, distribution, user journey) plus hand verification. Verdict: the substrate and engineering discipline
+  are right, the consumer product is not started. Added [`docs/product/`](../docs/product/): the
+  [audit](../docs/product/AUDIT-2026-11-14.md) (P0 findings, Hermes parity, five competing identities,
+  readiness gates, decisions D15–D20) and the [direction](../docs/product/DIRECTION.md) (product definition,
+  v1 architecture, distribution choice, 90-day plan). **Fixed P0-1:** the memory prompt section was a string
+  captured at `apply`, so a write was invisible until restart — it is now a per-request function with
+  regression tests. Push payloads no longer carry the session title; plugin home fallbacks now use DSH's
+  `~/.dsh`; CI runs the capabilities tests; stale plugin README install paths corrected. **Next:** human
+  decision on D15–D18, then Milestone A (frozen profile bundle).

@@ -26,6 +26,9 @@ jobs:
       - name: memory plugin selftest
         run: node plugins/dsh-memory-personal/selftest.mjs
 
+      - name: capabilities host tests
+        run: node --test plugins/dsh-capabilities/test/host.test.mjs
+
       - name: shell syntax
         run: |
           set -e

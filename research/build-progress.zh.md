@@ -601,3 +601,11 @@ Status/Health，覆盖 1440 与 390 两种宽度、两套配色。[`ui-design-br
   `package.json.bak-memory-20261113T150344`、`cordis.patch.yml.bak-memory-20261113T150344`、
   `pnpm-lock.yaml.bak-memory-20261113T150344`。**下一步：** 第一次真实对话应写入 profile 文件；在真实 UI 里
   确认跨会话召回。
+
+- **2026-11-14 — 产品就绪度审计与方向（仅仓库改动；未改主机）：** 三次独立审计（代码、分发、用户旅程）加人工复核。
+  结论：底层与工程纪律是对的，但消费级产品尚未开始。新增 [`docs/product/`](../docs/product/)：
+  [审计](../docs/product/AUDIT-2026-11-14.md)（P0 发现、Hermes 对标、五种相互竞争的身份、就绪门禁、决策 D15–D20）与
+  [方向](../docs/product/DIRECTION.md)（产品定义、v1 架构、分发选择、90 天计划）。**修复 P0-1：** 记忆提示词段落在
+  `apply` 时被捕获为字符串，写入要重启才可见——现改为每请求求值的函数，并加回归测试。推送负载不再包含会话标题；
+  插件主目录回退改为 DSH 的 `~/.dsh`；CI 运行 capabilities 测试；修正插件 README 中过期的安装路径。**下一步：**
+  由人决定 D15–D18，然后进入里程碑 A（冻结的 profile bundle）。

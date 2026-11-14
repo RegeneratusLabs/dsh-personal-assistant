@@ -5,8 +5,8 @@ English | [中文](AGENTS.zh.md)
 > **Building your *own* personal assistant?** If you are a DSH agent pointed at this repository by a user who
 > cloned it to build their own assistant, read [`agents/README.md`](agents/README.md), follow
 > [`agents/GUIDE.md`](agents/GUIDE.md) and use [`agents/PROMPT.md`](agents/PROMPT.md) as your task brief.
-> The standing orders below govern **maintenance of this reference deployment** (the original homelab host);
-> do not copy its host paths, persona or credentials.
+> The standing orders below govern work on the **product and its reference deployment** (the original homelab
+> host); do not copy its host paths, persona or credentials.
 
 This workspace builds a **personal AI agent on DeepSeek Harness (DSH)**. You are the build agent. These
 are standing orders; the full design lives in `research/`. Read this file first, then follow the reading
@@ -14,10 +14,16 @@ order below. Do not skip the gates.
 
 ## Mission
 
-Deliver a personal assistant on the existing `personal` DSH host (`~/.dsh-personal`, profile `personal`,
-port 7002) by **composing** pinned, vetted plugins on DSH seams — not by forking DSH or writing a new agent
-loop. Target end state: identity (soul), long-term memory (Hindsight), one channel with approvals
-(Telegram), heartbeat/proactivity, session recall, local telemetry and a security baseline.
+Deliver a personal assistant by **composing** pinned, vetted plugins on DSH seams — not by forking DSH or
+writing a new agent loop. The existing `personal` host (`~/.dsh-personal`, profile `personal`, port 7002) is
+the **reference deployment and evidence**, not the install path for users.
+
+**Product goal (2026-11-14).** The repository is being turned into a consumer-facing product: an installable
+assistant on a pinned DSH runtime, with its own shell, onboarding, channel, memory surface, updater and trust
+page. The audit, target shape and 90-day plan are in `docs/product/` ([audit](docs/product/AUDIT-2026-11-14.md)
+· [direction](docs/product/DIRECTION.md)). Work that does not serve the v1 product spine needs a decision
+first; the homelab's admin surfaces (host control, profiles, Composio, content plugins) are not product
+features.
 
 ## Read before acting (in this order)
 
@@ -130,7 +136,7 @@ loop. Target end state: identity (soul), long-term memory (Hindsight), one chann
   `research/m2-autonomy-policy.md` (per-surface defaults; channel landing row). Heartbeat live path is
   proven by `plugins/dsh-heartbeat/test/live.test.js` but production stays **default OFF**. Channel remains
   deferred; narrative digest deferred to M3.
-- This workspace (`/home/josh/projects/DSH-playground`) is the build repo; `AGENTS.md` here is
+- This workspace (`/home/josh/projects/dsh-personal-assistant`) is the build repo; `AGENTS.md` here is
   auto-loaded by DSH's instruction loader when the session workspace is this directory.
 
 ## Phase plan (see `build-progress.md` for status)

@@ -75,7 +75,7 @@ function redact(value) {
 }
 
 function dshHome() {
-  return process.env.DSH_HOME ? path.resolve(process.env.DSH_HOME) : path.join(os.homedir(), '.dsh-personal');
+  return process.env.DSH_HOME ? path.resolve(process.env.DSH_HOME) : path.join(os.homedir(), '.dsh');
 }
 
 /** One opaque user id per profile, created once; an unreadable file is an error, never a new id. */

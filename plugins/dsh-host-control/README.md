@@ -16,12 +16,12 @@ Why it exists, and the alternative shell path, are documented in
 
 ## Install
 
-From the Web UI: **Plugins → Add plugin → `/home/josh/projects/DSH-playground/plugins/dsh-host-control`**,
+From the Web UI: **Plugins → Add plugin → `/home/josh/projects/dsh-personal-assistant/plugins/dsh-host-control`**,
 or from the Host API (`plugin_manager` `install_bundle`). The install reports `restart-required`
 (`package-moved`), so the first time needs one shell restart — after that the button is available:
 
 ```sh
-/home/josh/projects/DSH-playground/scripts/ops/dsh-restart.sh dsh-web.service
+/home/josh/projects/dsh-personal-assistant/scripts/ops/dsh-restart.sh dsh-web.service
 ```
 
 ## Contract

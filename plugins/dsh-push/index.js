@@ -47,7 +47,6 @@ const FETCH_TIMEOUT_MS = 5_000
 const DEFAULT_MIN_INTERVAL_MS = 15_000
 const MAX_IN_FLIGHT = 4
 const MAX_TRACKED = 512
-const MAX_TITLE_CHARS = 120
 const TOPIC_RE = /^[A-Za-z0-9_-]{1,64}$/
 const TOOL_RE = /^[A-Za-z0-9_.:-]{1,64}$/
 
@@ -114,14 +113,6 @@ function topicFrom(url) {
   return TOPIC_RE.test(decoded) ? decoded : null
 }
 
-/** One-line, control-character-free text capped at MAX_TITLE_CHARS. */
-function cleanText(value) {
-  if (typeof value !== 'string') return ''
-  const oneLine = value.replace(/[\u0000-\u001f\u007f]+/gu, ' ').replace(/\s+/gu, ' ').trim()
-  if (oneLine.length <= MAX_TITLE_CHARS) return oneLine
-  return [...oneLine].slice(0, MAX_TITLE_CHARS - 1).join('') + '\u2026'
-}
-
 /** A tool name safe to echo, or '' when it is not one. */
 function cleanTool(value) {
   return typeof value === 'string' && TOOL_RE.test(value) ? value : ''
@@ -174,21 +165,11 @@ export function apply(ctx) {
     return
   }
 
-  /** Latest logged title per session (bounded). */
-  const titles = new Map()
   /** Dedupe watermark per `${kind}\0${sessionId}` (bounded). */
   const lastSent = new Map()
   let inFlight = 0
 
   logLine(`[dsh-push] active: ntfy notifications enabled (min interval ${minIntervalMs} ms)`)
-
-  function rememberTitle(sessionId, raw) {
-    const title = cleanText(raw)
-    if (title === '') return
-    titles.delete(sessionId)
-    titles.set(sessionId, title)
-    while (titles.size > MAX_TRACKED) titles.delete(titles.keys().next().value)
-  }
 
   function warn(error) {
     const name = error instanceof Error ? error.name : 'error'
@@ -242,14 +223,15 @@ export function apply(ctx) {
     while (lastSent.size > MAX_TRACKED) lastSent.delete(lastSent.keys().next().value)
     if (inFlight >= MAX_IN_FLIGHT) return
 
-    const title = titles.get(sessionId)
     const shortId = shortSessionId(sessionId)
+    // Notification text never carries the session title: DSH derives that title
+    // from the first user message, so forwarding it would leak prompt content to
+    // the push provider — exactly what "no message bodies" promises not to do.
     const payload = {
       title: `DSH: ${LABELS.get(kind) ?? 'event'}`,
-      message: title === undefined ? `session ${shortId}` : `${title} (${shortId})`,
+      message: `session ${shortId}`,
       kind,
       sessionId,
-      ...(title === undefined ? {} : { sessionTitle: title }),
       ...(extra === undefined ? {} : extra),
       timestamp: isoTimestamp(timeMs),
       topic,
@@ -261,9 +243,6 @@ export function apply(ctx) {
     try {
       if (event === null || typeof event !== 'object') return
       switch (event.type) {
-        case 'session/title':
-          rememberTitle(session?.id, event.data?.title)
-          return
         case 'turn/end': {
           const reason = event.data?.reason?.kind
           notify(TURN_KINDS.get(reason) ?? 'turn-other', session, event.time)

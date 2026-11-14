@@ -211,3 +211,9 @@ Chronological, link-first record of the build. Detail lives in `research/`.
 ## 2026-11-13 — memory layer installed on the personal host
 - `dsh plugin --profile personal add` (link:), coding-agent `hindsight` row disabled, restart via `dsh-restart.sh` (pid 3028723 → 3258661, `:7002` 401, active).
 - Journal on the new process: `[dsh-memory-personal] bank=dsh-personal … budgets=2200/4000`. `dsh-pending` clean for the unit. Rollback and backups recorded in `research/build-progress.md`.
+
+## 2026-11-14 — product-readiness audit
+- Three audits (code, distribution, user journey) + hand verification. Verdict: good substrate, no product.
+  New [audit](docs/product/AUDIT-2026-11-14.md) and [direction](docs/product/DIRECTION.md) under `docs/product/`.
+- Fixed the memory prompt section (writes were frozen until restart), removed session titles from push
+  payloads, corrected DSH-home fallbacks, added the missing capabilities test to CI.

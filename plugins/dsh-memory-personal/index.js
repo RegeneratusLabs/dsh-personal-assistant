@@ -80,7 +80,10 @@ function warnOnce(key, message) {
 
 /** This process's DSH home; real units set `DSH_HOME`, local runs may not. */
 function dshHome() {
-  return process.env.DSH_HOME ? path.resolve(process.env.DSH_HOME) : path.join(os.homedir(), '.dsh-personal');
+  // Fall back to DSH's own default home (~/.dsh), never to this deployment's
+  // custom home: a stock install that forgets DSH_HOME must not write into a
+  // directory belonging to a different product.
+  return process.env.DSH_HOME ? path.resolve(process.env.DSH_HOME) : path.join(os.homedir(), '.dsh');
 }
 
 /**
@@ -196,6 +199,22 @@ export function renderProfile(profile) {
     '</memory_profile>',
   );
   return lines.join('\n');
+}
+
+/**
+ * The live text of the injected profile section.
+ *
+ * The prompt registry re-evaluates a section whose `text` is a function once per
+ * request, so passing this function (rather than a string captured at `apply`)
+ * is what makes `memory_remember` / `memory_forget` visible in the same session.
+ * Without it the block stays frozen until the Host restarts.
+ * @param file - absolute profile path.
+ * @returns the rendered block for the file's current contents.
+ */
+export function profileSectionText(file) {
+  const { profile, error } = readProfile(file);
+  if (error) warnOnce(`section:${file}`, `cannot read ${file} (${error}); injecting an empty memory profile`);
+  return renderProfile(profile);
 }
 
 /**
@@ -447,13 +466,21 @@ export function apply(ctx, config) {
   }
 
   if (resolved.inject) {
-    const text = renderProfile(loaded.profile);
     const allocated = typeof ctx.systemPrompt.getSectionOrder === 'function'
       ? ctx.systemPrompt.getSectionOrder('DEPLOYMENT_PERSONA_PREFIX')
       : undefined;
     const order = Number.isFinite(allocated) ? allocated + 1 : 1;
     ctx.effect(() => {
-      const dispose = ctx.systemPrompt.section({ name: SECTION_NAME, order, text, interpolate: false });
+      // `text` is a function on purpose: the registry renders it per request, so
+      // a write through the tools shows up in this session instead of only after
+      // a restart. The file is small and read synchronously; a failed read
+      // degrades to an empty block and never throws into prompt assembly.
+      const dispose = ctx.systemPrompt.section({
+        name: SECTION_NAME,
+        order,
+        text: () => profileSectionText(resolved.profilePath),
+        interpolate: false,
+      });
       return () => void dispose();
     }, 'dsh-memory-personal: profile section');
   }

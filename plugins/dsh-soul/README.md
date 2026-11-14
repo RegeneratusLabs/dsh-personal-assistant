@@ -13,7 +13,7 @@ identity out of the patch stack, so it can be backed up, diffed and restored on 
 ```sh
 DSH_HOME=/home/josh/.dsh-personal \
   /home/josh/dsh/node/bin/dsh plugin --profile personal add \
-  /home/josh/projects/DSH-playground/plugins/dsh-soul
+  /home/josh/projects/dsh-personal-assistant/plugins/dsh-soul
 ```
 
 `dsh plugin add` installs the package, sees its `dsh.bundle`, and appends `@local/dsh-soul` to

@@ -19,9 +19,9 @@ Current cards (Tailscale authorities — the panel is meant to be opened over th
 
 ```sh
 # coding home
-dsh plugin --profile web add /home/josh/projects/DSH-playground/plugins/dsh-profiles
+dsh plugin --profile web add /home/josh/projects/dsh-personal-assistant/plugins/dsh-profiles
 # personal home (separate DSH_HOME)
-DSH_HOME=~/.dsh-personal dsh plugin --profile personal add /home/josh/projects/DSH-playground/plugins/dsh-profiles
+DSH_HOME=~/.dsh-personal dsh plugin --profile personal add /home/josh/projects/dsh-personal-assistant/plugins/dsh-profiles
 ```
 
 The bundle row mounts the host half; `dsh.client` loads the browser half. Reload the Web UI once after

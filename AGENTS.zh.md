@@ -5,7 +5,7 @@
 > **在搭建*你自己*的个人助理？** 如果你是 DSH agent，被用户指到本仓库来搭建他们自己的助理，
 > 请阅读 [`agents/README.md`](agents/README.zh.md)，
 > 遵循 [`agents/GUIDE.md`](agents/GUIDE.zh.md)，并以 [`agents/PROMPT.md`](agents/PROMPT.zh.md) 作为任务简报。
-> 下面的常设指令管辖的是**本参考部署的维护**（原始 homelab 主机）；
+> 下面的常设指令管辖的是**产品及其参考部署**的工作（原始 homelab 主机）；
 > 不要照搬它的主机路径、人格或凭据。
 
 本工作区**在 DeepSeek Harness（DSH）上构建一个个人 AI agent**。你就是构建 agent。以下是常设指令；完整
@@ -13,10 +13,14 @@
 
 ## 使命
 
-在现有的 `personal` DSH 主机上（`~/.dsh-personal`，profile `personal`，端口 7002），通过把已固定
-版本、经审查的插件**组合**到 DSH 接缝上，交付一个个人助理 —— 而不是 fork DSH 或另写一个 agent 循环。目标终态：
-身份（灵魂）、长期记忆（Hindsight）、一个带审批的渠道（Telegram）、心跳/主动性、会话召回、本地遥测和
-安全基线。
+通过把已固定版本、经审查的插件**组合**到 DSH 接缝上，交付一个个人助理 —— 而不是 fork DSH 或另写一个
+agent 循环。现有的 `personal` 主机（`~/.dsh-personal`，profile `personal`，端口 7002）是**参考部署与证据**，
+不是面向用户的安装路径。
+
+**产品目标（2026-11-14）。** 本仓库正在转向消费级产品：一个可安装的助手，运行在固定版本的 DSH 运行时上，
+拥有自己的外壳、引导流程、渠道、记忆界面、更新器与信任页。审计、目标形态与 90 天计划见
+`docs/product/`（[审计](docs/product/AUDIT-2026-11-14.md) · [方向](docs/product/DIRECTION.md)）。不服务于
+v1 产品主干的改动需要先做决策；homelab 的运维面板（host control、profiles、Composio、内容插件）不是产品功能。
 
 ## 行动前必读（按此顺序）
 
@@ -120,7 +124,7 @@
   `research/m2-autonomy-policy.md`（按界面划分的默认值；渠道落地行）。心跳的实时路径已由
   `plugins/dsh-heartbeat/test/live.test.js` 证明，但生产环境保持**默认关闭**。渠道仍延后；叙事摘要延后
   到 M3。
-- 本工作区（`/home/josh/projects/DSH-playground`）是构建仓库；当会话工作区就是该目录时，这里的
+- 本工作区（`/home/josh/projects/dsh-personal-assistant`）是构建仓库；当会话工作区就是该目录时，这里的
   `AGENTS.md` 会被 DSH 的指令加载器自动加载。
 
 ## 阶段计划（状态见 `build-progress.md`）

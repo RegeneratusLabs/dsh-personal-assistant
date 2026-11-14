@@ -56,7 +56,7 @@ function warnOnce(key, message) {
 
 /** This process's DSH home; real units set `DSH_HOME`, local runs may not. */
 function dshHome() {
-  return process.env.DSH_HOME ? path.resolve(process.env.DSH_HOME) : path.join(os.homedir(), '.dsh-personal');
+  return process.env.DSH_HOME ? path.resolve(process.env.DSH_HOME) : path.join(os.homedir(), '.dsh');
 }
 
 /**
